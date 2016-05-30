@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 
 namespace ModelicaParser.Datamodel
 {
-    class Connector : ISerializable
+    class Connector : ICloneable
     {
         public String type;
         public String sourceCardinality;
@@ -22,6 +22,11 @@ namespace ModelicaParser.Datamodel
             UID = generateUID(10);
         }
 
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+        
         private static string generateUID(int length)
         {
             const string alphanumericCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +

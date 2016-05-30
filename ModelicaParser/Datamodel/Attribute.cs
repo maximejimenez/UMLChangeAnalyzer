@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 
 namespace ModelicaParser.Datamodel
 {
-    class Attribute : ISerializable
+    class Attribute
     {
         public String type;
         public String name;

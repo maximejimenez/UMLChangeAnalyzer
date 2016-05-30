@@ -11,8 +11,9 @@ namespace ModelicaParser.Parsers
     class XMLToDatamodel
     {
         static List<MetaModel> metamodels = new List<MetaModel>();
-        //static Dictionary<string, >
-        // Table for Element connect target
+
+        static Dictionary<string, List<Connector>> targetElements;
+        static Dictionary<string, Element> declaredElements;
         static string[] Basetypes = new string[] { "Boolean", "Integer", "Real", "String" };
 
         static void Main(string[] args)
@@ -22,10 +23,12 @@ namespace ModelicaParser.Parsers
                 XmlDocument doc = new XmlDocument();
                 doc.Load(@"C:\Users\maxime\Desktop\XmlModelica\Absyn-1.9." + i + ".xml");
 
+                targetElements = new Dictionary<string, List<Connector>>();
+                declaredElements = new Dictionary<string, Element>();
                 MetaModel metamodel = parseMetaModel(doc);
                 metamodels.Add(metamodel);
                 
-                Console.WriteLine("Absyn-1.9." + i + " parsing to MetaDataModel sucessful");
+                Console.WriteLine("Absyn-1.9." + i + " parsing to Datamodel sucessful");
             }
             Console.ReadKey();
         }
@@ -42,6 +45,28 @@ namespace ModelicaParser.Parsers
                 metamodel.AddPackage(package);
             }
 
+            Dictionary<string, List<Connector>>.KeyCollection targetsName = targetElements.Keys;
+            foreach (string targetName in targetsName)
+            {
+                Element target = null;
+                if (declaredElements.TryGetValue(targetName, out target))
+                {
+                    foreach (Connector connector in targetElements[targetName])
+                    {
+                        Connector clone = (Connector) connector.Clone();
+                        target.AddTargetConnector(clone);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Can't find type : " + targetName);
+                }
+            }
+
+            /* 
+             * TODO : Clone connector and add it to element (targetConnectors)
+             *        => meaning go through targetElements using declaredElements
+             */
             return metamodel;
         }
 
@@ -56,10 +81,11 @@ namespace ModelicaParser.Parsers
                 {
                     Element uniontype = parseUniontype(children[i]);
                     package.AddElement(uniontype);
+                    declaredElements.Add(uniontype.name, uniontype);
                 }
                 else
                 {
-                    // type alias, might need to be handled
+                    // TODO : handle type alias (possibly in ModelicaToXML)
                 }
             }
 
@@ -101,14 +127,13 @@ namespace ModelicaParser.Parsers
                 }
                 else
                 {
-                    //TODO
-                    //Element element = parseUniontype(children[i]);
-
-                    Connector c = new Connector("Association", "1", minMultiplicity+".."+maxMultiplicity); //UID initialized
+                    Connector c = new Connector("Association", "1", minMultiplicity + ".." + maxMultiplicity);
                     record.AddSourceConnector(c);
-                    //go deeper ?
-                    //record.AddElement(element);
-                    // MAYBE store connection and do it at the end
+                    if(!targetElements.ContainsKey(type))
+                    {
+                        targetElements.Add(type, new List<Connector>());
+                    }
+                    targetElements[type].Add(c);
                 }
             }
 

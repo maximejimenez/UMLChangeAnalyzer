@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 
 namespace ModelicaParser.Datamodel
 {
-    class MetaModel : ISerializable
+    class MetaModel
     {
         public String version;
         List<Package> packages;
