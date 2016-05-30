@@ -9,6 +9,10 @@ namespace ModelicaParser.Datamodel
 {
     class Attribute
     {
+        // Backtracking
+        public Element parent;
+
+        // Attributes
         public String type;
         public String name;
         public String upperBound;

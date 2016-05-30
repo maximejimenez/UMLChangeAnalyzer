@@ -9,18 +9,23 @@ namespace ModelicaParser.Datamodel
 {
     class MetaModel
     {
+        // Attributes
         public String version;
-        List<Package> packages;
+        public List<Package> packages;
 
         // Changes
+
+        // Packages
         List<Package> addedPackages = new List<Package>();
         List<Package> modifiedPackages = new List<Package>();
         List<Package> removedPackages = new List<Package>();
 
+        //Elements
         List<Element> addedElements = new List<Element>();
         List<Element> modifiedElements = new List<Element>();
         List<Element> removedElements = new List<Element>();
 
+        //Attributes
         List<Attribute> addedAttribute = new List<Attribute>();
         List<Attribute> modifiedAttribute = new List<Attribute>();
         List<Attribute> removedAttribute = new List<Attribute>();
@@ -35,23 +40,66 @@ namespace ModelicaParser.Datamodel
             packages.Add(package);
         }
 
-        public void FindElement(string name)
+        public Element FindElement(string name)
         {
+            Element result = null;
+            // for other packages
             if(name.Contains(".")){
-                //TODO Handle import / reference to other pckage element
+                int firstPoint = name.IndexOf(".");
+                //TODO
             }
             else
             {
                 foreach (Package package in packages)
                 {
-
+                    result = package.FindElement(name);
+                    if (result != null)
+                    {
+                        break;
+                    }
                 }
             }
+
+            return result;
         }
 
-        public void CompareWithMetamodel(MetaModel metamodel)
+        public void CompareWithMetamodel(MetaModel newMetamodel)
         {
-            //TODO
+            //TODO several packages
+
+            Package oldPackage = packages.ElementAt(0);
+            Package newPackage = newMetamodel.packages.ElementAt(0);
+
+            // New uniontypes
+            List<Element> oldUniontypes = new List<Element>(oldPackage.elements);
+            Dictionary<string, Element> newUniontypes = new Dictionary<string, Element>();
+            foreach(Element element in newPackage.elements)
+            {
+                newUniontypes.Add(element.name, element);
+            }
+
+            foreach (Element uniontype in oldUniontypes)
+            {
+                Element newUniontype;
+                if(newUniontypes.TryGetValue(uniontype.name, out newUniontype)){
+                    uniontype.Compare(newUniontype);
+                    // Add to modifiedElement if not equals
+                    newUniontypes.Remove(uniontype.name);
+                    oldUniontypes.Remove(uniontype);
+                }
+                else
+                {
+                    // Deleted elements
+                    removedElements.Add(uniontype);
+                    oldUniontypes.Remove(uniontype);
+                }
+            }
+
+            foreach(Element addedUniontype in newUniontypes.Values)
+            {
+                // Added elements
+                addedElements.Add(addedUniontype);
+            }
         }
     }
 }

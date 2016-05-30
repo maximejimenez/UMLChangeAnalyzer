@@ -10,6 +10,11 @@ namespace ModelicaParser.Parsers
 {
     class XMLToDatamodel
     {
+        /*
+         * TODO : 
+         * - e.g. list<list<T>> or list<tuple<Exp,Exp>> 
+         * - alias for types 
+         */
         static List<MetaModel> metamodels = new List<MetaModel>();
 
         static Dictionary<string, List<Connector>> targetElements;
@@ -27,7 +32,14 @@ namespace ModelicaParser.Parsers
                 declaredElements = new Dictionary<string, Element>();
                 MetaModel metamodel = parseMetaModel(doc);
                 metamodels.Add(metamodel);
-                
+
+                int count = 0;
+                foreach (Element elem in metamodel.packages.ElementAt(0).elements)
+                {
+                    count += 1 + elem.children.Count;
+                }
+
+                Console.WriteLine("Number of elements : " + count);
                 Console.WriteLine("Absyn-1.9." + i + " parsing to Datamodel sucessful");
             }
             Console.ReadKey();
@@ -42,6 +54,7 @@ namespace ModelicaParser.Parsers
             for (int i = 0; i < children.Count; i++)
             {
                 Package package = parsePackage(children[i]);
+                package.metamodel = metamodel;
                 metamodel.AddPackage(package);
             }
 
@@ -54,19 +67,15 @@ namespace ModelicaParser.Parsers
                     foreach (Connector connector in targetElements[targetName])
                     {
                         Connector clone = (Connector) connector.Clone();
+                        clone.target = target;
                         target.AddTargetConnector(clone);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Can't find type : " + targetName);
+                    Console.WriteLine("*** WARNING *** \t Can't find type : " + targetName);
                 }
             }
-
-            /* 
-             * TODO : Clone connector and add it to element (targetConnectors)
-             *        => meaning go through targetElements using declaredElements
-             */
             return metamodel;
         }
 
@@ -80,6 +89,7 @@ namespace ModelicaParser.Parsers
                 if (children[i].Name == "uniontype")
                 {
                     Element uniontype = parseUniontype(children[i]);
+                    uniontype.package = package;
                     package.AddElement(uniontype);
                     declaredElements.Add(uniontype.name, uniontype);
                 }
@@ -100,9 +110,9 @@ namespace ModelicaParser.Parsers
             for (int i = 0; i < children.Count; i++)
             {
                 Element record = parseRecord(children[i]);
+                record.parent = uniontype;
                 uniontype.AddChildren(record);
             }
-
 
             return uniontype;
         }
@@ -123,11 +133,13 @@ namespace ModelicaParser.Parsers
                 if (Basetypes.Contains<string>(type))
                 {
                     ModelicaParser.Datamodel.Attribute attribute = new ModelicaParser.Datamodel.Attribute(type, name, maxMultiplicity, minMultiplicity);
+                    attribute.parent = record;
                     record.AddAttribute(attribute);
                 }
                 else
                 {
                     Connector c = new Connector("Association", "1", minMultiplicity + ".." + maxMultiplicity);
+                    c.source = record;
                     record.AddSourceConnector(c);
                     if(!targetElements.ContainsKey(type))
                     {

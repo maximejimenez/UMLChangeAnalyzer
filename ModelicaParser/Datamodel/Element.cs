@@ -9,12 +9,17 @@ namespace ModelicaParser.Datamodel
 {
     class Element
     {
+        // Backtracking
+        public Package package = null;
+        public Element parent = null;
+
+        // Attributes
         public String type;
         public String name;
-        List<Element> children;
-        List<Connector> sourceConnectors;
-        List<Connector> targetConnectors;
-        List<Attribute> attributes;
+        public List<Element> children;
+        public List<Connector> sourceConnectors;
+        public List<Connector> targetConnectors;
+        public List<Attribute> attributes;
 
         public Element(string t, string n)
         {
@@ -44,6 +49,11 @@ namespace ModelicaParser.Datamodel
         public void AddTargetConnector(Connector targetConnector)
         {
             targetConnectors.Add(targetConnector);
+        }
+
+        public void Compare(Element newElement)
+        {
+            //TODO
         }
     }
 }

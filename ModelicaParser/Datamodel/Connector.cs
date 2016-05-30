@@ -9,6 +9,11 @@ namespace ModelicaParser.Datamodel
 {
     class Connector : ICloneable
     {
+        // Backtracking
+        public Element source;
+        public Element target;
+
+        // Attributes
         public String type;
         public String sourceCardinality;
         public String targetCardinality;
