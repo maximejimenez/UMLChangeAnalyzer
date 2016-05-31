@@ -10,21 +10,31 @@ namespace ModelicaParser.Datamodel
     class Connector : ICloneable
     {
         // Backtracking
-        public Element source;
-        public Element target;
+        private Element source = null;
+        private Element target = null;
 
         // Attributes
-        public String type;
-        public String sourceCardinality;
-        public String targetCardinality;
-        public String UID;
+        private String type = "";
+        private String sourceCardinality = "";
+        private String targetCardinality = "";
+        private String UID;
 
-        public Connector(string t, string sC, string tC)
+        // Changes
+        //TODO
+
+        #region Constructors
+
+        public Connector()
         {
-            type = t;
-            sourceCardinality = sC;
-            targetCardinality = tC;
-            UID = generateUID(10);
+            this.UID = generateUID(10);
+        }
+
+        public Connector(string type, string sourceCardinality, string targetCardinality)
+        {
+            this.type = type;
+            this.sourceCardinality = sourceCardinality;
+            this.targetCardinality = targetCardinality;
+            this.UID = generateUID(10);
         }
 
         public object Clone()
@@ -41,5 +51,44 @@ namespace ModelicaParser.Datamodel
             return new string(Enumerable.Repeat(alphanumericCharacters, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
         }
+
+        #endregion
+
+        #region Getters and setters
+
+        public string Type
+        {
+            get { return type; }
+            set { type = value; }
+        }
+
+        public string SourceCardinality
+        {
+            get { return sourceCardinality; }
+            set { sourceCardinality = value; }
+        }
+
+        public string TargetCardinality
+        {
+            get { return targetCardinality; }
+            set { targetCardinality = value; }
+        }
+
+        public Element Source
+        {
+            get { return source; }
+            set { source = value; }
+        }
+
+        public Element Target
+        {
+            get { return target; }
+            set { target = value; }
+        }
+
+
+
+
+        #endregion
     }
 }

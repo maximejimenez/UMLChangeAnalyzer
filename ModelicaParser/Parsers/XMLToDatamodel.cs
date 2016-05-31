@@ -32,14 +32,7 @@ namespace ModelicaParser.Parsers
                 declaredElements = new Dictionary<string, Element>();
                 MetaModel metamodel = parseMetaModel(doc);
                 metamodels.Add(metamodel);
-
-                int count = 0;
-                foreach (Element elem in metamodel.packages.ElementAt(0).elements)
-                {
-                    count += 1 + elem.children.Count;
-                }
-
-                Console.WriteLine("Number of elements : " + count);
+            
                 Console.WriteLine("Absyn-1.9." + i + " parsing to Datamodel sucessful");
                 metamodels.ElementAt(0).FindElement("Absyn.Class");
             }
@@ -55,7 +48,7 @@ namespace ModelicaParser.Parsers
             for (int i = 0; i < children.Count; i++)
             {
                 Package package = parsePackage(children[i]);
-                package.metamodel = metamodel;
+                //package.metamodel = metamodel;
                 metamodel.AddPackage(package);
             }
 
@@ -68,7 +61,7 @@ namespace ModelicaParser.Parsers
                     foreach (Connector connector in targetElements[targetName])
                     {
                         Connector clone = (Connector) connector.Clone();
-                        clone.target = target;
+                        clone.Target = target;
                         target.AddTargetConnector(clone);
                     }
                 }
@@ -90,9 +83,9 @@ namespace ModelicaParser.Parsers
                 if (children[i].Name == "uniontype")
                 {
                     Element uniontype = parseUniontype(children[i]);
-                    uniontype.package = package;
+                    uniontype.ParentPackage = package;
                     package.AddElement(uniontype);
-                    declaredElements.Add(uniontype.name, uniontype);
+                    declaredElements.Add(uniontype.Name, uniontype);
                 }
                 else
                 {
@@ -111,7 +104,7 @@ namespace ModelicaParser.Parsers
             for (int i = 0; i < children.Count; i++)
             {
                 Element record = parseRecord(children[i]);
-                record.parent = uniontype;
+                record.ParentElement = uniontype;
                 uniontype.AddChildren(record);
             }
 
@@ -134,13 +127,13 @@ namespace ModelicaParser.Parsers
                 if (Basetypes.Contains<string>(type))
                 {
                     ModelicaParser.Datamodel.Attribute attribute = new ModelicaParser.Datamodel.Attribute(type, name, maxMultiplicity, minMultiplicity);
-                    attribute.parent = record;
+                    attribute.ParentElement = record;
                     record.AddAttribute(attribute);
                 }
                 else
                 {
                     Connector c = new Connector("Association", "1", minMultiplicity + ".." + maxMultiplicity);
-                    c.source = record;
+                    c.Source = record;
                     record.AddSourceConnector(c);
                     if(!targetElements.ContainsKey(type))
                     {

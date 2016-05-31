@@ -10,18 +10,37 @@ namespace ModelicaParser.Datamodel
     class Package
     {
         // Backtracking
-        public MetaModel metamodel;
+        //public MetaModel metamodel;
+        private Package parentPackage = null;
 
         // Attributes
-        public String name;
-        public List<Element> elements;
-        public List<Package> subPackages;
+        private String name = "";
+        private List<Element> elements =new List<Element>();
+        private List<Package> subPackages = new List<Package>();
 
-        public Package(string n)
+        // Changes
+        //TODO
+
+        #region Constructors
+
+        public Package(string name)
         {
-            name = n;
-            elements = new List<Element>();
-            subPackages = new List<Package>();
+            this.name = name;
+        }
+
+        #endregion
+
+        #region Getters and setters
+
+        public String Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        public List<Element> Elements
+        {
+            get { return elements; }
         }
 
         public void AddPackage(Package package){
@@ -32,6 +51,8 @@ namespace ModelicaParser.Datamodel
         {
             elements.Add(uniontype);
         }
+
+        #endregion
 
         public Element FindElement(string name)
         {
@@ -56,7 +77,7 @@ namespace ModelicaParser.Datamodel
             {
                 foreach (Element element in elements)
                 {
-                    if (element.name == name)
+                    if (element.Name == name)
                     {
                         return element;
                     }

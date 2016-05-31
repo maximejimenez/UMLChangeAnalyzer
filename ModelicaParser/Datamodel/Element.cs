@@ -10,30 +10,64 @@ namespace ModelicaParser.Datamodel
     class Element
     {
         // Backtracking
-        public Package package = null;
-        public Element parent = null;
+        private Package parentPackage = null;
+        private Element parentElement = null;
 
         // Attributes
-        public String type;
-        public String name;
-        public List<Element> children;
-        public List<Connector> sourceConnectors;
-        public List<Connector> targetConnectors;
-        public List<Attribute> attributes;
+        private String type = "";
+        private String name = "";
+        private List<Element> children = new List<Element>();
+        private List<Connector> sourceConnectors = new List<Connector>();
+        private List<Connector> targetConnectors = new List<Connector>();
+        private List<Attribute> attributes = new List<Attribute>();
 
-        public Element(string t, string n)
+        // Changes
+        //TODO
+
+        #region Constructors
+
+        public Element(string type, string name)
         {
-            type = t;
-            name = n;
-            children = new List<Element>();
-            sourceConnectors = new List<Connector>();
-            targetConnectors = new List<Connector>();
-            attributes = new List<Attribute>();
+            this.type = type;
+            this.name = name;
         }
 
-        public void AddChildren(Element elem)
+        #endregion
+
+        public void Compare(Element newElement)
         {
-            children.Add(elem);
+            //TODO
+        }
+
+        #region Getters and setters
+
+        public Package ParentPackage
+        {
+            get { return parentPackage; }
+            set { parentPackage = value; }
+        }
+
+        public Element ParentElement
+        {
+            get { return parentElement; }
+            set { parentElement = value; }
+        }
+
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        public string Type
+        {
+            get { return type; }
+            set { type = value; }
+        }
+
+        public void AddChildren(Element element)
+        {
+            children.Add(element);
         }
 
         public void AddAttribute(Attribute attribute)
@@ -51,9 +85,6 @@ namespace ModelicaParser.Datamodel
             targetConnectors.Add(targetConnector);
         }
 
-        public void Compare(Element newElement)
-        {
-            //TODO
-        }
+        #endregion
     }
 }
