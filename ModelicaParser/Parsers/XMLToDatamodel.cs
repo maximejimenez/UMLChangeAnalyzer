@@ -41,6 +41,7 @@ namespace ModelicaParser.Parsers
 
                 Console.WriteLine("Number of elements : " + count);
                 Console.WriteLine("Absyn-1.9." + i + " parsing to Datamodel sucessful");
+                metamodels.ElementAt(0).FindElement("Absyn.Class");
             }
             Console.ReadKey();
         }

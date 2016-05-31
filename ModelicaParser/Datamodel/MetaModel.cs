@@ -43,10 +43,21 @@ namespace ModelicaParser.Datamodel
         public Element FindElement(string name)
         {
             Element result = null;
-            // for other packages
+            // For imports
             if(name.Contains(".")){
                 int firstPoint = name.IndexOf(".");
-                //TODO
+                string packageName = name.Substring(0, firstPoint);
+                string qualifiedName = name.Substring(firstPoint + 1, name.Length - firstPoint - 1);
+
+                //Console.WriteLine("packageName = " + packageName);
+                //Console.WriteLine("qualifiedName = " + qualifiedName);
+                foreach (Package package in packages)
+                {
+                    if(packageName == package.name){
+                        package.FindElement(qualifiedName);
+                    }
+                }
+
             }
             else
             {
