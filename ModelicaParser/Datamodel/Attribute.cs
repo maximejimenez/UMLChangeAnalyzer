@@ -13,8 +13,9 @@ namespace ModelicaParser.Datamodel
         private Element parentElement;
 
         // Attributes
-        private String type = "";
         private String name = "";
+        private String note = "";
+        private String type = "";
         private String upperBound = "";
         private String lowerBound = "";
 

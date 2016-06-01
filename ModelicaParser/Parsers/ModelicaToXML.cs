@@ -37,7 +37,7 @@ namespace ModelicaParser
         public const string OPTION = "Option";
         public static XmlDocument doc;
 
-        /*static void Main(string[] args)
+        static void Main(string[] args)
         {
             for (int i = 2; i <= 6; i++)
             {
@@ -51,7 +51,7 @@ namespace ModelicaParser
                 System.IO.File.WriteAllText(@"C:\Users\maxime\Desktop\XmlModelica\Absyn-1.9."+ i +".xml", xml);
                 Console.WriteLine("XML export of version 1.9."+ i +" sucessful");
             }
-        }*/
+        }
 
         private static XmlElement getXMLFromTokens(IEnumerator<string> e, string version)
         {
@@ -160,7 +160,7 @@ namespace ModelicaParser
                     comments = false;
                 }
             }
-            tokens = tokenWithoutComments;
+            /*tokens = tokenWithoutComments;
             tokenWithoutComments = new List<string>();
             comments = false;
             foreach (string token in tokens)
@@ -187,7 +187,7 @@ namespace ModelicaParser
                         comments = false;
                     }
                 }
-            }
+            }*/
             return tokenWithoutComments;
         }
 
