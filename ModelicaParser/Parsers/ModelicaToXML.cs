@@ -309,7 +309,6 @@ namespace ModelicaParser
         {
             if (e.Current.StartsWith(OPTION))
             {
-                //field.SetAttribute("type", "option");
                 field.SetAttribute("minMultiplicity", "0");
                 field.SetAttribute("maxMultiplicity", "1");
                 contentTypeOption(field, e);
@@ -317,7 +316,6 @@ namespace ModelicaParser
             }
             else if (e.Current.StartsWith(LIST))
             {
-                //field.SetAttribute("type", "list");
                 field.SetAttribute("minMultiplicity", "0");
                 field.SetAttribute("maxMultiplicity", "*");
                 contentTypeList(field, e);

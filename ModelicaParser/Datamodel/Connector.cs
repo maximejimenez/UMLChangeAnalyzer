@@ -16,6 +16,7 @@ namespace ModelicaParser.Datamodel
 
         // Attributes
         private String type = "";
+        private String note = "";
         private String sourceCardinality = "";
         private String targetCardinality = "";
         private String uid;
@@ -142,6 +143,12 @@ namespace ModelicaParser.Datamodel
         {
             get { return type; }
             set { type = value; }
+        }
+
+        public string Note
+        {
+            get { return note; }
+            set { note = value; }
         }
 
         public string SourceCardinality
