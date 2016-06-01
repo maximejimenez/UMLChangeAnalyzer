@@ -10,6 +10,7 @@ namespace ModelicaParser.Datamodel
     class Connector : ICloneable
     {
         // Backtracking
+        private Element parentElement = null;
         private Element source = null;
         private Element target = null;
 
@@ -17,24 +18,20 @@ namespace ModelicaParser.Datamodel
         private String type = "";
         private String sourceCardinality = "";
         private String targetCardinality = "";
-        private String UID;
+        private String uid;
 
         // Changes
-        //TODO
+        private int numOfChanges;
+        private List<MMChange> changes = new List<MMChange>();
 
-        #region Constructors
-
-        public Connector()
-        {
-            this.UID = generateUID(10);
-        }
+        #region Loading
 
         public Connector(string type, string sourceCardinality, string targetCardinality)
         {
             this.type = type;
             this.sourceCardinality = sourceCardinality;
             this.targetCardinality = targetCardinality;
-            this.UID = generateUID(10);
+            this.uid = generateUID(10);
         }
 
         public object Clone()
@@ -50,6 +47,91 @@ namespace ModelicaParser.Datamodel
             var random = new Random();
             return new string(Enumerable.Repeat(alphanumericCharacters, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        public override string ToString()
+        {
+            return "Connector " + source.Name + " -> " + target.Name + "\n";
+        }
+
+        #endregion
+
+        #region Calculate number of
+
+        public int NumOfAllModifiableElements(bool RelevantOnly)
+        {
+            return 1;
+        }
+
+        #endregion
+
+        #region Retrieve object
+
+        public List<MMChange> GetChanges()
+        {
+            return new List<MMChange>(changes);
+        }
+
+        public string GetPath()
+        {
+            return parentElement.GetPath() + "::" + source.Name + "->" + target.Name;
+        }
+
+        #endregion
+
+        #region Calculation
+
+        public void ResetCalculation()
+        {
+            numOfChanges = 0;
+            changes.Clear();
+        }
+
+        public bool IgnoreConector()
+        {
+            foreach (string str in ConfigReader.ExcludedConnectorTypes)
+                if (type.Equals(str))
+                    return true;
+
+            return false;
+        }
+
+        public int CompareConnectors(Connector oldConnector, bool RelevantOnly)
+        {
+            if (RelevantOnly && IgnoreConector())
+                return 0;
+
+            if (((RelevantOnly && !ConfigReader.ExcludedConnectorNote) || !RelevantOnly) && !Equals(note, oldConnector.Note))
+            {
+                numOfChanges++;
+                changes.Add(new MMChange("~ Note", false));
+            }
+
+            if (((RelevantOnly && !ConfigReader.ExcludedConnectorNote) || !RelevantOnly) && !Equals(supplierNote, oldConnector.SupplierNote))
+            {
+                numOfChanges++;
+                changes.Add(new MMChange("~ SupplierNote", false));
+            }
+
+            if (((RelevantOnly && !ConfigReader.ExcludedConnectorNote) || !RelevantOnly) && !Equals(clientNote, oldConnector.ClientNote))
+            {
+                numOfChanges++;
+                changes.Add(new MMChange("~ ClientNote", false));
+            }
+
+            if (!Equals(supplierCard, oldConnector.SupplierCard))
+            {
+                numOfChanges++;
+                changes.Add(new MMChange("~ Supplier Cardinality: " + oldConnector.SupplierCard + " -> " + supplierCard, false));
+            }
+
+            if (!Equals(clientCard, oldConnector.ClientCard))
+            {
+                numOfChanges++;
+                changes.Add(new MMChange("~ Client Cardinality: " + oldConnector.ClientCard + " -> " + clientCard, false));
+            }
+
+            return numOfChanges;
         }
 
         #endregion
@@ -74,6 +156,17 @@ namespace ModelicaParser.Datamodel
             set { targetCardinality = value; }
         }
 
+        public string UID
+        {
+            get { return uid; }
+        }
+
+        public Element ParentElement
+        {
+            get { return parentElement; }
+            set { parentElement = value; }
+        }
+
         public Element Source
         {
             get { return source; }
@@ -85,9 +178,6 @@ namespace ModelicaParser.Datamodel
             get { return target; }
             set { target = value; }
         }
-
-
-
 
         #endregion
     }

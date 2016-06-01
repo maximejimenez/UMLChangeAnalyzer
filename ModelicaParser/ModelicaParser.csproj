@@ -49,6 +49,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -59,6 +60,7 @@
     <Compile Include="Datamodel\Connector.cs" />
     <Compile Include="Datamodel\Attribute.cs" />
     <Compile Include="Datamodel\MetaModel.cs" />
+    <Compile Include="Datamodel\MM_Changes.cs" />
     <Compile Include="Datamodel\Package.cs" />
     <Compile Include="Datamodel\Element.cs" />
     <Compile Include="Parsers\XMLToDatamodel.cs" />
@@ -84,6 +86,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

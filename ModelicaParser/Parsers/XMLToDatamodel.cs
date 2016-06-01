@@ -34,7 +34,7 @@ namespace ModelicaParser.Parsers
                 metamodels.Add(metamodel);
             
                 Console.WriteLine("Absyn-1.9." + i + " parsing to Datamodel sucessful");
-                metamodels.ElementAt(0).FindElement("Absyn.Class");
+                //metamodels.ElementAt(0).FindElement("Absyn.Class");
             }
             Console.ReadKey();
         }
@@ -61,6 +61,7 @@ namespace ModelicaParser.Parsers
                     foreach (Connector connector in targetElements[targetName])
                     {
                         Connector clone = (Connector) connector.Clone();
+                        clone.ParentElement = target;
                         clone.Target = target;
                         target.AddTargetConnector(clone);
                     }
@@ -105,7 +106,7 @@ namespace ModelicaParser.Parsers
             {
                 Element record = parseRecord(children[i]);
                 record.ParentElement = uniontype;
-                uniontype.AddChildren(record);
+                uniontype.AddChild(record);
             }
 
             return uniontype;
@@ -133,6 +134,7 @@ namespace ModelicaParser.Parsers
                 else
                 {
                     Connector c = new Connector("Association", "1", minMultiplicity + ".." + maxMultiplicity);
+                    c.ParentElement = record;
                     c.Source = record;
                     record.AddSourceConnector(c);
                     if(!targetElements.ContainsKey(type))
