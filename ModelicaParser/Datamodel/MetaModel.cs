@@ -213,7 +213,7 @@ namespace ModelicaParser.Datamodel
                 if (relevantOnly && pack.IgnorePackage())
                     continue;
 
-                numberOfConnectedElements += pack.CalculateNumberOfConnectedElements(relevantOnly);
+                //numberOfConnectedElements += pack.CalculateNumberOfConnectedElements(relevantOnly);
             }
 
             return numberOfConnectedElements;

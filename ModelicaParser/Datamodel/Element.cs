@@ -66,8 +66,8 @@ namespace ModelicaParser.Datamodel
             foreach (Attribute attr in attributes)
                 ret += attr.ToString();
 
-            foreach (Connector conn in connectors)
-                ret += conn.ToString();
+//            foreach (Connector conn in connectors)
+//                ret += conn.ToString();
 
             return ret;
         }
@@ -102,13 +102,13 @@ namespace ModelicaParser.Datamodel
                 modifiableElems += attr.NumOfAllModifiableElements(RelevantOnly);
             }
 
-            foreach (Connector conn in connectors)
+            /*foreach (Connector conn in connectors)
             {
                 if (RelevantOnly && conn.IgnoreConector())
                     continue;
 
                 modifiableElems += conn.NumOfAllModifiableElements(RelevantOnly);
-            }
+            }*/
 
             return modifiableElems;
         }
@@ -118,7 +118,7 @@ namespace ModelicaParser.Datamodel
         {
             List<Element> connectedElems = new List<Element>();
 
-            foreach (Connector conn in connectors)
+            /*foreach (Connector conn in connectors)
             {
                 if (relevantOnly && conn.IgnoreConector())
                     continue;
@@ -149,7 +149,7 @@ namespace ModelicaParser.Datamodel
                     if (exists == false)
                         connectedElems.Add(conn.Supplier);
                 }
-            }
+            }*/
 
             return connectedElems.Count;
         }
@@ -172,14 +172,14 @@ namespace ModelicaParser.Datamodel
                     listOfChanges.Add(chng.AppendTabs(2));
             }
 
-            foreach (Connector conn in connectors)
+            /*foreach (Connector conn in connectors)
             {
                 if (conn.NumOfChanges != 0)
                     listOfChanges.Add(new MMChange("~ Connector " + conn.GetPath(), true).AppendTabs(1));
 
                 foreach (MMChange chng in conn.GetChanges())
                     listOfChanges.Add(chng.AppendTabs(2));
-            }
+            }*/
 
             return listOfChanges;
         }
@@ -231,9 +231,9 @@ namespace ModelicaParser.Datamodel
 
         public Connector GetConnector(string uid)
         {
-            foreach (Connector connector in connectors)
-                if (connector.UID.Equals(uid))
-                    return connector;
+//            foreach (Connector connector in connectors)
+//                if (connector.UID.Equals(uid))
+//                    return connector;
 
             return null;
         }
@@ -273,8 +273,8 @@ namespace ModelicaParser.Datamodel
             foreach (Attribute attr in attributes)
                 attr.ResetCalculation();
 
-            foreach (Connector conn in connectors)
-                conn.ResetCalculation();
+//            foreach (Connector conn in connectors)
+//                conn.ResetCalculation();
 
 
             foreach (Element child in children)
@@ -284,9 +284,9 @@ namespace ModelicaParser.Datamodel
         // checks whether the element shall be ignored if relevance policy is enabled
         public bool IgnoreElement()
         {
-            foreach (string str in ConfigReader.ExcludedElementTypes)
-                if (type.Equals(str))
-                    return true;
+//            foreach (string str in ConfigReader.ExcludedElementTypes)
+//                if (type.Equals(str))
+//                    return true;
 
             return false;
         }
@@ -303,17 +303,17 @@ namespace ModelicaParser.Datamodel
                 changes.Add(new MMChange("~ Name: " + oldElement.Name + " -> " + name, false).AppendTabs(1));
             }
 
-            if (((RelevantOnly && !ConfigReader.ExcludedElementNote) || !RelevantOnly) && !Equals(note, oldElement.Note))
+            /*if (((RelevantOnly && !ConfigReader.ExcludedElementNote) || !RelevantOnly) && !Equals(note, oldElement.Note))
             {
                 numOfChanges++;
                 changes.Add(new MMChange("~ Note", false).AppendTabs(1));
-            }
+            }*/
 
-            if (!Equals(classifierName, oldElement.ClassifierName))
+            /*if (!Equals(classifierName, oldElement.ClassifierName))
             {
                 numOfChanges++;
                 changes.Add(new MMChange("~ Instance Classifier: " + oldElement.ClassifierName + " -> " + classifierName, false).AppendTabs(1));
-            }
+            }*/
 
             // checking if the attribute is changed or added in the new model
             foreach (Attribute attribute in attributes)
@@ -358,7 +358,7 @@ namespace ModelicaParser.Datamodel
             }
 
             // checking if the connector is changed or added in the new model
-            foreach (Connector connector in connectors)
+            /*foreach (Connector connector in connectors)
             {
                 if (RelevantOnly && connector.IgnoreConector())
                     continue;
@@ -397,7 +397,7 @@ namespace ModelicaParser.Datamodel
                     removedConnectors.Add(oldConnector);
                     changes.Add(new MMChange("- Connector " + oldConnector.GetPath(), false).AppendTabs(1));
                 }
-            }
+            }*/
 
             return numOfChanges;
         }

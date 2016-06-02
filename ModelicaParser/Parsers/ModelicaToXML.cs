@@ -48,7 +48,7 @@ namespace ModelicaParser
 
                 XmlElement root = getXMLFromTokens(e, "1.9."+i);
                 string xml = prettyXMLString(root);
-                System.IO.File.WriteAllText(@"C:\Users\maxime\Desktop\XmlModelica\Absyn-1.9."+ i +".xml", xml);
+                System.IO.File.WriteAllText(@"C:\Users\maxime\Desktop\TryXML\Absyn-1.9." + i + ".xml", xml);
                 Console.WriteLine("XML export of version 1.9."+ i +" sucessful");
             }
         }
@@ -90,6 +90,13 @@ namespace ModelicaParser
             string tmp = string.Join(" ", tokens.ToArray());
             string[] tokensArray = tmp.Split(WS, StringSplitOptions.RemoveEmptyEntries);
             tokens = handleMultipleDeclaration(tokensArray);
+            tokens = noteAsSimpleToken(new List<string>(tokens));
+
+            //foreach (string token in tokens)
+            //{
+            //    Console.WriteLine(token);
+            //    Console.ReadKey();
+            //}
 
             return tokens;
         }
@@ -138,8 +145,6 @@ namespace ModelicaParser
             }
             return tokens;
         }
-
-
 
         private static List<string> cleanMetaModelicaCode(List<string> tokens)
         {
@@ -211,6 +216,61 @@ namespace ModelicaParser
             return tokens;
         }
 
+        private static List<string> noteAsSimpleToken(List<string> tokens)
+        {
+            List<string> result = new List<string>();
+            bool comment = false;
+            string newToken = "";
+            foreach (string token in tokens)
+            {
+                if (comment)
+                {
+                    if (token.EndsWith("\""))
+                    {
+                        comment = false;
+                        newToken += token;
+                        result.Add(newToken);
+                    }
+                    else
+                    {
+                        newToken += token;
+                    }
+                }
+                else
+                {
+                    if ((token.StartsWith("\"") && token.EndsWith("\"")) || !token.StartsWith("\""))
+                    {
+                        result.Add(token);
+                    }
+                    else
+                    {
+                        comment = true;
+                        newToken = token;
+                    }
+                }
+            }
+
+            foreach (string token in result)
+            {
+                Console.WriteLine(token);
+                Console.ReadKey();
+            }
+
+            return result;
+        }
+
+        private static String retrieveNote(IEnumerator<string> e)
+        {
+            e.MoveNext();
+            if (e.Current.StartsWith("\"") && e.Current.EndsWith("\""))
+            {
+                return e.Current;
+            }
+            return null;
+        }
+
+
+
         private static void convertToXML(XmlElement parent, IEnumerator<string> e)
         {
             XmlElement elem;
@@ -233,35 +293,59 @@ namespace ModelicaParser
             else if (token == TYPE)
             {
                 elem = doc.CreateElement("type");
+                parent.AppendChild(elem);
                 e.MoveNext();
                 elem.SetAttribute("name", e.Current);
                 e.MoveNext();
                 e.MoveNext();
                 elem.SetAttribute("aliasFor", e.Current);
-                parent.AppendChild(elem);
+                String note = retrieveNote(e);
+                if (note != null)
+                {
+                    elem.SetAttribute("note", note);
+                }
             }
             else if ((token == PACKAGE))
             {
                 elem = createElementWithID(e);
+                parent.AppendChild(elem);
+                String note = retrieveNote(e);
+                if (note != null)
+                {
+                    elem.SetAttribute("note", note);
+                }
+
                 while (e.MoveNext() && e.Current != END)
                 {
                     convertToXML(elem, e);
                 }
+
                 e.MoveNext();
                 e.MoveNext();
-                parent.AppendChild(elem);
             }
             else if(token == UNIONTYPE)
             {
                 elem = createElementWithID(e);
+                parent.AppendChild(elem);
+                String note = retrieveNote(e);
+                if (note != null)
+                {
+                    elem.SetAttribute("note", note);
+                }
                 while (e.MoveNext() && e.Current != END)
                 {
                     convertToXML(elem, e);
                 }
-                parent.AppendChild(elem);
+
                 e.MoveNext();
             }else if((token == RECORD)){
                 elem = createElementWithID(e);
+                parent.AppendChild(elem);
+                String note = retrieveNote(e);
+                if (note != null)
+                {
+                    elem.SetAttribute("note", note);
+                }
                 while(e.MoveNext() && e.Current != END){
                     XmlElement field = doc.CreateElement("field");
                     handleType(field, e);
@@ -270,7 +354,7 @@ namespace ModelicaParser
                     e.MoveNext();
                     elem.AppendChild(field);
                 }
-                parent.AppendChild(elem);
+
                 e.MoveNext();
             }
 
@@ -293,6 +377,9 @@ namespace ModelicaParser
             {
                 string tkn = e.Current;
                 e.MoveNext();
+
+                string xml = doc.OuterXml;
+                System.IO.File.WriteAllText(@"C:\Users\maxime\Desktop\TryXML\Log.xml", xml);
                 throw new Exception("Unexpected token : " + tkn + "(" + e.Current + ")");
             }
         }

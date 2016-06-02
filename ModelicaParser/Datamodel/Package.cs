@@ -537,9 +537,9 @@ namespace ModelicaParser.Datamodel
         // checks whether the package shall be ignored if relevance policy is enabled
         public bool IgnorePackage()
         {
-            foreach (string str in ConfigReader.ExcludedPackageNames)
-                if (name.Equals(str))
-                    return true;
+//            foreach (string str in ConfigReader.ExcludedPackageNames)
+//                if (name.Equals(str))
+//                    return true;
 
             return false;
         }
@@ -564,13 +564,13 @@ namespace ModelicaParser.Datamodel
                     changes.Add(new MMChange("+ Attribute " + attr.GetPath(), false).AppendTabs(ident + 2));
                 }
 
-                foreach (EA_Connector conn in elem.Connectors)
-                {
-                    if (RelevantOnly && conn.IgnoreConector())
-                        continue;
+                //foreach (EA_Connector conn in elem.Connectors)
+                //{
+                //    if (RelevantOnly && conn.IgnoreConector())
+                //        continue;
 
-                    changes.Add(new MMChange("+ Connector " + conn.GetPath(), false).AppendTabs(ident + 2));
-                }
+                //    changes.Add(new MMChange("+ Connector " + conn.GetPath(), false).AppendTabs(ident + 2));
+                //}
             }
 
             foreach (Package pack in package.SubPackages)
@@ -602,13 +602,13 @@ namespace ModelicaParser.Datamodel
                     changes.Add(new MMChange("- Attribute " + attr.GetPath(), false).AppendTabs(ident + 2));
                 }
 
-                foreach (EA_Connector conn in elem.Connectors)
-                {
-                    if (RelevantOnly && conn.IgnoreConector())
-                        continue;
+                //foreach (EA_Connector conn in elem.Connectors)
+                //{
+                //    if (RelevantOnly && conn.IgnoreConector())
+                //        continue;
 
-                    changes.Add(new MMChange("- Connector " + conn.GetPath(), false).AppendTabs(ident + 2));
-                }
+                //    changes.Add(new MMChange("- Connector " + conn.GetPath(), false).AppendTabs(ident + 2));
+                //}
             }
 
             foreach (Package pack in package.SubPackages)
@@ -698,13 +698,13 @@ namespace ModelicaParser.Datamodel
                         changes.Add(new MMChange("+ Attribute " + attr.GetPath(), false).AppendTabs(1));
                     }
 
-                    foreach (EA_Connector conn in element.Connectors)
+                    /*foreach (Connector conn in element.Connectors)
                     {
                         if (RelevantOnly && conn.IgnoreConector())
                             continue;
 
                         changes.Add(new MMChange("+ Connector " + conn.GetPath(), false).AppendTabs(1));
-                    }
+                    }*/
                 }
 
                 // chacking if the element is changed in the new model
@@ -737,13 +737,13 @@ namespace ModelicaParser.Datamodel
                         changes.Add(new MMChange("- Attribute " + attr.GetPath(), false).AppendTabs(1));
                     }
 
-                    foreach (EA_Connector conn in oldElement.Connectors)
+                    /*foreach (EA_Connector conn in oldElement.Connectors)
                     {
                         if (RelevantOnly && conn.IgnoreConector())
                             continue;
 
                         changes.Add(new MMChange("- Connector " + conn.GetPath(), false).AppendTabs(1));
-                    }
+                    }*/
                 }
             }
 
@@ -774,6 +774,11 @@ namespace ModelicaParser.Datamodel
         public List<Package> SubPackages
         {
             get { return subPackages; }
+        }
+
+        public Package ParentPackage
+        {
+            get { return parentPackage; }
         }
 
         #endregion

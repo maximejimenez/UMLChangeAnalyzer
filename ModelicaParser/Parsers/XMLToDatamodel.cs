@@ -21,7 +21,7 @@ namespace ModelicaParser.Parsers
         static Dictionary<string, Element> declaredElements;
         static string[] Basetypes = new string[] { "Boolean", "Integer", "Real", "String" };
 
-        static void Main(string[] args)
+        /*static void Main(string[] args)
         {
             for (int i = 2; i <= 6; i++)
             {
@@ -37,7 +37,7 @@ namespace ModelicaParser.Parsers
                 //metamodels.ElementAt(0).FindElement("Absyn.Class");
             }
             Console.ReadKey();
-        }
+        }*/
 
         static MetaModel parseMetaModel(XmlDocument doc)
         {

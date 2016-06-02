@@ -82,11 +82,11 @@ namespace ModelicaParser.Datamodel
                 changes.Add(new MMChange("~ Name: " + oldAttribute.Name + " -> " + name, false));
             }
 
-            if (((RelevantOnly && !ConfigReader.ExcludedAttributeNote) || !RelevantOnly) && !Equals(note, oldAttribute.Note))
+            /*if (((RelevantOnly && !ConfigReader.ExcludedAttributeNote) || !RelevantOnly) && !Equals(note, oldAttribute.Note))
             {
                 numOfChanges++;
                 changes.Add(new MMChange("~ Note", false));
-            }
+            }*/
 
             if (!Equals(type, oldAttribute.Type))
             {

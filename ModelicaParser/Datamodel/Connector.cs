@@ -90,10 +90,10 @@ namespace ModelicaParser.Datamodel
 
         public bool IgnoreConector()
         {
-            foreach (string str in ConfigReader.ExcludedConnectorTypes)
+            /*foreach (string str in ConfigReader.ExcludedConnectorTypes)
                 if (type.Equals(str))
                     return true;
-
+            */
             return false;
         }
 
@@ -102,35 +102,35 @@ namespace ModelicaParser.Datamodel
             if (RelevantOnly && IgnoreConector())
                 return 0;
 
-            if (((RelevantOnly && !ConfigReader.ExcludedConnectorNote) || !RelevantOnly) && !Equals(note, oldConnector.Note))
-            {
-                numOfChanges++;
-                changes.Add(new MMChange("~ Note", false));
-            }
+            //if (((RelevantOnly && !ConfigReader.ExcludedConnectorNote) || !RelevantOnly) && !Equals(note, oldConnector.Note))
+            //{
+            //    numOfChanges++;
+            //    changes.Add(new MMChange("~ Note", false));
+            //}
 
-            if (((RelevantOnly && !ConfigReader.ExcludedConnectorNote) || !RelevantOnly) && !Equals(supplierNote, oldConnector.SupplierNote))
-            {
-                numOfChanges++;
-                changes.Add(new MMChange("~ SupplierNote", false));
-            }
+            //if (((RelevantOnly && !ConfigReader.ExcludedConnectorNote) || !RelevantOnly) && !Equals(supplierNote, oldConnector.SupplierNote))
+            //{
+            //    numOfChanges++;
+            //    changes.Add(new MMChange("~ SupplierNote", false));
+            //}
 
-            if (((RelevantOnly && !ConfigReader.ExcludedConnectorNote) || !RelevantOnly) && !Equals(clientNote, oldConnector.ClientNote))
-            {
-                numOfChanges++;
-                changes.Add(new MMChange("~ ClientNote", false));
-            }
+            //if (((RelevantOnly && !ConfigReader.ExcludedConnectorNote) || !RelevantOnly) && !Equals(clientNote, oldConnector.ClientNote))
+            //{
+            //    numOfChanges++;
+            //    changes.Add(new MMChange("~ ClientNote", false));
+            //}
 
-            if (!Equals(supplierCard, oldConnector.SupplierCard))
-            {
-                numOfChanges++;
-                changes.Add(new MMChange("~ Supplier Cardinality: " + oldConnector.SupplierCard + " -> " + supplierCard, false));
-            }
+            //if (!Equals(supplierCard, oldConnector.SupplierCard))
+            //{
+            //    numOfChanges++;
+            //    changes.Add(new MMChange("~ Supplier Cardinality: " + oldConnector.SupplierCard + " -> " + supplierCard, false));
+            //}
 
-            if (!Equals(clientCard, oldConnector.ClientCard))
-            {
-                numOfChanges++;
-                changes.Add(new MMChange("~ Client Cardinality: " + oldConnector.ClientCard + " -> " + clientCard, false));
-            }
+            //if (!Equals(clientCard, oldConnector.ClientCard))
+            //{
+            //    numOfChanges++;
+            //    changes.Add(new MMChange("~ Client Cardinality: " + oldConnector.ClientCard + " -> " + clientCard, false));
+            //}
 
             return numOfChanges;
         }
