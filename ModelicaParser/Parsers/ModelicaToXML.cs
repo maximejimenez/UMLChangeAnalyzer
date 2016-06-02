@@ -90,7 +90,7 @@ namespace ModelicaParser
             string tmp = string.Join(" ", tokens.ToArray());
             string[] tokensArray = tmp.Split(WS, StringSplitOptions.RemoveEmptyEntries);
             tokens = handleMultipleDeclaration(tokensArray);
-            tokens = noteAsSimpleToken(new List<string>(tokens));
+            tokens = noteAsSingleToken(new List<string>(tokens));
 
             //foreach (string token in tokens)
             //{
@@ -216,7 +216,7 @@ namespace ModelicaParser
             return tokens;
         }
 
-        private static List<string> noteAsSimpleToken(List<string> tokens)
+        private static List<string> noteAsSingleToken(List<string> tokens)
         {
             List<string> result = new List<string>();
             bool comment = false;
@@ -238,7 +238,7 @@ namespace ModelicaParser
                 }
                 else
                 {
-                    if ((token.StartsWith("\"") && token.EndsWith("\"")) || !token.StartsWith("\""))
+                    if ((token.StartsWith("\"") && token.EndsWith("\"") && token.Length > 1 )|| !token.StartsWith("\""))
                     {
                         result.Add(token);
                     }
