@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
+using ModelicaParser.Config;
 
 namespace ModelicaParser.Datamodel
 {
-    class Package
+    public class Package
     {
         // Backtracking
         //public MetaModel metamodel;
@@ -804,6 +805,11 @@ namespace ModelicaParser.Datamodel
         public Package ParentPackage
         {
             get { return parentPackage; }
+        }
+
+        public int NumOfChanges
+        {
+            get { return numOfChanges; }
         }
 
         #endregion

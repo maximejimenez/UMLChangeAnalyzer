@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Datamodel\MMResults.cs" />
     <Compile Include="Config\ConfigReader.cs" />
     <Compile Include="Datamodel\Connector.cs" />
     <Compile Include="Datamodel\Attribute.cs" />

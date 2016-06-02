@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 
 namespace ModelicaParser.Datamodel
 {
-    class MetaModel
+    public class MetaModel
     {
         // Attributes
         private String version = "";
@@ -76,16 +76,6 @@ namespace ModelicaParser.Datamodel
 
             return numberOfAttributes;
         }
-
-        /*public int DeptOfInheritance(bool relevantOnly)
-        {
-            int DeptOfInheritance = 0;
-
-            foreach (EA_Package package in packages)
-                DeptOfInheritance += package.DeptOfInheritance(this, relevantOnly);
-
-            return DeptOfInheritance;
-        }*/
 
         public int NumberOfModifiedElements()
         {
@@ -346,16 +336,16 @@ namespace ModelicaParser.Datamodel
             return list;
         }
 
-        /*
-        public EA_Package FindPackageByName(string name)
+        
+        public Package FindPackageByName(string name)
         {
-            foreach (EA_Package package in packages)
+            foreach (Package package in packages)
                 if (package.Name.Equals(name))
                     return package;
 
             return null;
         }
-
+        /*
         public EA_Package FindPackageByPath(string packagePath)
         {
             string[] pathParts = Regex.Split(packagePath, "::");
@@ -413,41 +403,41 @@ namespace ModelicaParser.Datamodel
             foreach (Package pack in packages)
                 pack.ResetCalculation();
         }
-        /*
+        
         // writing the elements and sub-packages of the package (used for new packages)
-        private void AddChangesForAllNewSubPackagesAndElements(int ident, EA_Package package)
+        private void AddChangesForAllNewSubPackagesAndElements(int ident, Package package)
         {
-            changes.Add(new ARChange("+ Package " + package.GetPath(), true).AppendTabs(ident++));  // not counted as a change
+            changes.Add(new MMChange("+ Package " + package.GetPath(), true).AppendTabs(ident++));  // not counted as a change
 
-            foreach (EA_Element elem in package.Elements)
-                changes.Add(new ARChange("+ Element " + elem.GetPath(), false).AppendTabs(ident));
+            foreach (Element elem in package.Elements)
+                changes.Add(new MMChange("+ Element " + elem.GetPath(), false).AppendTabs(ident));
 
-            foreach (EA_Package pack in package.SubPackages)
+            foreach (Package pack in package.SubPackages)
                 AddChangesForAllNewSubPackagesAndElements(ident, pack);
         }
 
         // writing the elements and sub-packages of the package (used for old packages)
-        private void AddChangesForAllRemovedSubPackagesAndElements(int ident, EA_Package package)
+        private void AddChangesForAllRemovedSubPackagesAndElements(int ident, Package package)
         {
-            changes.Add(new ARChange("- Package " + package.GetPath(), true).AppendTabs(ident++));  // not counted as a change
+            changes.Add(new MMChange("- Package " + package.GetPath(), true).AppendTabs(ident++));  // not counted as a change
 
-            foreach (EA_Element elem in package.Elements)
-                changes.Add(new ARChange("- Element " + elem.GetPath(), false).AppendTabs(ident));
+            foreach (Element elem in package.Elements)
+                changes.Add(new MMChange("- Element " + elem.GetPath(), false).AppendTabs(ident));
 
-            foreach (EA_Package pack in package.SubPackages)
+            foreach (Package pack in package.SubPackages)
                 AddChangesForAllRemovedSubPackagesAndElements(ident, pack);
         }
 
         // comparing two different models
-        public int CompareModels(EA_Model oldModel, bool RelevantOnly)
+        public int CompareModels(MetaModel oldModel, bool RelevantOnly)
         {
             // checking if the package is changed or added in the new model
-            foreach (EA_Package package in packages)
+            foreach (Package package in packages)
             {
                 if (RelevantOnly && package.IgnorePackage())
                     continue;
 
-                EA_Package oldPackage = oldModel.FindPackageById(package.Id);
+                Package oldPackage = oldModel.FindPackageByName(package.Name);
 
                 int num = 0;
 
@@ -469,12 +459,12 @@ namespace ModelicaParser.Datamodel
             }
 
             // checking if the package is removed in the new model
-            foreach (EA_Package oldPackage in oldModel.Packages)
+            foreach (Package oldPackage in oldModel.Packages)
             {
                 if (RelevantOnly && oldPackage.IgnorePackage())
                     continue;
 
-                EA_Package package = FindPackageById(oldPackage.Id);
+                Package package = FindPackageByName(oldPackage.Name);
 
                 if (package == null)
                 {
@@ -487,7 +477,7 @@ namespace ModelicaParser.Datamodel
 
             return numOfChanges;
         }
-        */
+        
  
         #endregion
 

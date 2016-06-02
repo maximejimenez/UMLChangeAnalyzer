@@ -8,7 +8,7 @@ using ModelicaParser.Config;
 
 namespace ModelicaParser.Datamodel
 {
-    class Element
+    public class Element
     {
         // Backtracking
         private Package parentPackage = null;

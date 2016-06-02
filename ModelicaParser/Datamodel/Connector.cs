@@ -8,7 +8,7 @@ using ModelicaParser.Config;
 
 namespace ModelicaParser.Datamodel
 {
-    class Connector : ICloneable
+    public class Connector : ICloneable
     {
         // Backtracking
         private Element parentElement = null;

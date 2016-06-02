@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 
 namespace ModelicaParser.Datamodel
 {
-    class Attribute //: IEquatable<Attribute>
+    public class Attribute //: IEquatable<Attribute>
     {
         // Backtracking
         private Element parentElement;
