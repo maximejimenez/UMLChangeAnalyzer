@@ -222,11 +222,11 @@ namespace ModelicaParser
                 }
             }
 
-            foreach (string token in result)
+            /*foreach (string token in result)
             {
                 Console.WriteLine(token);
                 Console.ReadKey();
-            }
+            }*/
 
             return result;
         }
@@ -247,112 +247,91 @@ namespace ModelicaParser
         {
             XmlElement elem;
             string token = e.Current;
-            if (token == ENCAPSULATED){
-                // TODO maybe ignore
-            }
-            else if (token == PUBLIC)
+            String note;
+            switch (token)
             {
-                //TODO
-            }
-            else if (token == PROTECTED)
-            {
-                // DO NOTHING
-            }
-            else if (token == IMPORT)
-            {
-                e.MoveNext();
-            }
-            else if (token == TYPE)
-            {
-                elem = doc.CreateElement("type");
-                parent.AppendChild(elem);
-                e.MoveNext();
-                elem.SetAttribute("name", e.Current);
-                e.MoveNext();
-                e.MoveNext();
-                elem.SetAttribute("aliasFor", e.Current);
-                String note = retrieveNote(e);
-                if (note != null)
-                {
-                    elem.SetAttribute("note", note);
-                }
-            }
-            else if ((token == PACKAGE))
-            {
-                elem = createElementWithID(e);
-                parent.AppendChild(elem);
-                String note = retrieveNote(e);
-                if (note != null)
-                {
-                    elem.SetAttribute("note", note);
-                }
+                case ENCAPSULATED:
+                case PUBLIC:
+                case PROTECTED:
+                case SEMICOLON:
+                    break;
 
-                while (e.MoveNext() && e.Current != END)
-                {
-                    convertToXML(elem, e);
-                }
-
-                e.MoveNext();
-                e.MoveNext();
-            }
-            else if(token == UNIONTYPE)
-            {
-                elem = createElementWithID(e);
-                parent.AppendChild(elem);
-                String note = retrieveNote(e);
-                if (note != null)
-                {
-                    elem.SetAttribute("note", note);
-                }
-                while (e.MoveNext() && e.Current != END)
-                {
-                    convertToXML(elem, e);
-                }
-
-                e.MoveNext();
-            }else if((token == RECORD)){
-                elem = createElementWithID(e);
-                parent.AppendChild(elem);
-                String note = retrieveNote(e);
-                if (note != null)
-                {
-                    elem.SetAttribute("note", note);
-                }
-                while(e.MoveNext() && e.Current != END){
-                    XmlElement field = doc.CreateElement("field");
-                    handleType(field, e);
+                case IMPORT:
+                case END:
                     e.MoveNext();
-                    field.SetAttribute("name", e.Current);
+                    break;
+
+                case TYPE:
+                   elem = doc.CreateElement("type");
+                    parent.AppendChild(elem);
                     e.MoveNext();
-                    elem.AppendChild(field);
-                }
+                    elem.SetAttribute("name", e.Current);
+                    e.MoveNext();
+                    e.MoveNext();
+                    elem.SetAttribute("aliasFor", e.Current);
+                    note = retrieveNote(e);
+                    if (note != null)
+                    {
+                        elem.SetAttribute("note", note);
+                    }
+                    break;
 
-                e.MoveNext();
-            }
+                case PACKAGE:
+                    elem = createElementWithID(e);
+                    parent.AppendChild(elem);
+                    note = retrieveNote(e);
+                    if (note != null)
+                    {
+                        elem.SetAttribute("note", note);
+                    }
 
-            else if (token == END)
-            {
-                e.MoveNext();
-            }
-            else if (token == SEMICOLON)
-            {
-                //DO NOTHING
-            }
-            else if (token.StartsWith(OPTION))
-            {
-                //TODO
-            }
-            else if(token.StartsWith(LIST)){
-                //TODO
-            }
-            else
-            {
-                string tkn = e.Current;
-                e.MoveNext();
+                    while (e.MoveNext() && e.Current != END)
+                    {
+                        convertToXML(elem, e);
+                    }
+                    e.MoveNext();
+                    e.MoveNext();
+                    break;
 
-                string xml = doc.OuterXml;
-                System.IO.File.WriteAllText(@"C:\Users\maxime\Desktop\TryXML\Log.xml", xml);
-                throw new Exception("Unexpected token : " + tkn + "(" + e.Current + ")");
+                case UNIONTYPE:
+                    elem = createElementWithID(e);
+                    parent.AppendChild(elem);
+                    note = retrieveNote(e);
+                    if (note != null)
+                    {
+                        elem.SetAttribute("note", note);
+                    }
+                    while (e.MoveNext() && e.Current != END)
+                    {
+                        convertToXML(elem, e);
+                    }
+                    e.MoveNext();
+                    break;
+                case RECORD:
+                     elem = createElementWithID(e);
+                    parent.AppendChild(elem);
+                    note = retrieveNote(e);
+                    if (note != null)
+                    {
+                        elem.SetAttribute("note", note);
+                    }
+                    while(e.MoveNext() && e.Current != END){
+                        XmlElement field = doc.CreateElement("field");
+                        handleType(field, e);
+                        e.MoveNext();
+                        field.SetAttribute("name", e.Current);
+                        e.MoveNext();
+                        elem.AppendChild(field);
+                    }
+                    e.MoveNext();
+                    break;
+
+                default:
+                    string tkn = e.Current;
+                    e.MoveNext();
+                    string xml = doc.OuterXml;
+                    System.IO.File.WriteAllText(@"C:\Users\maxime\Desktop\TryXML\Log.xml", xml);
+                    throw new Exception("Unexpected token : " + tkn + "(" + e.Current + ")");
             }
         }
 
