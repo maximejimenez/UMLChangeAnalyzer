@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
+using ModelicaParser.Config;
 
 namespace ModelicaParser.Datamodel
 {
@@ -101,7 +102,7 @@ namespace ModelicaParser.Datamodel
             if (RelevantOnly && IgnoreConector())
                 return 0;
 
-            if (((RelevantOnly && !ConfigReader.ExcludedConnectorNote) || !RelevantOnly) && !Equals(note, oldConnector.Note))
+            /*if (((RelevantOnly && !ConfigReader.ExcludedConnectorNote) || !RelevantOnly) && !Equals(note, oldConnector.Note))
             {
                 numOfChanges++;
                 changes.Add(new MMChange("~ Note", false));
@@ -117,18 +118,19 @@ namespace ModelicaParser.Datamodel
             {
                 numOfChanges++;
                 changes.Add(new MMChange("~ ClientNote", false));
-            }
+            }*/
 
-            if (!Equals(supplierCard, oldConnector.SupplierCard))
+
+            if (!Equals(SourceCardinality, oldConnector.SourceCardinality))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Supplier Cardinality: " + oldConnector.SupplierCard + " -> " + supplierCard, false));
+                changes.Add(new MMChange("~ Source Cardinality: " + oldConnector.SourceCardinality + " -> " + SourceCardinality, false));
             }
 
-            if (!Equals(clientCard, oldConnector.ClientCard))
+            if (!Equals(TargetCardinality, oldConnector.TargetCardinality))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Client Cardinality: " + oldConnector.ClientCard + " -> " + clientCard, false));
+                changes.Add(new MMChange("~ Target Cardinality: " + oldConnector.TargetCardinality + " -> " + TargetCardinality, false));
             }
 
             return numOfChanges;
@@ -177,6 +179,11 @@ namespace ModelicaParser.Datamodel
         {
             get { return target; }
             set { target = value; }
+        }
+
+        public int NumOfChanges
+        {
+            get { return numOfChanges; }
         }
 
         #endregion

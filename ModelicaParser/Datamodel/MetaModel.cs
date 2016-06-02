@@ -204,22 +204,6 @@ namespace ModelicaParser.Datamodel
             return numberOfRemovedAttributes;
         }
 
-        public int CalculateNumberOfConnectedElements(bool relevantOnly)
-        {
-            int numberOfConnectedElements = 0;
-
-            foreach (Package pack in packages)
-            {
-                if (relevantOnly && pack.IgnorePackage())
-                    continue;
-
-                numberOfConnectedElements += pack.CalculateNumberOfConnectedElements(relevantOnly);
-            }
-
-            return numberOfConnectedElements;
-        }
-
-
         #endregion
 
         #region Retrieve objects

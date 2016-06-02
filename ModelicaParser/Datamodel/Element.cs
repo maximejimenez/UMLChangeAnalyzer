@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
+using ModelicaParser.Config;
 
 namespace ModelicaParser.Datamodel
 {
@@ -65,7 +66,9 @@ namespace ModelicaParser.Datamodel
             foreach (Attribute attr in attributes)
                 ret += attr.ToString();
 
-            foreach (Connector conn in connectors)
+            foreach (Connector conn in sourceConnectors)
+                ret += conn.ToString();
+            foreach (Connector conn in targetConnectors)
                 ret += conn.ToString();
 
             return ret;
@@ -101,7 +104,15 @@ namespace ModelicaParser.Datamodel
                 modifiableElems += attr.NumOfAllModifiableElements(RelevantOnly);
             }
 
-            foreach (Connector conn in connectors)
+            foreach (Connector conn in sourceConnectors)
+            {
+                if (RelevantOnly && conn.IgnoreConector())
+                    continue;
+
+                modifiableElems += conn.NumOfAllModifiableElements(RelevantOnly);
+            }
+
+            foreach (Connector conn in targetConnectors)
             {
                 if (RelevantOnly && conn.IgnoreConector())
                     continue;
@@ -112,46 +123,6 @@ namespace ModelicaParser.Datamodel
             return modifiableElems;
         }
 
-        // calculates the number of elements connected to this element
-        public int CalculateNumberOfConnectedElements(bool relevantOnly)
-        {
-            List<Element> connectedElems = new List<Element>();
-
-            foreach (Connector conn in connectors)
-            {
-                if (relevantOnly && conn.IgnoreConector())
-                    continue;
-
-                // for all connectors where this element is a supplier
-                if (conn.Supplier.Id.Equals(this.id) && !conn.Type.Equals("Generalization") && !conn.Type.Equals("NoteLink"))
-                {
-                    bool exists = false;
-
-                    foreach (EA_Element elem in connectedElems)
-                        if (elem.Id.Equals(conn.Client.Id))
-                            exists = true;
-
-                    if (exists == false)
-                        connectedElems.Add(conn.Client);
-
-                }
-
-                // for all connectors where this element is a client
-                else if (conn.Client.Id.Equals(this.id) && !conn.Type.Equals("Generalization") && !conn.Type.Equals("NoteLink"))
-                {
-                    bool exists = false;
-
-                    foreach (EA_Element elem in connectedElems)
-                        if (elem.Id.Equals(conn.Supplier.Id))
-                            exists = true;
-
-                    if (exists == false)
-                        connectedElems.Add(conn.Supplier);
-                }
-            }
-
-            return connectedElems.Count;
-        }
 
         #endregion
 
@@ -171,7 +142,16 @@ namespace ModelicaParser.Datamodel
                     listOfChanges.Add(chng.AppendTabs(2));
             }
 
-            foreach (Connector conn in connectors)
+            foreach (Connector conn in sourceConnectors)
+            {
+                if (conn.NumOfChanges != 0)
+                    listOfChanges.Add(new MMChange("~ Connector " + conn.GetPath(), true).AppendTabs(1));
+
+                foreach (MMChange chng in conn.GetChanges())
+                    listOfChanges.Add(chng.AppendTabs(2));
+            }
+
+            foreach (Connector conn in targetConnectors)
             {
                 if (conn.NumOfChanges != 0)
                     listOfChanges.Add(new MMChange("~ Connector " + conn.GetPath(), true).AppendTabs(1));
@@ -230,7 +210,11 @@ namespace ModelicaParser.Datamodel
 
         public Connector GetConnector(string uid)
         {
-            foreach (Connector connector in connectors)
+            foreach (Connector connector in sourceConnectors)
+                if (connector.UID.Equals(uid))
+                    return connector;
+
+            foreach (Connector connector in targetConnectors)
                 if (connector.UID.Equals(uid))
                     return connector;
 
@@ -272,7 +256,10 @@ namespace ModelicaParser.Datamodel
             foreach (Attribute attr in attributes)
                 attr.ResetCalculation();
 
-            foreach (Connector conn in connectors)
+            foreach (Connector conn in sourceConnectors)
+                conn.ResetCalculation();
+
+            foreach (Connector conn in targetConnectors)
                 conn.ResetCalculation();
 
 
@@ -302,17 +289,11 @@ namespace ModelicaParser.Datamodel
                 changes.Add(new MMChange("~ Name: " + oldElement.Name + " -> " + name, false).AppendTabs(1));
             }
 
-            if (((RelevantOnly && !ConfigReader.ExcludedElementNote) || !RelevantOnly) && !Equals(note, oldElement.Note))
+            /*if (((RelevantOnly && !ConfigReader.ExcludedElementNote) || !RelevantOnly) && !Equals(note, oldElement.Note))
             {
                 numOfChanges++;
                 changes.Add(new MMChange("~ Note", false).AppendTabs(1));
-            }
-
-            if (!Equals(classifierName, oldElement.ClassifierName))
-            {
-                numOfChanges++;
-                changes.Add(new MMChange("~ Instance Classifier: " + oldElement.ClassifierName + " -> " + classifierName, false).AppendTabs(1));
-            }
+            }*/
 
             // checking if the attribute is changed or added in the new model
             foreach (Attribute attribute in attributes)
@@ -357,12 +338,12 @@ namespace ModelicaParser.Datamodel
             }
 
             // checking if the connector is changed or added in the new model
-            foreach (Connector connector in connectors)
+            foreach (Connector connector in SourceConnectors)
             {
                 if (RelevantOnly && connector.IgnoreConector())
                     continue;
 
-                Connector oldConnector = oldElement.GetConnector(connector.Id);
+                Connector oldConnector = oldElement.GetConnector(connector.UID);
 
                 int num = 0;
 
@@ -371,7 +352,33 @@ namespace ModelicaParser.Datamodel
                 {
                     numOfChanges += connector.NumOfAllModifiableElements(RelevantOnly);
                     addedConnectors.Add(connector);
-                    changes.Add(new MMChange("+ Connector " + connector.GetPath(), false).AppendTabs(1));
+                    changes.Add(new MMChange("+ Connector (source) " + connector.GetPath(), false).AppendTabs(1));
+                }
+
+                // checking if the connector is changed in the new model
+                else if ((num = connector.CompareConnectors(oldConnector, RelevantOnly)) != 0)
+                {
+                    numOfChanges += num;
+                    modifiedConnectors.Add(connector);
+                }
+            }
+
+            // checking if the connector is changed or added in the new model
+            foreach (Connector connector in TargetConnectors)
+            {
+                if (RelevantOnly && connector.IgnoreConector())
+                    continue;
+
+                Connector oldConnector = oldElement.GetConnector(connector.UID);
+
+                int num = 0;
+
+                // checking if the connector is added to the new model
+                if (oldConnector == null)
+                {
+                    numOfChanges += connector.NumOfAllModifiableElements(RelevantOnly);
+                    addedConnectors.Add(connector);
+                    changes.Add(new MMChange("+ Connector (target) " + connector.GetPath(), false).AppendTabs(1));
                 }
 
                 // checking if the connector is changed in the new model
@@ -383,18 +390,33 @@ namespace ModelicaParser.Datamodel
             }
 
             // checking if the connector is removed in the new model
-            foreach (Connector oldConnector in oldElement.Connectors)
+            foreach (Connector oldConnector in oldElement.SourceConnectors)
             {
                 if (RelevantOnly && oldConnector.IgnoreConector())
                     continue;
 
-                Connector connector = GetConnector(oldConnector.Id);
+                Connector connector = GetConnector(oldConnector.UID);
 
                 if (connector == null)
                 {
                     numOfChanges += oldConnector.NumOfAllModifiableElements(RelevantOnly);
                     removedConnectors.Add(oldConnector);
-                    changes.Add(new MMChange("- Connector " + oldConnector.GetPath(), false).AppendTabs(1));
+                    changes.Add(new MMChange("- Connector (source) " + oldConnector.GetPath(), false).AppendTabs(1));
+                }
+            }
+
+            foreach (Connector oldConnector in oldElement.TargetConnectors)
+            {
+                if (RelevantOnly && oldConnector.IgnoreConector())
+                    continue;
+
+                Connector connector = GetConnector(oldConnector.UID);
+
+                if (connector == null)
+                {
+                    numOfChanges += oldConnector.NumOfAllModifiableElements(RelevantOnly);
+                    removedConnectors.Add(oldConnector);
+                    changes.Add(new MMChange("- Connector (target) " + oldConnector.GetPath(), false).AppendTabs(1));
                 }
             }
 

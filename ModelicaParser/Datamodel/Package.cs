@@ -563,12 +563,20 @@ namespace ModelicaParser.Datamodel
                     changes.Add(new MMChange("+ Attribute " + attr.GetPath(), false).AppendTabs(ident + 2));
                 }
 
-                foreach (EA_Connector conn in elem.Connectors)
+                foreach (Connector conn in elem.SourceConnectors)
                 {
                     if (RelevantOnly && conn.IgnoreConector())
                         continue;
 
-                    changes.Add(new MMChange("+ Connector " + conn.GetPath(), false).AppendTabs(ident + 2));
+                    changes.Add(new MMChange("+ Connector (source) " + conn.GetPath(), false).AppendTabs(ident + 2));
+                }
+
+                foreach (Connector conn in elem.TargetConnectors)
+                {
+                    if (RelevantOnly && conn.IgnoreConector())
+                        continue;
+
+                    changes.Add(new MMChange("+ Connector (target) " + conn.GetPath(), false).AppendTabs(ident + 2));
                 }
             }
 
@@ -601,12 +609,20 @@ namespace ModelicaParser.Datamodel
                     changes.Add(new MMChange("- Attribute " + attr.GetPath(), false).AppendTabs(ident + 2));
                 }
 
-                foreach (EA_Connector conn in elem.Connectors)
+                foreach (Connector conn in elem.SourceConnectors)
                 {
                     if (RelevantOnly && conn.IgnoreConector())
                         continue;
 
-                    changes.Add(new MMChange("- Connector " + conn.GetPath(), false).AppendTabs(ident + 2));
+                    changes.Add(new MMChange("- Connector (source) " + conn.GetPath(), false).AppendTabs(ident + 2));
+                }
+
+                foreach (Connector conn in elem.TargetConnectors)
+                {
+                    if (RelevantOnly && conn.IgnoreConector())
+                        continue;
+
+                    changes.Add(new MMChange("- Connector (target) " + conn.GetPath(), false).AppendTabs(ident + 2));
                 }
             }
 
@@ -697,12 +713,20 @@ namespace ModelicaParser.Datamodel
                         changes.Add(new MMChange("+ Attribute " + attr.GetPath(), false).AppendTabs(1));
                     }
 
-                    foreach (EA_Connector conn in element.Connectors)
+                    foreach (Connector conn in element.SourceConnectors)
                     {
                         if (RelevantOnly && conn.IgnoreConector())
                             continue;
 
-                        changes.Add(new MMChange("+ Connector " + conn.GetPath(), false).AppendTabs(1));
+                        changes.Add(new MMChange("+ Connector (source) " + conn.GetPath(), false).AppendTabs(1));
+                    }
+
+                    foreach (Connector conn in element.TargetConnectors)
+                    {
+                        if (RelevantOnly && conn.IgnoreConector())
+                            continue;
+
+                        changes.Add(new MMChange("+ Connector (target) " + conn.GetPath(), false).AppendTabs(1));
                     }
                 }
 
@@ -736,12 +760,20 @@ namespace ModelicaParser.Datamodel
                         changes.Add(new MMChange("- Attribute " + attr.GetPath(), false).AppendTabs(1));
                     }
 
-                    foreach (EA_Connector conn in oldElement.Connectors)
+                    foreach (Connector conn in oldElement.SourceConnectors)
                     {
                         if (RelevantOnly && conn.IgnoreConector())
                             continue;
 
-                        changes.Add(new MMChange("- Connector " + conn.GetPath(), false).AppendTabs(1));
+                        changes.Add(new MMChange("- Connector (source) " + conn.GetPath(), false).AppendTabs(1));
+                    }
+
+                    foreach (Connector conn in oldElement.TargetConnectors)
+                    {
+                        if (RelevantOnly && conn.IgnoreConector())
+                            continue;
+
+                        changes.Add(new MMChange("- Connector (target) " + conn.GetPath(), false).AppendTabs(1));
                     }
                 }
             }
@@ -767,6 +799,11 @@ namespace ModelicaParser.Datamodel
         public List<Package> SubPackages
         {
             get { return subPackages; }
+        }
+
+        public Package ParentPackage
+        {
+            get { return parentPackage; }
         }
 
         #endregion
