@@ -165,34 +165,6 @@ namespace ModelicaParser
                     comments = false;
                 }
             }
-            /*tokens = tokenWithoutComments;
-            tokenWithoutComments = new List<string>();
-            comments = false;
-            foreach (string token in tokens)
-            {
-                if (!comments)
-                {
-                    if (token.StartsWith("\""))
-                    {
-                        comments = true;
-                        if (token.EndsWith("\"") && token.Length != 1)
-                        {
-                            comments = false;
-                        }
-                    }
-                    else
-                    {
-                        tokenWithoutComments.Add(token);
-                    }
-                }
-                else
-                {
-                    if (token.EndsWith("\""))
-                    {
-                        comments = false;
-                    }
-                }
-            }*/
             return tokenWithoutComments;
         }
 
