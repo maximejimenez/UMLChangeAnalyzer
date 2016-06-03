@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using ModelicaParser.Config;
+using ModelicaParser.Changes;
 
 namespace ModelicaParser.Datamodel
 {
@@ -30,6 +31,11 @@ namespace ModelicaParser.Datamodel
         private List<Element> addedElements = new List<Element>();
 
         #region Loading
+
+        public Package()
+        {
+
+        }
 
         public Package(string name)
         {

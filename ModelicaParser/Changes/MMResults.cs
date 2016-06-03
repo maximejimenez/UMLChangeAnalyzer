@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ModelicaParser.Datamodel;
 
-namespace ModelicaParser.Datamodel
+namespace ModelicaParser.Changes
 {
     // contains the calculation results (changes, metrics and features)
     public class MMResults
@@ -38,9 +39,9 @@ namespace ModelicaParser.Datamodel
         private List<Element> modifiedElements = new List<Element>();
         private List<Element> removedElements = new List<Element>();
         private List<Element> addedElements = new List<Element>();
-        private List<Attribute> modifiedAttributes = new List<Attribute>();
-        private List<Attribute> addedAttributes = new List<Attribute>();
-        private List<Attribute> removedAttributes = new List<Attribute>();
+        private List<ModelicaParser.Datamodel.Attribute> modifiedAttributes = new List<ModelicaParser.Datamodel.Attribute>();
+        private List<ModelicaParser.Datamodel.Attribute> addedAttributes = new List<ModelicaParser.Datamodel.Attribute>();
+        private List<ModelicaParser.Datamodel.Attribute> removedAttributes = new List<ModelicaParser.Datamodel.Attribute>();
 
         #region Compare
 
@@ -276,19 +277,19 @@ namespace ModelicaParser.Datamodel
             set { removedElements = value; }
         }
 
-        public List<Attribute> ModifiedAttributes
+        public List<ModelicaParser.Datamodel.Attribute> ModifiedAttributes
         {
             get { return modifiedAttributes; }
             set { modifiedAttributes = value; }
         }
 
-        public List<Attribute> AddedAttributes
+        public List<ModelicaParser.Datamodel.Attribute> AddedAttributes
         {
             get { return addedAttributes; }
             set { addedAttributes = value; }
         }
 
-        public List<Attribute> RemovedAttributes
+        public List<ModelicaParser.Datamodel.Attribute> RemovedAttributes
         {
             get { return removedAttributes; }
             set { removedAttributes = value; }

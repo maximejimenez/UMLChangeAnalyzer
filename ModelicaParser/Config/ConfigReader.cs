@@ -11,7 +11,7 @@ namespace ModelicaParser.Config
         // parser of the config XML file
         public static class ConfigReader
         {
-            //        private static MainForm form;
+            private static MainForm form;
             private static string resultsPath = "";
             private static List<string> excludedPackageNames = new List<string>();
             private static List<string> excludedConnectorTypes = new List<string>();

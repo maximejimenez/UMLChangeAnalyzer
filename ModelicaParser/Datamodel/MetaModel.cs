@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using ModelicaParser.Changes;
 
 namespace ModelicaParser.Datamodel
 {
@@ -345,12 +347,13 @@ namespace ModelicaParser.Datamodel
 
             return null;
         }
-        /*
-        public EA_Package FindPackageByPath(string packagePath)
-        {
-            string[] pathParts = Regex.Split(packagePath, "::");
 
-            EA_Package package = this.FindPackageByName(pathParts[0]);
+
+        public Package FindPackageByPath(string packagePath)
+        {
+            string[] pathParts = Regex.Split(packagePath, ".");
+
+            Package package = this.FindPackageByName(pathParts[0]);
 
             if (package == null)
                 return null;
@@ -366,11 +369,11 @@ namespace ModelicaParser.Datamodel
             return package;
         }
 
-        public EA_Element FindElementByPath(string elementPath)
+        public Element FindElementByPath(string elementPath)
         {
-            string[] pathParts = Regex.Split(elementPath, "::");
+            string[] pathParts = Regex.Split(elementPath, ".");
 
-            EA_Package package = this.FindPackageByName(pathParts[0]);
+            Package package = this.FindPackageByName(pathParts[0]);
 
             if (package == null)
                 return null;
@@ -385,7 +388,7 @@ namespace ModelicaParser.Datamodel
 
             return package.GetElementByName(pathParts[pathParts.Length - 1]);
         }
-        */
+        
 
         #endregion
 
