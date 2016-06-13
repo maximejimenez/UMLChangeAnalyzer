@@ -206,7 +206,7 @@ namespace ModelicaParser.Datamodel
         }
 
 
-        // adds all attributes of the element to a list
+        // adds all elements of the element to a list
         public List<Element> GetAllElements(List<Element> list)
         {
             foreach (Element child in children)
@@ -218,8 +218,8 @@ namespace ModelicaParser.Datamodel
         // adds all modified attributes of the element to a list
         public List<Element> GetAllModifiedElements(List<Element> list)
         {
-            foreach (Element child in children)
-                list.Add(child);
+            foreach (Element elem in modifiedElements)
+                list.Add(elem);
 
             return list;
         }
@@ -257,6 +257,14 @@ namespace ModelicaParser.Datamodel
             foreach (Attribute attr in modifiedAttributes)
                 list.Add(attr);
 
+            foreach (Element child in children)
+            {
+                foreach (Attribute attr in child.ModifiedAttributes)
+                {
+                    list.Add(attr);
+                }
+            }
+
             return list;
         }
 
@@ -266,6 +274,14 @@ namespace ModelicaParser.Datamodel
             foreach (Attribute attr in addedAttributes)
                 list.Add(attr);
 
+            foreach (Element child in children)
+            {
+                foreach (Attribute attr in child.AddedAttributes)
+                {
+                    list.Add(attr);
+                }
+            }
+
             return list;
         }
 
@@ -274,6 +290,14 @@ namespace ModelicaParser.Datamodel
         {
             foreach (Attribute attr in removedAttributes)
                 list.Add(attr);
+
+            foreach (Element child in children)
+            {
+                foreach (Attribute attr in child.RemovedAttributes)
+                {
+                    list.Add(attr);
+                }
+            }
 
             return list;
         }
@@ -321,7 +345,16 @@ namespace ModelicaParser.Datamodel
         {
             string path = name;
 
+            Element elem = parentElement;
             Package pack = parentPackage;
+
+
+            while (elem != null)
+            {
+                pack = elem.ParentPackage;
+                path = elem.Name + "::" + path;
+                elem = elem.ParentElement;
+            }
 
             while (pack != null)
             {
@@ -402,8 +435,10 @@ namespace ModelicaParser.Datamodel
                 // checking if the element is changed in the new model
                 else
                 {
-                    numOfChanges += child.CompareElements(oldSubElement, RelevantOnly);
-                    modifiedElements.Add(child);
+                    int noc = child.CompareElements(oldSubElement, RelevantOnly);
+                    numOfChanges += noc;
+                    if(noc != 0)
+                        modifiedElements.Add(oldSubElement);
                 }
             }
 

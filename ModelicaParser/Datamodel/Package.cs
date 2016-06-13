@@ -347,8 +347,13 @@ namespace ModelicaParser.Datamodel
         // adds all modified elements in the package and sub-packages  to a list
         public List<Element> GetAllModifiedElements(List<Element> list)
         {
-            foreach (Element elem in modifiedElements)
+            foreach (Element elem in modifiedElements) {
                 list.Add(elem);
+                foreach (Element subElem in elem.ModifiedElements)
+                {
+                    list.Add(subElem);
+                }
+            }
 
             foreach (Package subPack in subPackages)
                 subPack.GetAllModifiedElements(list);
@@ -360,7 +365,13 @@ namespace ModelicaParser.Datamodel
         public List<Element> GetAllAddedElements(List<Element> list)
         {
             foreach (Element elem in addedElements)
+            {
                 list.Add(elem);
+                foreach (Element subElem in elem.AddedElements)
+                {
+                    list.Add(subElem);
+                }
+            }
 
             foreach (Package subPack in addedSubPackages)
                 subPack.GetAllElements(list);
@@ -375,7 +386,13 @@ namespace ModelicaParser.Datamodel
         public List<Element> GetAllRemovedElements(List<Element> list)
         {
             foreach (Element elem in removedElements)
+            {
                 list.Add(elem);
+                foreach (Element subElem in elem.RemovedElements)
+                {
+                    list.Add(subElem);
+                }
+            }
 
             foreach (Package subPack in removedSubPackages)
                 subPack.GetAllElements(list);
