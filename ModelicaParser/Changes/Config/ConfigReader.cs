@@ -31,10 +31,10 @@ namespace ModelicaParser.Config
             #region Read
 
             // parsing the config XML file
-            public static bool Read(string filePath) //, MainForm form)
+            public static bool Read(string filePath, MainForm form)
             {
                 // reseting everything in case a config file has been previously read
-                //ConfigReader.form = form;
+                ConfigReader.form = form;
                 resultsPath = "";
                 excludedPackageNames = new List<string>();
                 excludedConnectorTypes = new List<string>();
@@ -196,11 +196,11 @@ namespace ModelicaParser.Config
             // validation error/warning event handler 
             private static void ValidationCallBack(object sender, ValidationEventArgs args)
             {
-                /*if (args.Severity == XmlSeverityType.Warning)
+                if (args.Severity == XmlSeverityType.Warning)
                     form.ListAdd("WARNING in line " + args.Exception.LineNumber + " :" + args.Message);
                 else
                     form.ListAdd("ERROR in line " + args.Exception.LineNumber + " :" + args.Message);
-                */
+                
                 validates = false;
             }
 

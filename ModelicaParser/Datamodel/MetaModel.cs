@@ -69,6 +69,16 @@ namespace ModelicaParser.Datamodel
             return numberOfElements;
         }
 
+        public int NumberOfConnectors(bool relevantOnly)
+        {
+            int numberOfConnectors = 0;
+
+            foreach (Package package in packages)
+                numberOfConnectors += package.NumberOfConnectors(relevantOnly);
+
+            return numberOfConnectors;
+        }
+
         public int NumberOfAttributes(bool relevantOnly)
         {
             int numberOfAttributes = 0;

@@ -13,6 +13,8 @@ namespace ModelicaParser.Changes
         private int numOfElementsMod2 = 0;
         private int numOfAttributesMod1 = 0;
         private int numOfAttributesMod2 = 0;
+        private int numOfConnectorsMod1 = 0;
+        private int numOfConnectorsMod2 = 0;
         private int numOfPackagesMod1 = 0;
         private int numOfPackagedMod2 = 0;
 
@@ -54,6 +56,8 @@ namespace ModelicaParser.Changes
             NumOfElementsMod2 = model2.NumberOfElements(relevancy);
             NumOfAttributesMod1 = model1.NumberOfAttributes(relevancy);
             NumOfAttributesMod2 = model2.NumberOfAttributes(relevancy);
+            numOfConnectorsMod1 = model1.NumberOfConnectors(relevancy);
+            numOfConnectorsMod2 = model2.NumberOfConnectors(relevancy);
             NumOfPackagesMod1 = model1.NumberOfPackages(relevancy);
             NumOfPackagedMod2 = model2.NumberOfPackages(relevancy);
 
@@ -89,6 +93,8 @@ namespace ModelicaParser.Changes
             NumOfElementsMod2 += package2.NumberOfElements(relevancy);
             NumOfAttributesMod1 += package1.NumberOfAttributes(relevancy);
             NumOfAttributesMod2 += package2.NumberOfAttributes(relevancy);
+            numOfConnectorsMod1 = package1.NumberOfConnectors(relevancy);
+            numOfConnectorsMod2 = package2.NumberOfConnectors(relevancy);
             NumOfPackagesMod1 += package1.NumberOfPackages(relevancy);
             NumOfPackagedMod2 += package2.NumberOfPackages(relevancy);
 
@@ -143,6 +149,18 @@ namespace ModelicaParser.Changes
         {
             get { return numOfAttributesMod2; }
             set { numOfAttributesMod2 = value; }
+        }
+
+        public int NumOfConnectorsMod1
+        {
+            get { return numOfConnectorsMod1; }
+            set { numOfConnectorsMod1 = value; }
+        }
+
+        public int NumOfConnectorsMod2
+        {
+            get { return numOfConnectorsMod2; }
+            set { numOfConnectorsMod2 = value; }
         }
 
         public int NumOfPackagesMod1

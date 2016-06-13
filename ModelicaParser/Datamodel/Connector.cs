@@ -28,12 +28,12 @@ namespace ModelicaParser.Datamodel
 
         #region Loading
 
-        public Connector(string type, string sourceCardinality, string targetCardinality)
+        public Connector(string type, string sourceCardinality, string targetCardinality, string uid)
         {
             this.type = type;
             this.sourceCardinality = sourceCardinality;
             this.targetCardinality = targetCardinality;
-            this.uid = generateUID(10);
+            this.uid = uid;
         }
 
         public object Clone()
@@ -41,7 +41,7 @@ namespace ModelicaParser.Datamodel
             return this.MemberwiseClone();
         }
         
-        private static string generateUID(int length)
+        /*private static string generateUID(int length)
         {
             const string alphanumericCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
                                                   "abcdefghijklmnopqrstuvwxyz" +
@@ -49,7 +49,7 @@ namespace ModelicaParser.Datamodel
             var random = new Random();
             return new string(Enumerable.Repeat(alphanumericCharacters, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
+        }*/
 
         public override string ToString()
         {
@@ -103,24 +103,7 @@ namespace ModelicaParser.Datamodel
             if (RelevantOnly && IgnoreConector())
                 return 0;
 
-            /*if (((RelevantOnly && !ConfigReader.ExcludedConnectorNote) || !RelevantOnly) && !Equals(note, oldConnector.Note))
-            {
-                numOfChanges++;
-                changes.Add(new MMChange("~ Note", false));
-            }
-
-            if (((RelevantOnly && !ConfigReader.ExcludedConnectorNote) || !RelevantOnly) && !Equals(supplierNote, oldConnector.SupplierNote))
-            {
-                numOfChanges++;
-                changes.Add(new MMChange("~ SupplierNote", false));
-            }
-
-            if (((RelevantOnly && !ConfigReader.ExcludedConnectorNote) || !RelevantOnly) && !Equals(clientNote, oldConnector.ClientNote))
-            {
-                numOfChanges++;
-                changes.Add(new MMChange("~ ClientNote", false));
-            }*/
-
+            //NOTE HERE
 
             if (!Equals(SourceCardinality, oldConnector.SourceCardinality))
             {
@@ -130,8 +113,9 @@ namespace ModelicaParser.Datamodel
 
             if (!Equals(TargetCardinality, oldConnector.TargetCardinality))
             {
+
                 numOfChanges++;
-                changes.Add(new MMChange("~ Target Cardinality: " + oldConnector.TargetCardinality + " -> " + TargetCardinality, false));
+                changes.Add(new MMChange("~ Target Cardinality (" + UID + "): " + oldConnector.TargetCardinality + " -> " + TargetCardinality, false));
             }
 
             return numOfChanges;
@@ -162,6 +146,7 @@ namespace ModelicaParser.Datamodel
         public string UID
         {
             get { return uid; }
+            set { uid = value; }
         }
 
         public Element ParentElement

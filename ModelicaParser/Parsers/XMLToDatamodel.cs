@@ -10,18 +10,14 @@ namespace ModelicaParser.Parsers
 {
     class XMLToDatamodel
     {
-        /*
-         * TODO : 
-         * - e.g. list<list<T>> or list<tuple<Exp,Exp>> 
-         * - alias for types 
-         */
+
         static List<MetaModel> metamodels = new List<MetaModel>();
 
         static Dictionary<string, List<Connector>> targetElements;
         static Dictionary<string, Element> declaredElements;
         static string[] Basetypes = new string[] { "Boolean", "Integer", "Real", "String" };
 
-        static void Main(string[] args)
+        /*static void Main(string[] args)
         {
             for (int i = 2; i <= 6; i++)
             {
@@ -37,7 +33,9 @@ namespace ModelicaParser.Parsers
                 //metamodels.ElementAt(0).FindElement("Absyn.Class");
             }
             Console.ReadKey();
-        }
+        }*/
+
+        #region Type parsers
 
         static MetaModel parseMetaModel(XmlDocument doc)
         {
@@ -73,7 +71,6 @@ namespace ModelicaParser.Parsers
             }
             return metamodel;
         }
-
         static Package parsePackage(XmlNode elem)
         {
             string id = elem.Attributes["id"].Value;
@@ -130,10 +127,11 @@ namespace ModelicaParser.Parsers
                     ModelicaParser.Datamodel.Attribute attribute = new ModelicaParser.Datamodel.Attribute(type, name, maxMultiplicity, minMultiplicity);
                     attribute.ParentElement = record;
                     record.AddAttribute(attribute);
+                    Console.WriteLine("Attribute : " + attribute);
                 }
                 else
                 {
-                    Connector c = new Connector("Association", "1", minMultiplicity + ".." + maxMultiplicity);
+                    Connector c = new Connector("Association", "1", minMultiplicity + ".." + maxMultiplicity, name);
                     c.ParentElement = record;
                     c.Source = record;
                     record.AddSourceConnector(c);
@@ -148,7 +146,7 @@ namespace ModelicaParser.Parsers
             return record;
         }
 
-
+        #endregion
 
     }
 }

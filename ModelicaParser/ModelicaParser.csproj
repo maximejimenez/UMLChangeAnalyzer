@@ -59,7 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Changes\MMResults.cs" />
-    <Compile Include="Config\ConfigReader.cs" />
+    <Compile Include="Changes\Config\ConfigReader.cs" />
     <Compile Include="Datamodel\Connector.cs" />
     <Compile Include="Datamodel\Attribute.cs" />
     <Compile Include="Datamodel\MetaModel.cs" />
@@ -97,9 +97,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Config\MM_Config.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">

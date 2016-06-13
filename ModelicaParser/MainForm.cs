@@ -78,13 +78,14 @@ namespace ModelicaParser
             else
                 load.Enabled = enable;
 
-            if (features.InvokeRequired)
+            /*if (features.InvokeRequired)
             {
                 EnableButtonsCallback d = new EnableButtonsCallback(EnableButtons);
                 this.Invoke(d, new object[] { enable });
             }
             else
                 features.Enabled = enable;
+            */
 
             if (extractMultiple.InvokeRequired)
             {
@@ -110,14 +111,14 @@ namespace ModelicaParser
             else
                 reportMetrics.Enabled = enable;
 
-            if (reportFeatures.InvokeRequired)
+            /*if (reportFeatures.InvokeRequired)
             {
                 EnableButtonsCallback d = new EnableButtonsCallback(EnableButtons);
                 this.Invoke(d, new object[] { enable });
             }
             else
                 reportFeatures.Enabled = enable;
-
+            */
             if (compare.InvokeRequired)
             {
                 EnableButtonsCallback d = new EnableButtonsCallback(EnableButtons);
@@ -380,10 +381,6 @@ namespace ModelicaParser
         // event different role selected
         private void rolesList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            checkBoxLengthMetrics.Enabled = true;
-            checkBoxComplexityMetrics.Enabled = true;
-            checkBoxCouplingMetrics.Enabled = true;
-            checkBoxCohesionMetrics.Enabled = true;
             checkBoxModifiedPacks.Enabled = true;
             checkBoxAddedPacks.Enabled = true;
             checkBoxRemovedPacks.Enabled = true;
@@ -395,10 +392,6 @@ namespace ModelicaParser
             if (featuresLoaded)
             {
                 checkBoxSizeMetrics.Enabled = false;
-                checkBoxLengthMetrics.Enabled = false;
-                checkBoxComplexityMetrics.Enabled = false;
-                checkBoxCouplingMetrics.Enabled = false;
-                checkBoxCohesionMetrics.Enabled = false;
                 checkBoxModifiedPacks.Enabled = false;
                 checkBoxRemovedPacks.Enabled = false;
                 checkBoxAddedPacks.Enabled = false;
@@ -508,12 +501,12 @@ namespace ModelicaParser
                 EnableButtons(false);   // disabling all buttons
                 EnableCompare(false);
 
-                bool validates = true;//ConfigReader.Read(textBoxNotRelevant.Text, this);
+                bool validates = ConfigReader.Read(textBoxNotRelevant.Text, this);
 
                 if (validates)  // if the XML config file is validated
                 {
                     //AddRolesGUI(ConfigReader.Roles);
-                    EnableRelevancy(true);
+                    //EnableRelevancy(true);
                     ListAdd("Config file successfully read.");
                 }
                 else
@@ -564,10 +557,10 @@ namespace ModelicaParser
                 featuresLoaded = false;
 
                 ListAdd("Loading model 1...");
-                model1 = MM_Extractor.DeserializeMMModel(textBoxModel1.Text);
+                model1 = MM_Extractor.XMLtoMetamodel(textBoxModel1.Text);
 
                 ListAdd("Loading model 2...");
-                model2 = MM_Extractor.DeserializeMMModel(textBoxModel2.Text);
+                model2 = MM_Extractor.XMLtoMetamodel(textBoxModel2.Text);
 
                 resultsList = new List<MMResults>();
 
@@ -628,6 +621,7 @@ namespace ModelicaParser
                     ListExportAdd("", sb);
                     ListExportAdd("Number of elements: " + results.NumOfElementsMod1 + " -> " + results.NumOfElementsMod2, sb);
                     ListExportAdd("Number of attributes: " + results.NumOfAttributesMod1 + " -> " + results.NumOfAttributesMod2, sb);
+                    ListExportAdd("Number of connectors: " + results.NumOfConnectorsMod1 + " -> " + results.NumOfConnectorsMod2, sb);
                     ListExportAdd("Number of packages: " + results.NumOfPackagesMod1 + " -> " + results.NumOfPackagedMod2, sb);
 
                     ListExportAdd("", sb);
@@ -890,10 +884,6 @@ namespace ModelicaParser
         private Label label3;
         private Label label4;
         private CheckBox checkBoxSizeMetrics;
-        private CheckBox checkBoxLengthMetrics;
-        private CheckBox checkBoxComplexityMetrics;
-        private CheckBox checkBoxCouplingMetrics;
-        private CheckBox checkBoxCohesionMetrics;
         private CheckBox checkBoxChangeMetrics;
         private Button reportChanges;
         private Button reportMetrics;
@@ -944,10 +934,6 @@ namespace ModelicaParser
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.checkBoxSizeMetrics = new System.Windows.Forms.CheckBox();
-            this.checkBoxLengthMetrics = new System.Windows.Forms.CheckBox();
-            this.checkBoxComplexityMetrics = new System.Windows.Forms.CheckBox();
-            this.checkBoxCouplingMetrics = new System.Windows.Forms.CheckBox();
-            this.checkBoxCohesionMetrics = new System.Windows.Forms.CheckBox();
             this.checkBoxChangeMetrics = new System.Windows.Forms.CheckBox();
             this.reportChanges = new System.Windows.Forms.Button();
             this.reportMetrics = new System.Windows.Forms.Button();
@@ -962,8 +948,8 @@ namespace ModelicaParser
             this.textBoxModelPath.Name = "textBoxModelPath";
             this.textBoxModelPath.Size = new System.Drawing.Size(449, 20);
             this.textBoxModelPath.TabIndex = 0;
-            this.textBoxModelPath.Text = "C:\\mySVN\\PhD\\Implementation\\AUTOSAR MMOD Releases\\AUTOSAR_MMOD_MetaModel_4.2.1.ea" +
-    "p";
+            this.textBoxModelPath.Text = "C:\\Users\\maxime\\Desktop\\Modelica OMCompiler\\OMCompiler-1.9.2\\Compiler\\FrontEnd\\Ab" +
+    "syn.mo";
             // 
             // label1
             // 
@@ -998,12 +984,11 @@ namespace ModelicaParser
             this.textBoxFilePath.Name = "textBoxFilePath";
             this.textBoxFilePath.Size = new System.Drawing.Size(449, 20);
             this.textBoxFilePath.TabIndex = 5;
-            this.textBoxFilePath.Text = "C:\\mySVN\\PhD\\Implementation\\AUTOSAR MMOD Releases\\AUTOSAR_MMOD_MetaModel_4.2.1.mo" +
-    "d";
+            this.textBoxFilePath.Text = "C:\\Users\\maxime\\Desktop\\Modelica OMCompiler\\OMCompiler-1.9.3\\Compiler\\FrontEnd\\Ab" +
+    "syn.mo";
             // 
             // compare
             // 
-            this.compare.Enabled = false;
             this.compare.Location = new System.Drawing.Point(677, 106);
             this.compare.Name = "compare";
             this.compare.Size = new System.Drawing.Size(70, 46);
@@ -1017,8 +1002,7 @@ namespace ModelicaParser
             this.textBoxModel2.Name = "textBoxModel2";
             this.textBoxModel2.Size = new System.Drawing.Size(449, 20);
             this.textBoxModel2.TabIndex = 14;
-            this.textBoxModel2.Text = "C:\\mySVN\\PhD\\Implementation\\AUTOSAR MMOD Releases\\AUTOSAR_MMOD_MetaModel_4.2.1.mo" +
-    "d";
+            this.textBoxModel2.Text = "C:\\Users\\maxime\\Desktop\\XmlModelica\\Absyn-1.9.3.xml";
             // 
             // textBoxModel1
             // 
@@ -1026,8 +1010,7 @@ namespace ModelicaParser
             this.textBoxModel1.Name = "textBoxModel1";
             this.textBoxModel1.Size = new System.Drawing.Size(449, 20);
             this.textBoxModel1.TabIndex = 15;
-            this.textBoxModel1.Text = "C:\\mySVN\\PhD\\Implementation\\AUTOSAR MMOD Releases\\AUTOSAR_MMOD_MetaModel_4.1.3.mo" +
-    "d";
+            this.textBoxModel1.Text = "C:\\Users\\maxime\\Desktop\\XmlModelica\\Absyn-1.9.2.xml";
             // 
             // label5
             // 
@@ -1094,7 +1077,7 @@ namespace ModelicaParser
             this.textBoxNotRelevant.Name = "textBoxNotRelevant";
             this.textBoxNotRelevant.Size = new System.Drawing.Size(449, 20);
             this.textBoxNotRelevant.TabIndex = 24;
-            this.textBoxNotRelevant.Text = "C:\\mySVN\\PhD\\Implementation\\AUTOSAR MMOD Releases\\ARCA_Config.xml";
+            this.textBoxNotRelevant.Text = "C:\\Users\\maxime\\Desktop\\ModelicaResults\\MM_Config.xml";
             // 
             // checkBoxAllChanges
             // 
@@ -1169,7 +1152,7 @@ namespace ModelicaParser
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(666, 232);
+            this.label8.Location = new System.Drawing.Point(669, 232);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(81, 13);
             this.label8.TabIndex = 33;
@@ -1191,8 +1174,7 @@ namespace ModelicaParser
             this.textBoxFeatures.Name = "textBoxFeatures";
             this.textBoxFeatures.Size = new System.Drawing.Size(449, 20);
             this.textBoxFeatures.TabIndex = 36;
-            this.textBoxFeatures.Text = "#65949, #65950, #65951, #65952, #65953, #65954, #65955, #65956, #65957, #65958, #" +
-    "65959, #65960, #65973, #66117";
+            this.textBoxFeatures.Text = "Not available";
             // 
             // label10
             // 
@@ -1226,8 +1208,7 @@ namespace ModelicaParser
             this.textBoxSvnModel.Name = "textBoxSvnModel";
             this.textBoxSvnModel.Size = new System.Drawing.Size(449, 20);
             this.textBoxSvnModel.TabIndex = 41;
-            this.textBoxSvnModel.Text = "C:\\AUTOSAR\\26_Products\\10_CP_R4\\01_Sources\\MMOD_MetaModel_059\\master\\AUTOSAR_Meta" +
-    "Model_Master.EAP";
+            this.textBoxSvnModel.Text = "Not available";
             // 
             // features
             // 
@@ -1249,7 +1230,6 @@ namespace ModelicaParser
             // 
             // rolesList
             // 
-            this.rolesList.Enabled = false;
             this.rolesList.FormattingEnabled = true;
             this.rolesList.Items.AddRange(new object[] {
             "Entire model"});
@@ -1318,56 +1298,12 @@ namespace ModelicaParser
             // checkBoxSizeMetrics
             // 
             this.checkBoxSizeMetrics.AutoSize = true;
-            this.checkBoxSizeMetrics.Location = new System.Drawing.Point(755, 177);
+            this.checkBoxSizeMetrics.Location = new System.Drawing.Point(774, 186);
             this.checkBoxSizeMetrics.Name = "checkBoxSizeMetrics";
             this.checkBoxSizeMetrics.Size = new System.Drawing.Size(46, 17);
             this.checkBoxSizeMetrics.TabIndex = 52;
             this.checkBoxSizeMetrics.Text = "Size";
             this.checkBoxSizeMetrics.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxLengthMetrics
-            // 
-            this.checkBoxLengthMetrics.AutoSize = true;
-            this.checkBoxLengthMetrics.Enabled = false;
-            this.checkBoxLengthMetrics.Location = new System.Drawing.Point(828, 177);
-            this.checkBoxLengthMetrics.Name = "checkBoxLengthMetrics";
-            this.checkBoxLengthMetrics.Size = new System.Drawing.Size(59, 17);
-            this.checkBoxLengthMetrics.TabIndex = 53;
-            this.checkBoxLengthMetrics.Text = "Length";
-            this.checkBoxLengthMetrics.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxComplexityMetrics
-            // 
-            this.checkBoxComplexityMetrics.AutoSize = true;
-            this.checkBoxComplexityMetrics.Enabled = false;
-            this.checkBoxComplexityMetrics.Location = new System.Drawing.Point(901, 177);
-            this.checkBoxComplexityMetrics.Name = "checkBoxComplexityMetrics";
-            this.checkBoxComplexityMetrics.Size = new System.Drawing.Size(76, 17);
-            this.checkBoxComplexityMetrics.TabIndex = 54;
-            this.checkBoxComplexityMetrics.Text = "Complexity";
-            this.checkBoxComplexityMetrics.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxCouplingMetrics
-            // 
-            this.checkBoxCouplingMetrics.AutoSize = true;
-            this.checkBoxCouplingMetrics.Enabled = false;
-            this.checkBoxCouplingMetrics.Location = new System.Drawing.Point(755, 194);
-            this.checkBoxCouplingMetrics.Name = "checkBoxCouplingMetrics";
-            this.checkBoxCouplingMetrics.Size = new System.Drawing.Size(67, 17);
-            this.checkBoxCouplingMetrics.TabIndex = 55;
-            this.checkBoxCouplingMetrics.Text = "Coupling";
-            this.checkBoxCouplingMetrics.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxCohesionMetrics
-            // 
-            this.checkBoxCohesionMetrics.AutoSize = true;
-            this.checkBoxCohesionMetrics.Enabled = false;
-            this.checkBoxCohesionMetrics.Location = new System.Drawing.Point(828, 194);
-            this.checkBoxCohesionMetrics.Name = "checkBoxCohesionMetrics";
-            this.checkBoxCohesionMetrics.Size = new System.Drawing.Size(70, 17);
-            this.checkBoxCohesionMetrics.TabIndex = 56;
-            this.checkBoxCohesionMetrics.Text = "Cohesion";
-            this.checkBoxCohesionMetrics.UseVisualStyleBackColor = true;
             // 
             // checkBoxChangeMetrics
             // 
@@ -1438,10 +1374,6 @@ namespace ModelicaParser
             this.Controls.Add(this.reportMetrics);
             this.Controls.Add(this.reportChanges);
             this.Controls.Add(this.checkBoxChangeMetrics);
-            this.Controls.Add(this.checkBoxCohesionMetrics);
-            this.Controls.Add(this.checkBoxCouplingMetrics);
-            this.Controls.Add(this.checkBoxComplexityMetrics);
-            this.Controls.Add(this.checkBoxLengthMetrics);
             this.Controls.Add(this.checkBoxSizeMetrics);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -1481,7 +1413,6 @@ namespace ModelicaParser
             this.Controls.Add(this.extract);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBoxModelPath);
-            this.Enabled = false;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

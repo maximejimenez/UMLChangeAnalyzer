@@ -27,7 +27,7 @@ namespace ModelicaParser.Changes
 
             try
             {
-                bool validates = true;//ConfigReader.Read(form.TextBoxNotRelevant1.Text, form);               // the path to the configuration file is provided in the GUI
+                bool validates = ConfigReader.Read(form.TextBoxNotRelevant1.Text, form);               // the path to the configuration file is provided in the GUI
 
                 if (validates)  // if the XML config file is validated
                 {
@@ -77,8 +77,8 @@ namespace ModelicaParser.Changes
 
                     string[] filePaths;
 
-                    model1 = MM_Extractor.DeserializeMMModel(releases[i]);
-                    model2 = MM_Extractor.DeserializeMMModel(releases[j]);
+                    model1 = MM_Extractor.XMLtoMetamodel(releases[i]);
+                    model2 = MM_Extractor.XMLtoMetamodel(releases[j]);
 
                     for (int ind = 0; ind < resultsArrayMatrix.Length; ind++)     // foreach role
                     {
@@ -108,10 +108,10 @@ namespace ModelicaParser.Changes
             for (int ind = 0; ind < resultsArrayMatrix.Length; ind++)
                 if (ind == 0)                                   // exporting results for the "entire meta-model"
                     CreateReport(resultsArrayMatrix[ind], "entire model", releases.Length, sb);
-                else if (!ConfigReader.Roles[ind - 1].UtmOnly)  // exporting results for the M1 and M2 roles
+                /*else if (!ConfigReader.Roles[ind - 1].UtmOnly)  // exporting results for the M1 and M2 roles
                     CreateReport(resultsArrayMatrix[ind], ConfigReader.Roles[ind - 1].Name, releases.Length, sb);
                 else if (ConfigReader.Roles[ind - 1].UtmOnly)   // exporting results for the UTM role
-                    CreateReportUTM(resultsArrayMatrix[ind], ConfigReader.Roles[ind - 1].Name, releases.Length, sb);
+                    CreateReportUTM(resultsArrayMatrix[ind], ConfigReader.Roles[ind - 1].Name, releases.Length, sb);*/
 
             File.WriteAllText(reportPath + @"\Results_changes.csv", sb.ToString());
 

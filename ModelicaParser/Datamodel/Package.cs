@@ -103,6 +103,25 @@ namespace ModelicaParser.Datamodel
             return numberOfAttributes;
         }
 
+        public int NumberOfConnectors(bool relevantOnly)
+        {
+            if (relevantOnly && IgnorePackage())
+                return 0;
+
+            int numberOfConnectors = 0;
+
+            foreach (Element elem in elements)
+                if (!(relevantOnly && elem.IgnoreElement()))
+                    numberOfConnectors += elem.NumberOfConnectors(relevantOnly);
+
+            foreach (Package pack in subPackages)
+                numberOfConnectors += pack.NumberOfConnectors(relevantOnly);
+
+            return numberOfConnectors;
+        }
+
+        
+
         // calculates the number of modified elements of this package (from the list of changed elements) and all of its sub-packages
         public int NumberOfModifiedElements()
         {
@@ -300,7 +319,7 @@ namespace ModelicaParser.Datamodel
             foreach (Element elem in elements)
             {
                 if (elem.NumOfChanges != 0)
-                    listOfChanges.Add(new MMChange("~ Element " + elem.GetPath() + " " + elem.Name, true));
+                    listOfChanges.Add(new MMChange("~ Element " + elem.GetPath(), true));
 
                 foreach (MMChange chng in elem.GetChanges())
                     listOfChanges.Add(chng);
