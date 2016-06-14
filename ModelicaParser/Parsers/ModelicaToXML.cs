@@ -314,7 +314,9 @@ namespace ModelicaParser
 
         private static void handleFunction(XmlElement parent, IEnumerator<string> e, string visibility)
         {
-            e.MoveNext();
+            XmlElement elem = createElementWithID(e);
+            elem.SetAttribute("visibility", visibility);
+            parent.AppendChild(elem);
             string functionName = e.Current;
             while(e.MoveNext() && e.Current != functionName); // Skip Function
             e.MoveNext();
