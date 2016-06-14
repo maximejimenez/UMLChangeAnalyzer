@@ -105,10 +105,10 @@ namespace ModelicaParser
                 }
                 if (!comments)
                 {
-                    if (text.Substring(i).StartsWith("/* \"From here down, only Absyn helper functions should be present."))
+                    /*if (text.Substring(i).StartsWith("/* \"From here down, only Absyn helper functions should be present."))
                     {
                         break;
-                    }
+                    }*/
                     text2 += text[i];
                 }
                 if (text[i] == '\n')
