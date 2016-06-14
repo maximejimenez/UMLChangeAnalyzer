@@ -53,6 +53,18 @@ namespace ModelicaParser
             }
         }*/
 
+        public ModelicaToXML() {}
+
+        public string parse(string path)
+        {
+            doc = new XmlDocument();
+            string text = File.ReadAllText(path, Encoding.UTF8);
+            IEnumerator<string> e = getTokens(text).GetEnumerator();
+            XmlElement root = getXMLFromTokens(e, "1.9.X");
+            return prettyXMLString(root);
+        }
+
+
         private static XmlElement getXMLFromTokens(IEnumerator<string> e, string version)
         {
             XmlElement root = doc.CreateElement("metamodel");

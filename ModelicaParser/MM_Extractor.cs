@@ -18,9 +18,12 @@ namespace ModelicaParser
         {
             this.mainForm = mainForm;
         }
+
         internal void ExtractModel(string p1, string p2)
         {
-            throw new NotImplementedException();
+            ModelicaToXML toXML = new ModelicaToXML();
+            string xml = toXML.parse(p1);
+            System.IO.File.WriteAllText(p2, xml);
         }
 
         internal void ReleaseModel()
