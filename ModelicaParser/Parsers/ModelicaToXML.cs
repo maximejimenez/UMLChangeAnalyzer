@@ -36,6 +36,7 @@ namespace ModelicaParser
         public const string LIST = "list";
         public const string OPTION = "Option";
         public const string FUNCTION = "function";
+        public const string CONSTANT = "constant";
 
         public static XmlDocument doc;
 
@@ -105,10 +106,6 @@ namespace ModelicaParser
                 }
                 if (!comments)
                 {
-                    /*if (text.Substring(i).StartsWith("/* \"From here down, only Absyn helper functions should be present."))
-                    {
-                        break;
-                    }*/
                     text2 += text[i];
                 }
                 if (text[i] == '\n')
@@ -317,6 +314,10 @@ namespace ModelicaParser
                 {
                     handleFunction(parent, e, visibility);
                 }
+                else if (e.Current == CONSTANT)
+                {
+                    handleConstant(parent, e, visibility);
+                }
                 /*else
                 {
                     Console.WriteLine("Unexpected token : " + e.Current);
@@ -417,6 +418,23 @@ namespace ModelicaParser
             string functionName = e.Current;
             while (e.MoveNext() && e.Current != functionName) ; // Skip Function
             e.MoveNext();
+        }
+
+        private static void handleConstant(XmlElement parent, IEnumerator<string> e, string visibility)
+        {
+            XmlElement constant = doc.CreateElement(CONSTANT);
+            if (visibility != "")
+                constant.SetAttribute("visibility", visibility);
+            parent.AppendChild(constant);
+            e.MoveNext();
+            constant.SetAttribute("type", e.Current);
+            e.MoveNext();
+            constant.SetAttribute("name", e.Current);
+            e.MoveNext();
+            e.MoveNext();
+            constant.SetAttribute("value", e.Current);
+            e.MoveNext();
+            // Maybe note to handle
         }
 
         private static void handleFieldType(XmlElement field, IEnumerator<string> e)
