@@ -300,25 +300,60 @@ namespace ModelicaParser
         private static void handleImport(XmlElement parent, IEnumerator<string> e, string visibility)
         {
             XmlElement import = createElementWithID(e);
-            import.SetAttribute("visibility", visibility);
+            if (visibility != "")
+                import.SetAttribute("visibility", visibility);
             parent.AppendChild(import);
             e.MoveNext();
         }
 
         private static void handleUniontype(XmlElement parent, IEnumerator<string> e, string visibility)
         {
+            XmlElement uniontype = createElementWithID(e);
+            parent.AppendChild(uniontype);
+            if (visibility != "")
+                uniontype.SetAttribute("visibility", visibility);
+            e.MoveNext();
+            if (e.Current.StartsWith("\"") && e.Current.EndsWith("\""))
+            {
+                uniontype.SetAttribute("note", e.Current.Substring(1, e.Current.Length - 2));
+                e.MoveNext();
+            }
+            do{
+                handleRecord(uniontype, e);
+                e.MoveNext();
+            }while(e.Current != END);
+        }
+
+        //TODO type
+
+        private static void handleRecord(XmlElement parent, IEnumerator<string> e)
+        {
+            XmlElement record = createElementWithID(e);
+            parent.AppendChild(record);
+            e.MoveNext();
+            if (e.Current.StartsWith("\"") && e.Current.EndsWith("\""))
+            {
+                record.SetAttribute("note", e.Current.Substring(1, e.Current.Length - 2));
+                e.MoveNext();
+            }
+            do
+            {
+                handleField(record, e);
+                e.MoveNext();
+            } while (e.Current != END);
 
         }
 
-        private static void handleRecord(XmlElement parent, IEnumerator<string> e, string visibility)
+        private static void handleField(XmlElement parent, IEnumerator<string> e)
         {
-
+            //TODO
         }
 
         private static void handleFunction(XmlElement parent, IEnumerator<string> e, string visibility)
         {
             XmlElement function = createElementWithID(e);
-            function.SetAttribute("visibility", visibility);
+            if(visibility != "")
+                function.SetAttribute("visibility", visibility);
             parent.AppendChild(function);
             string functionName = e.Current;
             while(e.MoveNext() && e.Current != functionName); // Skip Function
