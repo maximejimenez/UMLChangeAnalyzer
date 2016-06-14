@@ -434,7 +434,7 @@ namespace ModelicaParser
             e.MoveNext();
             constant.SetAttribute("value", e.Current);
             e.MoveNext();
-            // Maybe note to handle
+            // TODO : Maybe note to handle
         }
 
         private static void handleFieldType(XmlElement field, IEnumerator<string> e)
@@ -494,119 +494,5 @@ namespace ModelicaParser
 
         #endregion
 
-        /*private static void convertToXML(XmlElement parent, IEnumerator<string> e)
-        {
-            XmlElement elem;
-            string token = e.Current;
-            switch (token)
-            {
-                case ENCAPSULATED:
-                case PUBLIC:
-                case PROTECTED:
-                case SEMICOLON:
-                    break;
-
-                case IMPORT:
-                case END:
-                    e.MoveNext();
-                    break;
-
-                case TYPE:
-                    elem = doc.CreateElement("type");
-                    parent.AppendChild(elem);
-                    e.MoveNext();
-                    elem.SetAttribute("name", e.Current);
-                    e.MoveNext();
-                    e.MoveNext();
-                    elem.SetAttribute("aliasFor", e.Current);
-                    //note ?
-                    e.MoveNext();
-                    if (e.Current.StartsWith("\"") && e.Current.EndsWith("\""))
-                    {
-                        elem.SetAttribute("note", e.Current.Substring(1, e.Current.Length - 2));
-                    }
-                    else
-                    {
-                        convertToXML(parent, e);
-                    }
-
-                    break;
-
-                case PACKAGE:
-                    elem = createElementWithID(e);
-                    parent.AppendChild(elem);
-                    //note ?
-                    e.MoveNext();
-                    if (e.Current.StartsWith("\"") && e.Current.EndsWith("\""))
-                    {
-                        elem.SetAttribute("note", e.Current.Substring(1, e.Current.Length - 2));
-                        while (e.MoveNext() && e.Current != END)
-                        {
-                            convertToXML(elem, e);
-                        }
-                        e.MoveNext();
-                        e.MoveNext();
-                    }
-                    else
-                    {
-                        convertToXML(elem, e);
-                    }
-
-                    break;
-
-                case UNIONTYPE:
-                    elem = createElementWithID(e);
-                    parent.AppendChild(elem);
-                    //note ?
-                    e.MoveNext();
-                    if (e.Current.StartsWith("\"") && e.Current.EndsWith("\""))
-                    {
-                        elem.SetAttribute("note", e.Current.Substring(1, e.Current.Length - 2));
-                        while (e.MoveNext() && e.Current != END)
-                        {
-                            convertToXML(elem, e);
-                        }
-                        e.MoveNext();
-                        e.MoveNext();
-                    }
-                    else
-                    {
-                        convertToXML(elem, e);
-                    }
-
-                    break;
-                case RECORD:
-                     elem = createElementWithID(e);
-                    parent.AppendChild(elem);
-                    //note ?
-                    if (e.Current.StartsWith("\"") && e.Current.EndsWith("\""))
-                    {
-                        elem.SetAttribute("note", e.Current.Substring(1, e.Current.Length - 2));
-                        while (e.MoveNext() && e.Current != END)
-                        {
-                            XmlElement field = doc.CreateElement("field");
-                            handleFieldType(field, e);
-                            e.MoveNext();
-                            field.SetAttribute("name", e.Current);
-                            e.MoveNext();
-                            elem.AppendChild(field);
-                        }
-                        e.MoveNext();
-                    }
-                    else
-                    {
-                        convertToXML(elem, e);
-                    }
-
-                    break;
-
-                default:
-                    string tkn = e.Current;
-                    e.MoveNext();
-                    string xml = doc.OuterXml;
-                    System.IO.File.WriteAllText(@"C:\Users\maxime\Desktop\TryXML\Log.xml", xml);
-                    throw new Exception("Unexpected token : " + tkn + "(" + e.Current + ")");
-            }
-        }*/
     }
 }
