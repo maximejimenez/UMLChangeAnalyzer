@@ -306,6 +306,25 @@ namespace ModelicaParser
             e.MoveNext();
         }
 
+        private static void handleType(XmlElement parent, IEnumerator<string> e)
+        {
+            XmlElement type = createElementWithName(e);
+            parent.AppendChild(type);
+            e.MoveNext();
+            e.MoveNext();
+            type.SetAttribute("aliasFor", e.Current);
+            e.MoveNext();
+            if (e.Current.StartsWith("\"") && e.Current.EndsWith("\""))
+            {
+                type.SetAttribute("note", e.Current.Substring(1, e.Current.Length - 2));
+            }
+            else
+            {
+                handleInsidePackage(parent, e, "");
+            }
+        }
+
+
         private static void handleUniontype(XmlElement parent, IEnumerator<string> e, string visibility)
         {
             XmlElement uniontype = createElementWithID(e);
@@ -321,10 +340,8 @@ namespace ModelicaParser
             do{
                 handleRecord(uniontype, e);
                 e.MoveNext();
-            }while(e.Current != END);
+            } while(e.Current != END);
         }
-
-        //TODO type
 
         private static void handleRecord(XmlElement parent, IEnumerator<string> e)
         {
@@ -493,6 +510,14 @@ namespace ModelicaParser
             XmlElement elem = doc.CreateElement(e.Current);
             e.MoveNext();
             elem.SetAttribute("id", e.Current);
+            return elem;
+        }
+
+        private static XmlElement createElementWithName(IEnumerator<string> e)
+        {
+            XmlElement elem = doc.CreateElement(e.Current);
+            e.MoveNext();
+            elem.SetAttribute("name", e.Current);
             return elem;
         }
 
