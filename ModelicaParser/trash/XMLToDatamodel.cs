@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using ModelicaParser.Datamodel;
 using System.Xml;
 
-namespace ModelicaParser.Parsers
+namespace ModelicaParser.Trash
 {
     class XMLToDatamodel
     {

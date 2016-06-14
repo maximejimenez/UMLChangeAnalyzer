@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 using ModelicaParser.Datamodel;
 using ModelicaParser.Config;
 using ModelicaParser.Changes;
+using ModelicaParser.Extract;
 
 namespace ModelicaParser
 {
@@ -792,7 +793,7 @@ namespace ModelicaParser
         private void extractMultiple_Click_Function()
         {
             EnableButtons(false);
-            //new ExtractMultiple(this);
+            new ExtractMultiple(this);
             EnableButtons(true);
         }
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace ModelicaParser
+namespace ModelicaParser.Extract
 {
     class ModelicaToXML
     {
@@ -60,6 +60,7 @@ namespace ModelicaParser
             doc = new XmlDocument();
             string text = File.ReadAllText(path, Encoding.UTF8);
             IEnumerator<string> e = getTokens(text).GetEnumerator();
+            //TODO handle version
             XmlElement root = getXMLFromTokens(e, "1.9.X");
             return prettyXMLString(root);
         }

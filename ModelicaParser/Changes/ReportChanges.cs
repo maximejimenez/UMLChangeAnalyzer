@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using ModelicaParser.Config;
 using ModelicaParser.Datamodel;
+using ModelicaParser.Extract;
 
 namespace ModelicaParser.Changes
 {

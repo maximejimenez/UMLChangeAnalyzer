@@ -5,7 +5,7 @@ using System.Text;
 using ModelicaParser.Datamodel;
 using System.Xml;
 
-namespace ModelicaParser
+namespace ModelicaParser.Extract
 {
     class MM_Extractor
     {
@@ -28,7 +28,8 @@ namespace ModelicaParser
 
         internal void ReleaseModel()
         {
-            throw new NotImplementedException();
+            // TODO
+            //throw new NotImplementedException();
         }
 
         internal static MetaModel XMLtoMetamodel(string p)
