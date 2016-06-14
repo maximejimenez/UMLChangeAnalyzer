@@ -299,7 +299,10 @@ namespace ModelicaParser
 
         private static void handleImport(XmlElement parent, IEnumerator<string> e, string visibility)
         {
-
+            XmlElement import = createElementWithID(e);
+            import.SetAttribute("visibility", visibility);
+            parent.AppendChild(import);
+            e.MoveNext();
         }
 
         private static void handleUniontype(XmlElement parent, IEnumerator<string> e, string visibility)
@@ -314,9 +317,9 @@ namespace ModelicaParser
 
         private static void handleFunction(XmlElement parent, IEnumerator<string> e, string visibility)
         {
-            XmlElement elem = createElementWithID(e);
-            elem.SetAttribute("visibility", visibility);
-            parent.AppendChild(elem);
+            XmlElement function = createElementWithID(e);
+            function.SetAttribute("visibility", visibility);
+            parent.AppendChild(function);
             string functionName = e.Current;
             while(e.MoveNext() && e.Current != functionName); // Skip Function
             e.MoveNext();
