@@ -62,7 +62,7 @@
     <Compile Include="Datamodel\MetaModel.cs" />
     <Compile Include="Datamodel\MM_Changes.cs" />
     <Compile Include="Datamodel\Package.cs" />
-    <Compile Include="Datamodel\Element.cs" />
+    <Compile Include="bin\Element.cs" />
     <Compile Include="Parsers\XMLToDatamodel.cs" />
     <Compile Include="Parsers\ModelicaToXML.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -269,21 +269,14 @@ namespace ModelicaParser
                     e.MoveNext();
                     e.MoveNext();
                     elem.SetAttribute("aliasFor", e.Current);
-                    note = retrieveNote(e);
-                    if (note != null)
-                    {
-                        elem.SetAttribute("note", note);
-                    }
+                    //note ?
+
                     break;
 
                 case PACKAGE:
                     elem = createElementWithID(e);
                     parent.AppendChild(elem);
-                    note = retrieveNote(e);
-                    if (note != null)
-                    {
-                        elem.SetAttribute("note", note);
-                    }
+                    //note ?
 
                     while (e.MoveNext() && e.Current != END)
                     {
@@ -296,11 +289,7 @@ namespace ModelicaParser
                 case UNIONTYPE:
                     elem = createElementWithID(e);
                     parent.AppendChild(elem);
-                    note = retrieveNote(e);
-                    if (note != null)
-                    {
-                        elem.SetAttribute("note", note);
-                    }
+                    //note ?
                     while (e.MoveNext() && e.Current != END)
                     {
                         convertToXML(elem, e);
@@ -310,11 +299,7 @@ namespace ModelicaParser
                 case RECORD:
                      elem = createElementWithID(e);
                     parent.AppendChild(elem);
-                    note = retrieveNote(e);
-                    if (note != null)
-                    {
-                        elem.SetAttribute("note", note);
-                    }
+                    //note ?
                     while(e.MoveNext() && e.Current != END){
                         XmlElement field = doc.CreateElement("field");
                         handleType(field, e);
