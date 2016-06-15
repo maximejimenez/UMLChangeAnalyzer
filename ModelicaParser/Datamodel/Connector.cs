@@ -113,7 +113,11 @@ namespace ModelicaParser.Datamodel
             if (RelevantOnly && IgnoreConector())
                 return 0;
 
-            //NOTE HERE
+            if (((RelevantOnly && !ConfigReader.ExcludedAttributeNote) || !RelevantOnly) && !Equals(note, oldConnector.Note))
+            {
+                numOfChanges++;
+                changes.Add(new MMChange("~ Note", false).AppendTabs(1));
+            }
 
             if (!Equals(SourceCardinality, oldConnector.SourceCardinality))
             {

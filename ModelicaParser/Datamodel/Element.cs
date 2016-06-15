@@ -428,6 +428,12 @@ namespace ModelicaParser.Datamodel
                 changes.Add(new MMChange("~ Name: " + oldElement.Name + " -> " + name, false).AppendTabs(1));
             }
 
+            if (((RelevantOnly && !ConfigReader.ExcludedAttributeNote) || !RelevantOnly) && !Equals(note, oldElement.Note))
+            {
+                numOfChanges++;
+                changes.Add(new MMChange("~ Note", false).AppendTabs(1));
+            }
+
             // checking if the element is changed or added in the new model
             foreach(Element child in children){
                 int num = 0;
@@ -464,8 +470,6 @@ namespace ModelicaParser.Datamodel
                     changes.Add(new MMChange("- Element " + oldElement.GetPath(), false).AppendTabs(1));
                 }
             }
-
-            //NOTE HERE
 
             // checking if the attribute is changed or added in the new model
             foreach (Attribute attribute in attributes)

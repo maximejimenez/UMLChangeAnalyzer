@@ -695,6 +695,12 @@ namespace ModelicaParser.Datamodel
             if (!name.Equals(oldPackage.Name))  // number of changes not increased as the change in the name of a package is not considered a change
                 changes.Add(new MMChange("~ Name: " + oldPackage.Name + " -> " + name, true).AppendTabs(1));
 
+            if (((RelevantOnly && !ConfigReader.ExcludedAttributeNote) || !RelevantOnly) && !Equals(note, oldPackage.Note))
+            {
+                numOfChanges++;
+                changes.Add(new MMChange("~ Note", false).AppendTabs(1));
+            }
+
             // checking if the sub-package is changed or added in the new model
             foreach (Package subPackage in subPackages)
             {
