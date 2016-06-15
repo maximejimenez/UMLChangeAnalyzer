@@ -85,12 +85,6 @@ namespace ModelicaParser
             tokens = handleMultipleDeclaration(tokensArray);
             tokens = noteAsSingleToken(new List<string>(tokens));
 
-            //foreach (string token in tokens)
-            //{
-            //    Console.WriteLine(token);
-            //    Console.ReadKey();
-            //}
-
             return tokens;
         }
 
@@ -210,12 +204,6 @@ namespace ModelicaParser
                     }
                 }
             }
-
-            /*foreach (string token in result)
-            {
-                Console.WriteLine(token);
-                Console.ReadKey();
-            }*/
 
             return result;
         }
