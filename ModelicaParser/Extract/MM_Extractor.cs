@@ -21,9 +21,9 @@ namespace ModelicaParser.Extract
 
         internal void ExtractModel(string p1, string p2)
         {
+            string version = "1.9.X"; //TODO
             ModelicaToXML toXML = new ModelicaToXML();
-            string xml = toXML.parse(p1);
-            System.IO.File.WriteAllText(p2, xml);
+            string xml = toXML.parse(p1, p2, version);
         }
 
         internal void ReleaseModel()

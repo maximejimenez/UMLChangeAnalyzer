@@ -44,14 +44,24 @@ namespace ModelicaParser.Extract
 
         public ModelicaToXML() {}
 
-        public string parse(string path)
+        public void parse(string mmPath, string xmlPath, string version)
         {
             doc = new XmlDocument();
-            string text = File.ReadAllText(path, Encoding.UTF8);
-            IEnumerator<string> e = getTokens(text).GetEnumerator();
-            //TODO handle version
-            XmlElement root = getXMLFromTokens(e, "1.9.X");
-            return prettyXMLString(root);
+            XmlElement root = doc.CreateElement("metamodel");
+            root.SetAttribute("version", version);
+            doc.AppendChild(root);
+
+            if(Directory.Exists(mmPath)){
+                string[] paths = Directory.GetFiles(mmPath);
+                foreach(string filePath in paths){
+                    string text = File.ReadAllText(filePath, Encoding.UTF8);
+                    IEnumerator<string> e = getTokens(text).GetEnumerator();
+                    handlePackage(root, e);
+                }
+            }
+
+            string xml = prettyXMLString(root);
+            System.IO.File.WriteAllText(xmlPath, xml);
         }
 
         #endregion
@@ -208,15 +218,6 @@ namespace ModelicaParser.Extract
             }
 
             return result;
-        }
-
-        private static XmlElement getXMLFromTokens(IEnumerator<string> e, string version)
-        {
-            XmlElement root = doc.CreateElement("metamodel");
-            root.SetAttribute("version", version);
-            doc.AppendChild(root);
-            handlePackage(root, e);
-            return root;
         }
 
         #endregion

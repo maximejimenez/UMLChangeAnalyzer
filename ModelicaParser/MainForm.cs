@@ -985,8 +985,7 @@ namespace ModelicaParser
             this.textBoxFilePath.Name = "textBoxFilePath";
             this.textBoxFilePath.Size = new System.Drawing.Size(449, 20);
             this.textBoxFilePath.TabIndex = 5;
-            this.textBoxFilePath.Text = "C:\\Users\\maxime\\Desktop\\Modelica OMCompiler\\OMCompiler-1.9.3\\Compiler\\FrontEnd\\Ab" +
-    "syn.mo";
+            this.textBoxFilePath.Text = "C:\\Users\\maxime\\Desktop\\ModelicaResults\\Metamodels\\";
             // 
             // compare
             // 
@@ -1003,7 +1002,7 @@ namespace ModelicaParser
             this.textBoxModel2.Name = "textBoxModel2";
             this.textBoxModel2.Size = new System.Drawing.Size(449, 20);
             this.textBoxModel2.TabIndex = 14;
-            this.textBoxModel2.Text = "C:\\Users\\maxime\\Desktop\\XmlModelica\\Absyn-1.9.3.xml";
+            this.textBoxModel2.Text = "C:\\Users\\maxime\\Desktop\\ModelicaResults\\Metamodels\\Absyn-1.9.3.xml";
             // 
             // textBoxModel1
             // 
@@ -1011,7 +1010,7 @@ namespace ModelicaParser
             this.textBoxModel1.Name = "textBoxModel1";
             this.textBoxModel1.Size = new System.Drawing.Size(449, 20);
             this.textBoxModel1.TabIndex = 15;
-            this.textBoxModel1.Text = "C:\\Users\\maxime\\Desktop\\XmlModelica\\Absyn-1.9.2.xml";
+            this.textBoxModel1.Text = "C:\\Users\\maxime\\Desktop\\ModelicaResults\\Metamodels\\Absyn-1.9.2.xml";
             // 
             // label5
             // 
@@ -1078,7 +1077,7 @@ namespace ModelicaParser
             this.textBoxNotRelevant.Name = "textBoxNotRelevant";
             this.textBoxNotRelevant.Size = new System.Drawing.Size(449, 20);
             this.textBoxNotRelevant.TabIndex = 24;
-            this.textBoxNotRelevant.Text = "C:\\Users\\maxime\\Desktop\\ModelicaResults\\MM_Config.xml";
+            this.textBoxNotRelevant.Text = "C:\\Users\\maxime\\Desktop\\ModelicaResults\\Config\\MM_Config.xml";
             // 
             // checkBoxAllChanges
             // 
