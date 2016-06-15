@@ -12,49 +12,35 @@ namespace ModelicaParser.Extract
 {
     class ModelicaToXML
     {
-        public const string SEMICOLON = ";";
-        public const string UNIONTYPE = "uniontype";
-        public const string UTID = "uniontypeID";
-        public const string RECORD = "record";
-        public const string RECORDID = "recordID";
-        public const string EQUALS = "=";
-        public const string PUBLIC = "public";
-        public const string PROTECTED = "protected";
-        public const string IMPORT = "import";
-        public const string ENCAPSULATED = "encapsulated";
-        public const string PACKAGE = "package";
-        public const string TYPE = "type";
-        public const string END = "end";
-        public const string STRING = "String";
-        public const string INTEGER = "Integer";
-        public const string BOOLEAN = "Boolean";
-        public const string SOURCEINFO = "SourceInfo";
-        public const string UTYPE = "UndefinedType";
-        public const string DTYPE = "DefinedType";
-        public const string ID = "Identifier";
-        public const string ALIAS = "alias";
-        public const string LIST = "list";
-        public const string OPTION = "Option";
-        public const string FUNCTION = "function";
-        public const string CONSTANT = "constant";
+        private const string SEMICOLON = ";";
+        private const string UNIONTYPE = "uniontype";
+        private const string UTID = "uniontypeID";
+        private const string RECORD = "record";
+        private const string RECORDID = "recordID";
+        private const string EQUALS = "=";
+        private const string PUBLIC = "public";
+        private const string PROTECTED = "protected";
+        private const string IMPORT = "import";
+        private const string ENCAPSULATED = "encapsulated";
+        private const string PACKAGE = "package";
+        private const string TYPE = "type";
+        private const string END = "end";
+        private const string STRING = "String";
+        private const string INTEGER = "Integer";
+        private const string BOOLEAN = "Boolean";
+        private const string SOURCEINFO = "SourceInfo";
+        private const string UTYPE = "UndefinedType";
+        private const string DTYPE = "DefinedType";
+        private const string ID = "Identifier";
+        private const string ALIAS = "alias";
+        private const string LIST = "list";
+        private const string OPTION = "Option";
+        private const string FUNCTION = "function";
+        private const string CONSTANT = "constant";
 
-        public static XmlDocument doc;
+        private static XmlDocument doc;
 
-        static void Main(string[] args)
-        {
-            for (int i = 2; i <= 6; i++)
-            {
-                doc = new XmlDocument();
-                string text = File.ReadAllText(@"C:\Users\maxime\Desktop\Modelica OMCompiler\OMCompiler-1.9."+ i +@"\Compiler\FrontEnd\Absyn.mo", Encoding.UTF8);
-                List<string> tokens = getTokens(text);
-                IEnumerator<string> e = tokens.GetEnumerator();
-
-                XmlElement root = getXMLFromTokens(e, "1.9."+i);
-                string xml = prettyXMLString(root);
-                System.IO.File.WriteAllText(@"C:\Users\maxime\Desktop\TryXML\Absyn-1.9." + i + ".xml", xml);
-                Console.WriteLine("XML export of version 1.9."+ i +" sucessful");
-            }
-        }*/
+        #region Public
 
         public ModelicaToXML() {}
 
@@ -68,16 +54,9 @@ namespace ModelicaParser.Extract
             return prettyXMLString(root);
         }
 
+        #endregion
 
-        private static XmlElement getXMLFromTokens(IEnumerator<string> e, string version)
-        {
-            XmlElement root = doc.CreateElement("metamodel");
-            root.SetAttribute("version", version);
-            doc.AppendChild(root);
-            while (e.MoveNext())
-            {
-                convertToXML(root, e);
-            }
+        // Internal functions
 
         #region Utils
 
