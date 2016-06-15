@@ -72,7 +72,6 @@
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="trash\XMLToDatamodel.cs" />
     <Compile Include="Extract\ModelicaToXML.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
