@@ -35,9 +35,12 @@ namespace ModelicaParser.Extract
         public const string ALIAS = "alias";
         public const string LIST = "list";
         public const string OPTION = "Option";
+        public const string FUNCTION = "function";
+        public const string CONSTANT = "constant";
+
         public static XmlDocument doc;
 
-        /*static void Main(string[] args)
+        static void Main(string[] args)
         {
             for (int i = 2; i <= 6; i++)
             {
@@ -48,7 +51,7 @@ namespace ModelicaParser.Extract
 
                 XmlElement root = getXMLFromTokens(e, "1.9."+i);
                 string xml = prettyXMLString(root);
-                System.IO.File.WriteAllText(@"C:\Users\maxime\Desktop\XmlModelica\Absyn-1.9."+ i +".xml", xml);
+                System.IO.File.WriteAllText(@"C:\Users\maxime\Desktop\TryXML\Absyn-1.9." + i + ".xml", xml);
                 Console.WriteLine("XML export of version 1.9."+ i +" sucessful");
             }
         }*/
@@ -75,8 +78,8 @@ namespace ModelicaParser.Extract
             {
                 convertToXML(root, e);
             }
-            return root;
-        }
+
+        #region Utils
 
         private static string prettyXMLString(XmlElement dom)
         {
@@ -103,6 +106,7 @@ namespace ModelicaParser.Extract
             string tmp = string.Join(" ", tokens.ToArray());
             string[] tokensArray = tmp.Split(WS, StringSplitOptions.RemoveEmptyEntries);
             tokens = handleMultipleDeclaration(tokensArray);
+            tokens = noteAsSingleToken(new List<string>(tokens));
 
             return tokens;
         }
@@ -119,10 +123,6 @@ namespace ModelicaParser.Extract
                 }
                 if (!comments)
                 {
-                    if (text.Substring(i).StartsWith("/* \"From here down, only Absyn helper functions should be present."))
-                    {
-                        break;
-                    }
                     text2 += text[i];
                 }
                 if (text[i] == '\n')
@@ -152,8 +152,6 @@ namespace ModelicaParser.Extract
             return tokens;
         }
 
-
-
         private static List<string> cleanMetaModelicaCode(List<string> tokens)
         {
             List<string> tokenWithoutComments = new List<string>();
@@ -171,34 +169,6 @@ namespace ModelicaParser.Extract
                 if (token == "*/")
                 {
                     comments = false;
-                }
-            }
-            tokens = tokenWithoutComments;
-            tokenWithoutComments = new List<string>();
-            comments = false;
-            foreach (string token in tokens)
-            {
-                if (!comments)
-                {
-                    if (token.StartsWith("\""))
-                    {
-                        comments = true;
-                        if (token.EndsWith("\"") && token.Length != 1)
-                        {
-                            comments = false;
-                        }
-                    }
-                    else
-                    {
-                        tokenWithoutComments.Add(token);
-                    }
-                }
-                else
-                {
-                    if (token.EndsWith("\""))
-                    {
-                        comments = false;
-                    }
                 }
             }
             return tokenWithoutComments;
@@ -224,105 +194,264 @@ namespace ModelicaParser.Extract
             return tokens;
         }
 
-        private static void convertToXML(XmlElement parent, IEnumerator<string> e)
+        private static List<string> noteAsSingleToken(List<string> tokens)
         {
-            XmlElement elem;
-            string token = e.Current;
-            if (token == ENCAPSULATED){
-                // TODO maybe ignore
-            }
-            else if (token == PUBLIC)
+            List<string> result = new List<string>();
+            bool comment = false;
+            string newToken = "";
+            foreach (string token in tokens)
             {
-                //TODO
-            }
-            else if (token == PROTECTED)
-            {
-                // DO NOTHING
-            }
-            else if (token == IMPORT)
-            {
-                e.MoveNext();
-            }
-            else if (token == TYPE)
-            {
-                elem = doc.CreateElement("type");
-                e.MoveNext();
-                elem.SetAttribute("name", e.Current);
-                e.MoveNext();
-                e.MoveNext();
-                elem.SetAttribute("aliasFor", e.Current);
-                parent.AppendChild(elem);
-            }
-            else if ((token == PACKAGE))
-            {
-                elem = createElementWithID(e);
-                while (e.MoveNext() && e.Current != END)
+                if (comment)
                 {
-                    convertToXML(elem, e);
-                }
-                e.MoveNext();
-                e.MoveNext();
-                parent.AppendChild(elem);
+                    if (token.EndsWith("\""))
+                    {
+                        comment = false;
+                        newToken += token;
+                        result.Add(newToken);
             }
-            else if(token == UNIONTYPE)
+                    else
             {
-                elem = createElementWithID(e);
-                while (e.MoveNext() && e.Current != END)
-                {
-                    convertToXML(elem, e);
+                        newToken += token;
+            }
                 }
-                parent.AppendChild(elem);
-                e.MoveNext();
-            }else if((token == RECORD)){
-                elem = createElementWithID(e);
-                while(e.MoveNext() && e.Current != END){
-                    XmlElement field = doc.CreateElement("field");
-                    handleType(field, e);
-                    e.MoveNext();
-                    field.SetAttribute("name", e.Current);
-                    e.MoveNext();
-                    elem.AppendChild(field);
+                else
+            {
+                    if ((token.StartsWith("\"") && token.EndsWith("\"") && token.Length > 1 )|| !token.StartsWith("\""))
+                    {
+                        result.Add(token);
+            }
+                    else
+            {
+                        comment = true;
+                        newToken = token;
+                    }
                 }
-                parent.AppendChild(elem);
-                e.MoveNext();
             }
 
-            else if (token == END)
-            {
-                e.MoveNext();
-            }
-            else if (token == SEMICOLON)
-            {
-                //DO NOTHING
-            }
-            else if (token.StartsWith(OPTION))
-            {
-                //TODO
-            }
-            else if(token.StartsWith(LIST)){
-                //TODO
-            }
-            else
-            {
-                string tkn = e.Current;
-                e.MoveNext();
-                throw new Exception("Unexpected token : " + tkn + "(" + e.Current + ")");
-            }
+            return result;
         }
+
+        private static XmlElement getXMLFromTokens(IEnumerator<string> e, string version)
+        {
+            XmlElement root = doc.CreateElement("metamodel");
+            root.SetAttribute("version", version);
+            doc.AppendChild(root);
+            handlePackage(root, e);
+            return root;
+        }
+
+        #endregion
+
+        #region DOMHelpers
 
         private static XmlElement createElementWithID(IEnumerator<string> e)
         {
             XmlElement elem = doc.CreateElement(e.Current);
-            e.MoveNext();
+                e.MoveNext();
             elem.SetAttribute("id", e.Current);
+            return elem;
+            }
+
+        private static XmlElement createElementWithName(IEnumerator<string> e)
+            {
+            XmlElement elem = doc.CreateElement(e.Current);
+                e.MoveNext();
+                elem.SetAttribute("name", e.Current);
             return elem;
         }
 
-        private static void handleType(XmlElement field, IEnumerator<string> e)
+        #endregion
+
+        #region Handlers
+
+        private static void handlePackage(XmlElement parent, IEnumerator<string> e)
+        {
+            Boolean encapsulated = false;
+                e.MoveNext();
+            if (e.Current == ENCAPSULATED)
+            {
+                encapsulated = true;
+                e.MoveNext();
+            }
+            if (e.Current == PACKAGE)
+            {
+                XmlElement package = createElementWithID(e);
+                parent.AppendChild(package);
+                if (encapsulated)
+                    package.SetAttribute(ENCAPSULATED, "true");
+                e.MoveNext();
+                if (e.Current.StartsWith("\"") && e.Current.EndsWith("\""))
+                {
+                    package.SetAttribute("note", e.Current.Substring(1, e.Current.Length - 2));
+                    e.MoveNext();
+                }
+                handleInsidePackage(package, e, "");
+            }
+            else
+            {
+                Console.WriteLine("Package not handled");
+            }
+        }
+
+        private static void handleInsidePackage(XmlElement parent, IEnumerator<string> e, string visibility)
+        {
+            do
+            {
+                if (e.Current == PUBLIC)
+                {
+                    visibility = PUBLIC;
+                e.MoveNext();
+                    handleInsidePackage(parent, e, visibility);
+                }
+                else if (e.Current == PROTECTED)
+                {
+                    visibility = PROTECTED;
+                e.MoveNext();
+                    handleInsidePackage(parent, e, visibility);
+                }
+                else if (e.Current == IMPORT)
+                {
+                    handleImport(parent, e, visibility);
+                }
+                else if (e.Current == TYPE)
+                {
+                    handleType(parent, e, visibility);
+                }
+                else if (e.Current == UNIONTYPE)
+                {
+                    handleUniontype(parent, e, visibility);
+                }
+                else if (e.Current == FUNCTION)
+                {
+                    handleFunction(parent, e, visibility);
+                }
+                else if (e.Current == CONSTANT)
+                {
+                    handleConstant(parent, e, visibility);
+            }
+                /*else
+            {
+                    Console.WriteLine("Unexpected token : " + e.Current);
+                }*/
+            } while (e.MoveNext() && e.Current != END);
+        }
+
+        private static void handleImport(XmlElement parent, IEnumerator<string> e, string visibility)
+                {
+            XmlElement import = createElementWithID(e);
+            if (visibility != "")
+                import.SetAttribute("visibility", visibility);
+            parent.AppendChild(import);
+            e.MoveNext();
+                }
+
+        private static void handleType(XmlElement parent, IEnumerator<string> e, string visibility)
+        {
+            XmlElement type = createElementWithName(e);
+            if (visibility != "")
+                type.SetAttribute("visibility", visibility);
+            parent.AppendChild(type);
+            e.MoveNext();
+            e.MoveNext();
+            type.SetAttribute("aliasFor", e.Current);
+            e.MoveNext();
+            if (e.Current.StartsWith("\"") && e.Current.EndsWith("\""))
+            {
+                type.SetAttribute("note", e.Current.Substring(1, e.Current.Length - 2));
+                e.MoveNext();
+            }
+        }
+
+        private static void handleUniontype(XmlElement parent, IEnumerator<string> e, string visibility)
+        {
+            XmlElement uniontype = createElementWithID(e);
+            parent.AppendChild(uniontype);
+            if (visibility != "")
+                uniontype.SetAttribute("visibility", visibility);
+                    e.MoveNext();
+            if (e.Current.StartsWith("\"") && e.Current.EndsWith("\""))
+            {
+                uniontype.SetAttribute("note", e.Current.Substring(1, e.Current.Length - 2));
+                    e.MoveNext();
+                }
+            do
+            {
+                handleRecord(uniontype, e);
+                e.MoveNext();
+            } while (e.Current != END);
+            e.MoveNext();
+                e.MoveNext();
+            }
+
+        private static void handleRecord(XmlElement parent, IEnumerator<string> e)
+        {
+            XmlElement record = createElementWithID(e);
+            parent.AppendChild(record);
+            e.MoveNext();
+            if (e.Current.StartsWith("\"") && e.Current.EndsWith("\""))
+            {
+                record.SetAttribute("note", e.Current.Substring(1, e.Current.Length - 2));
+                e.MoveNext();
+            }
+
+            if(e.Current != END){
+                do
+            {
+                    handleField(record, e);
+                    e.MoveNext();
+                } while (e.Current != END);
+            }
+            e.MoveNext();
+            e.MoveNext();
+            }
+
+        private static void handleField(XmlElement parent, IEnumerator<string> e)
+        {
+            XmlElement field = doc.CreateElement("field");
+            handleFieldType(field, e);
+            e.MoveNext();
+            field.SetAttribute("name", e.Current);
+            e.MoveNext();
+            if (e.Current.StartsWith("\"") && e.Current.EndsWith("\""))
+            {
+                field.SetAttribute("note", e.Current.Substring(1, e.Current.Length - 2));
+                e.MoveNext();
+            }
+            parent.AppendChild(field);
+            }
+
+        private static void handleFunction(XmlElement parent, IEnumerator<string> e, string visibility)
+            {
+            XmlElement function = createElementWithID(e);
+            if (visibility != "")
+                function.SetAttribute("visibility", visibility);
+            parent.AppendChild(function);
+            string functionName = e.Current;
+            while (e.MoveNext() && e.Current != functionName) ; // Skip Function
+                e.MoveNext();
+        }
+
+        private static void handleConstant(XmlElement parent, IEnumerator<string> e, string visibility)
+        {
+            XmlElement constant = doc.CreateElement(CONSTANT);
+            if (visibility != "")
+                constant.SetAttribute("visibility", visibility);
+            parent.AppendChild(constant);
+            e.MoveNext();
+            constant.SetAttribute("type", e.Current);
+            e.MoveNext();
+            constant.SetAttribute("name", e.Current);
+            e.MoveNext();
+            e.MoveNext();
+            constant.SetAttribute("value", e.Current);
+            e.MoveNext();
+            // TODO : Maybe note to handle
+        }
+
+        private static void handleFieldType(XmlElement field, IEnumerator<string> e)
         {
             if (e.Current.StartsWith(OPTION))
             {
-                //field.SetAttribute("type", "option");
                 field.SetAttribute("minMultiplicity", "0");
                 field.SetAttribute("maxMultiplicity", "1");
                 contentTypeOption(field, e);
@@ -330,7 +459,6 @@ namespace ModelicaParser.Extract
             }
             else if (e.Current.StartsWith(LIST))
             {
-                //field.SetAttribute("type", "list");
                 field.SetAttribute("minMultiplicity", "0");
                 field.SetAttribute("maxMultiplicity", "*");
                 contentTypeList(field, e);
@@ -374,5 +502,8 @@ namespace ModelicaParser.Extract
                 field.SetAttribute("type", contentType);
             }
         }
+
+        #endregion
+
     }
 }
