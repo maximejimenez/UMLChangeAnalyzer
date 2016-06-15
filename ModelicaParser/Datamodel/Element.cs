@@ -18,6 +18,7 @@ namespace ModelicaParser.Datamodel
         // Attributes
         private String type = "";
         private String name = "";
+        private String note = "";
         private List<Element> children = new List<Element>();
         private List<Connector> sourceConnectors = new List<Connector>();
         private List<Connector> targetConnectors = new List<Connector>();
@@ -37,10 +38,18 @@ namespace ModelicaParser.Datamodel
         private List<Connector> addedConnectors = new List<Connector>();
 
         #region Loading
+
         public Element(string type, string name)
         {
             this.type = type;
             this.name = name;
+        }
+
+        public Element(string type, string name, string note)
+        {
+            this.type = type;
+            this.name = name;
+            this.note = note;
         }
 
         public void AddChild(Element element)
@@ -612,6 +621,12 @@ namespace ModelicaParser.Datamodel
         {
             get { return type; }
             set { type = value; }
+        }
+
+        public String Note
+        {
+            get { return note; }
+            set { note = value; }
         }
 
         public List<Attribute> Attributes

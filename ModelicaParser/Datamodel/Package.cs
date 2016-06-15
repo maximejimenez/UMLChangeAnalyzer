@@ -17,8 +17,10 @@ namespace ModelicaParser.Datamodel
 
         // Attributes
         private String name = "";
+        private String note = "";
         private List<Element> elements =new List<Element>();
         private List<Package> subPackages = new List<Package>();
+
 
         // Changes
         private int numOfChanges;
@@ -40,6 +42,12 @@ namespace ModelicaParser.Datamodel
         public Package(string name)
         {
             this.name = name;
+        }
+
+        public Package(string name, string note)
+        {
+            this.name = name;
+            this.note = note;
         }
 
         public void AddSubPackage(Package package)
@@ -832,6 +840,12 @@ namespace ModelicaParser.Datamodel
         {
             get { return name; }
             set { name = value; }
+        }
+
+        public String Note
+        {
+            get { return note; }
+            set { note = value; }
         }
 
         public List<Element> Elements

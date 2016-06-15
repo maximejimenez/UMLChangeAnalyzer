@@ -83,6 +83,10 @@ namespace ModelicaParser.Extract
         {
             string id = elem.Attributes["id"].Value;
             Package package = new Package(id);
+            XmlAttribute noteAttribute = elem.Attributes["note"];
+            if (noteAttribute != null)
+                package.Note = noteAttribute.Value;
+
             XmlNodeList children = elem.ChildNodes;
             for (int i = 0; i < children.Count; i++)
             {
@@ -101,10 +105,15 @@ namespace ModelicaParser.Extract
 
             return package;
         }
+
         static Element parseUniontype(XmlNode elem)
         {
             string id = elem.Attributes["id"].Value;
             Element uniontype = new Element("uniontype", id);
+            XmlAttribute noteAttribute = elem.Attributes["note"];
+            if (noteAttribute != null)
+                uniontype.Note = noteAttribute.Value;
+
             XmlNodeList children = elem.ChildNodes;
 
             for (int i = 0; i < children.Count; i++)
@@ -120,6 +129,10 @@ namespace ModelicaParser.Extract
         {
             string id = elem.Attributes["id"].Value;
             Element record = new Element("record", id);
+            XmlAttribute noteAttribute = elem.Attributes["note"];
+            if (noteAttribute != null)
+                record.Note = noteAttribute.Value;
+
             XmlNodeList children = elem.ChildNodes;
 
             for (int i = 0; i < children.Count; i++)
@@ -129,10 +142,14 @@ namespace ModelicaParser.Extract
                 string name = attributes["name"].Value;
                 string maxMultiplicity = attributes["maxMultiplicity"].Value;
                 string minMultiplicity = attributes["minMultiplicity"].Value;
+                XmlAttribute fieldAttributeNote = attributes["note"];
+
 
                 if (Basetypes.Contains<string>(type))
                 {
                     ModelicaParser.Datamodel.Attribute attribute = new ModelicaParser.Datamodel.Attribute(type, name, maxMultiplicity, minMultiplicity);
+                    if (fieldAttributeNote != null)
+                        attribute.Note = noteAttribute.Value;
                     attribute.ParentElement = record;
                     record.AddAttribute(attribute);
                 }
@@ -145,6 +162,8 @@ namespace ModelicaParser.Extract
                         targetMultiplicity = minMultiplicity + ".." + maxMultiplicity;
                     }
                     Connector c = new Connector("Association", "1", targetMultiplicity, name);
+                    if (fieldAttributeNote != null)
+                        c.Note = noteAttribute.Value;
                     c.ParentElement = record;
                     c.Source = record;
                     record.AddSourceConnector(c);
@@ -155,7 +174,6 @@ namespace ModelicaParser.Extract
                     targetElements[type].Add(c);
                 }
             }
-            //Console.WriteLine(record.Name + " (" + record.Attributes.Count+")");
 
             return record;
         }

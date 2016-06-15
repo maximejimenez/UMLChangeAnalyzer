@@ -18,6 +18,7 @@ namespace ModelicaParser.Datamodel
         private String name = "";
         private String upperBound = "";
         private String lowerBound = "";
+        private String note = "";
 
         // Changes
         private int numOfChanges;
@@ -31,6 +32,15 @@ namespace ModelicaParser.Datamodel
             this.name = name;
             this.upperBound = upperBound;
             this.lowerBound = lowerBound;
+        }
+
+        public Attribute(string type, string name, string upperBound, string lowerBound, string note)
+        {
+            this.type = type;
+            this.name = name;
+            this.upperBound = upperBound;
+            this.lowerBound = lowerBound;
+            this.note = note;
         }
 
         #endregion
@@ -142,6 +152,12 @@ namespace ModelicaParser.Datamodel
         {
             get { return upperBound; }
             set { upperBound = value; }
+        }
+
+        public string Note
+        {
+            get { return note; }
+            set { note = value; }
         }
 
         public List<MMChange> Changes

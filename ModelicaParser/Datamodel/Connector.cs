@@ -20,7 +20,8 @@ namespace ModelicaParser.Datamodel
         private String type = "";
         private String sourceCardinality = "";
         private String targetCardinality = "";
-        private String uid;
+        private String uid = "";
+        private String note = "";
 
         // Changes
         private int numOfChanges;
@@ -34,6 +35,15 @@ namespace ModelicaParser.Datamodel
             this.sourceCardinality = sourceCardinality;
             this.targetCardinality = targetCardinality;
             this.uid = uid;
+        }
+
+        public Connector(string type, string sourceCardinality, string targetCardinality, string uid, string note)
+        {
+            this.type = type;
+            this.sourceCardinality = sourceCardinality;
+            this.targetCardinality = targetCardinality;
+            this.uid = uid;
+            this.note = note;
         }
 
         public object Clone()
@@ -147,6 +157,12 @@ namespace ModelicaParser.Datamodel
         {
             get { return uid; }
             set { uid = value; }
+        }
+
+        public string Note
+        {
+            get { return note; }
+            set { note = value; }
         }
 
         public Element ParentElement
