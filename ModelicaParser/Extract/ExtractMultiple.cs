@@ -11,6 +11,7 @@ namespace ModelicaParser.Extract
     class ExtractMultiple
     {
         private MainForm form;
+        private string[] versions;          // list of versions to be extracted
         private string[] releases;          // list of releases to be extracted (their paths)
 
         #region Extraction
@@ -27,10 +28,14 @@ namespace ModelicaParser.Extract
                 if (validates)  // if the XML config file is validated
                 {
                     releases = new string[ConfigReader.ExtractMultipleReleases.Count];
+                    versions = new string[ConfigReader.ExtractMultipleReleases.Count];
 
                     // TODO : handle full directory or multiple file from the front end compiler
                     for (int i = 0; i < ConfigReader.ExtractMultipleReleases.Count; i++)
-                        releases[i] = ConfigReader.ExtractMultipleReleases[i] + "\\Absyn.mo";              // getting all release paths from the config file
+                        releases[i] = ConfigReader.ExtractMultipleReleases[i][0];              // getting all release paths from the config file
+
+                    for (int i = 0; i < ConfigReader.ExtractMultipleReleases.Count; i++)
+                        versions[i] = ConfigReader.ExtractMultipleReleases[i][1];              // getting all release paths from the config file
 
                     form.ListAdd("Release paths successfully read.");
 
@@ -48,19 +53,19 @@ namespace ModelicaParser.Extract
         // extracting multiple meta-models
         private void ExtractModels()
         {
-            for (int i = 0; i < releases.Length; i++)       // extracted models are created in the same folder as the AUTOSAR models
+            for (int i = 0; i < releases.Length; i++)
             {
-                string modelPath = releases[i];     // extracted name is the same as the meta-model name, just the extension "eap" is exchanged with "mod"
-                string filePath = releases[i].Substring(0, releases[i].Length - 3) + ".xml";
+                string modelPath = releases[i];
+                string version = versions[i];
+                string filePath = Path.Combine("C:\\Users\\maxime\\Desktop\\ModelicaResults\\XML\\", version + ".xml");
 
-                if (File.Exists(filePath))      // the extraction is not done if the "mod" file with the same name exists
+                if (File.Exists(filePath))      // the extraction is not done if the file with the same name exists
                     form.ListAdd("File " + filePath + " already exists.");
                 else
                 {
                     MM_Extractor extractor = new MM_Extractor(form);
-
                     form.ListAdd("Dumping " + modelPath);
-                    extractor.ExtractModel(modelPath, filePath);
+                    extractor.ExtractModel(modelPath, filePath, version);
                 }
             }
 

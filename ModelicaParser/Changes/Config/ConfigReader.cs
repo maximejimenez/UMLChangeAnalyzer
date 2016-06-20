@@ -16,7 +16,7 @@ namespace ModelicaParser.Config
             private static List<string> excludedPackageNames = new List<string>();
             private static List<string> excludedConnectorTypes = new List<string>();
             private static List<string> excludedElementTypes = new List<string>();
-            private static List<string> extractMultipleReleases = new List<string>();
+            private static List<string[]> extractMultipleReleases = new List<string[]>();
             private static List<string> reportChangesReleases = new List<string>();
             private static string reportChangesPath = "";
             private static List<string> reportMetricsReleases = new List<string>();
@@ -25,7 +25,6 @@ namespace ModelicaParser.Config
             private static bool excludedAttributeNote = false;
             private static bool excludedConnectorNote = false;
             private static bool excludedCaseSensitivity = false;
-            //        private static List<ARRole> roles = new List<ARRole>();
             private static bool validates = true;
 
             #region Read
@@ -39,7 +38,7 @@ namespace ModelicaParser.Config
                 excludedPackageNames = new List<string>();
                 excludedConnectorTypes = new List<string>();
                 excludedElementTypes = new List<string>();
-                extractMultipleReleases = new List<string>();
+                extractMultipleReleases = new List<string[]>();
                 reportChangesReleases = new List<string>();
                 reportChangesPath = "";
                 reportMetricsReleases = new List<string>();
@@ -53,10 +52,10 @@ namespace ModelicaParser.Config
 
                 // setting the schema validation settings
                 XmlReaderSettings settings = new XmlReaderSettings();
-                settings.ValidationType = ValidationType.Schema;
+                /*settings.ValidationType = ValidationType.Schema;
                 settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessInlineSchema;
                 settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessSchemaLocation;     // schema defined in the "schemaLocation" attribute
-                settings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;
+                settings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;*/
 
                 // registering the validation error/warning event handler
                 settings.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);
@@ -151,8 +150,10 @@ namespace ModelicaParser.Config
                                 while (subTree.Read())
                                     if (subTree.NodeType == XmlNodeType.Element && subTree.Name.Equals("RELEASE"))
                                     {                                   // reading one release
+                                        //read version
+                                        string version = subTree.GetAttribute("VERSION");
                                         subTree.Read();
-                                        extractMultipleReleases.Add(subTree.Value);
+                                        extractMultipleReleases.Add(new string[] { subTree.Value, version });
                                     }
 
                                 break;
@@ -248,12 +249,7 @@ namespace ModelicaParser.Config
                 get { return ConfigReader.excludedCaseSensitivity; }
             }
 
-            //public static List<ARRole> Roles
-            //{
-            //    get { return ConfigReader.roles; }
-            //}
-
-            public static List<string> ExtractMultipleReleases
+            public static List<string[]> ExtractMultipleReleases
             {
                 get { return ConfigReader.extractMultipleReleases; }
             }

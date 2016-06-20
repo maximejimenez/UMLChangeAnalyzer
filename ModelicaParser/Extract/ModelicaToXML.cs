@@ -54,12 +54,13 @@ namespace ModelicaParser.Extract
             if(Directory.Exists(mmPath)){
                 string[] paths = Directory.GetFiles(mmPath);
                 foreach(string filePath in paths){
+                    Console.WriteLine(filePath);
                     string text = File.ReadAllText(filePath, Encoding.UTF8);
                     IEnumerator<string> e = getTokens(text).GetEnumerator();
                     handlePackage(root, e);
                 }
             }
-
+            
             string xml = prettyXMLString(root);
             System.IO.File.WriteAllText(xmlPath, xml);
         }
@@ -119,7 +120,6 @@ namespace ModelicaParser.Extract
                     comments = false;
                 }
             }
-            text2 += "end Absyn;";
             return text2;
         }
 
@@ -147,7 +147,7 @@ namespace ModelicaParser.Extract
             Boolean comments = false;
             foreach (string token in tokens)
             {
-                if (token == "/*")
+                if (token.StartsWith("/*"))
                 {
                     comments = true;
                 }
@@ -155,7 +155,7 @@ namespace ModelicaParser.Extract
                 {
                     tokenWithoutComments.Add(token);
                 }
-                if (token == "*/")
+                if (token.EndsWith("*/"))
                 {
                     comments = false;
                 }
@@ -227,7 +227,7 @@ namespace ModelicaParser.Extract
         private static XmlElement createElementWithID(IEnumerator<string> e)
         {
             XmlElement elem = doc.CreateElement(e.Current);
-                e.MoveNext();
+            e.MoveNext();
             elem.SetAttribute("id", e.Current);
             return elem;
             }
@@ -235,8 +235,8 @@ namespace ModelicaParser.Extract
         private static XmlElement createElementWithName(IEnumerator<string> e)
             {
             XmlElement elem = doc.CreateElement(e.Current);
-                e.MoveNext();
-                elem.SetAttribute("name", e.Current);
+            e.MoveNext();
+            elem.SetAttribute("name", e.Current);
             return elem;
         }
 

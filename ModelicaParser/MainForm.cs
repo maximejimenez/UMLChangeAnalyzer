@@ -479,9 +479,9 @@ namespace ModelicaParser
         {
             ClearListBox();
 
-            /*Thread t = new Thread(reportMetrics_Click_Function);
+            Thread t = new Thread(reportMetrics_Click_Function);
             t.IsBackground = true;
-            t.Start();*/
+            t.Start();
         }
 
         // reporting feature calculation event (work done in a separate thread)
@@ -534,7 +534,8 @@ namespace ModelicaParser
                 MM_Extractor extractor = new MM_Extractor(this);
 
                 ListAdd("Dumping model...");
-                extractor.ExtractModel(textBoxModelPath.Text, textBoxFilePath.Text);
+                string version = "1.9.X";
+                extractor.ExtractModel(textBoxModelPath.Text, textBoxFilePath.Text, version);
                 ListAdd("Model successfully dumped!");
                 extractor.ReleaseModel();
 
@@ -806,12 +807,12 @@ namespace ModelicaParser
         }
 
         // reporting metrics for multiple meta-model releases
-        /*private void reportMetrics_Click_Function()
+        private void reportMetrics_Click_Function()
         {
             EnableButtons(false);
-            new ReportMetrics(this, checkBoxRelevancePolicy.Checked);
+            //new ReportMetrics(this, checkBoxRelevancePolicy.Checked);
             EnableButtons(true);
-        }*/
+        }
 
         #endregion
 
@@ -1002,7 +1003,7 @@ namespace ModelicaParser
             this.textBoxModel2.Name = "textBoxModel2";
             this.textBoxModel2.Size = new System.Drawing.Size(449, 20);
             this.textBoxModel2.TabIndex = 14;
-            this.textBoxModel2.Text = "C:\\Users\\maxime\\Desktop\\ModelicaResults\\Metamodels\\Absyn-1.9.3.xml";
+            this.textBoxModel2.Text = "C:\\Users\\maxime\\Desktop\\ModelicaResults\\XML\\1.9.3.xml";
             // 
             // textBoxModel1
             // 
@@ -1010,7 +1011,7 @@ namespace ModelicaParser
             this.textBoxModel1.Name = "textBoxModel1";
             this.textBoxModel1.Size = new System.Drawing.Size(449, 20);
             this.textBoxModel1.TabIndex = 15;
-            this.textBoxModel1.Text = "C:\\Users\\maxime\\Desktop\\ModelicaResults\\Metamodels\\Absyn-1.9.2.xml";
+            this.textBoxModel1.Text = "C:\\Users\\maxime\\Desktop\\ModelicaResults\\XML\\1.9.2.xml";
             // 
             // label5
             // 

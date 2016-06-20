@@ -10,6 +10,7 @@ namespace ModelicaParser.Extract
     class MM_Extractor
     {
         private MainForm mainForm;
+        private static string currentPackage = ""; // Help for backtracking
         static Dictionary<string, List<Connector>> targetElements;
         static Dictionary<string, Element> declaredElements;
         static string[] Basetypes = new string[] { "Boolean", "Integer", "Real", "String" };
@@ -19,11 +20,10 @@ namespace ModelicaParser.Extract
             this.mainForm = mainForm;
         }
 
-        internal void ExtractModel(string p1, string p2)
+        internal void ExtractModel(string p1, string p2, string version)
         {
-            string version = "1.9.X"; //TODO
             ModelicaToXML toXML = new ModelicaToXML();
-            string xml = toXML.parse(p1, p2, version);
+            toXML.parse(p1, p2, version);
         }
 
         internal void ReleaseModel()
@@ -38,6 +38,7 @@ namespace ModelicaParser.Extract
             doc.Load(p);
             targetElements = new Dictionary<string, List<Connector>>();
             declaredElements = new Dictionary<string, Element>();
+            currentPackage = "";
             return parseMetaModel(doc);
         }
 
@@ -64,6 +65,7 @@ namespace ModelicaParser.Extract
                 {
                     foreach (Connector connector in targetElements[targetName])
                     {
+                        connector.Target = target;
                         Connector clone = (Connector)connector.Clone();
                         clone.ParentElement = target;
                         clone.Target = target;
@@ -82,6 +84,7 @@ namespace ModelicaParser.Extract
         static Package parsePackage(XmlNode elem)
         {
             string id = elem.Attributes["id"].Value;
+            currentPackage = id;
             Package package = new Package(id);
             XmlAttribute noteAttribute = elem.Attributes["note"];
             if (noteAttribute != null)
@@ -95,7 +98,7 @@ namespace ModelicaParser.Extract
                     Element uniontype = parseUniontype(children[i]);
                     uniontype.ParentPackage = package;
                     package.AddElement(uniontype);
-                    declaredElements.Add(uniontype.Name, uniontype);
+                    declaredElements.Add(id+"."+uniontype.Name, uniontype);
                 }
                 else
                 {
@@ -144,12 +147,11 @@ namespace ModelicaParser.Extract
                 string minMultiplicity = attributes["minMultiplicity"].Value;
                 XmlAttribute fieldAttributeNote = attributes["note"];
 
-
                 if (Basetypes.Contains<string>(type))
                 {
                     ModelicaParser.Datamodel.Attribute attribute = new ModelicaParser.Datamodel.Attribute(type, name, maxMultiplicity, minMultiplicity);
                     if (fieldAttributeNote != null)
-                        attribute.Note = noteAttribute.Value;
+                        attribute.Note = fieldAttributeNote.Value;
                     attribute.ParentElement = record;
                     record.AddAttribute(attribute);
                 }
@@ -163,10 +165,14 @@ namespace ModelicaParser.Extract
                     }
                     Connector c = new Connector("Association", "1", targetMultiplicity, name);
                     if (fieldAttributeNote != null)
-                        c.Note = noteAttribute.Value;
+                        c.Note = fieldAttributeNote.Value;
                     c.ParentElement = record;
                     c.Source = record;
                     record.AddSourceConnector(c);
+                    if (!type.Contains("."))
+                    {
+                        type = currentPackage + "." + type;
+                    }
                     if (!targetElements.ContainsKey(type))
                     {
                         targetElements.Add(type, new List<Connector>());

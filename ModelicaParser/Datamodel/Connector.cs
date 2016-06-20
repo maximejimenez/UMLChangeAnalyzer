@@ -86,7 +86,11 @@ namespace ModelicaParser.Datamodel
 
         public string GetPath()
         {
-            return parentElement.GetPath() + "::" + source.Name + "->" + target.Name;
+            if (target == null)
+            {
+                Console.WriteLine(parentElement.GetPath() + " : " + source.Name + " -> null" );
+            }
+            return parentElement.GetPath() + "." + source.Name + "->" + target.Name;
         }
 
         #endregion

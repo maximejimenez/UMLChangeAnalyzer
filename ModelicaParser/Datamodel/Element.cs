@@ -361,13 +361,13 @@ namespace ModelicaParser.Datamodel
             while (elem != null)
             {
                 pack = elem.ParentPackage;
-                path = elem.Name + "::" + path;
+                path = elem.Name + "." + path;
                 elem = elem.ParentElement;
             }
 
             while (pack != null)
             {
-                path = pack.Name + "::" + path;
+                path = pack.Name + "." + path;
                 pack = pack.ParentPackage;
             }
 
@@ -528,6 +528,7 @@ namespace ModelicaParser.Datamodel
                 {
                     numOfChanges += connector.NumOfAllModifiableElements(RelevantOnly);
                     addedConnectors.Add(connector);
+                    Console.WriteLine(type + " " + name);
                     changes.Add(new MMChange("+ Connector (source) " + connector.GetPath(), false).AppendTabs(1));
                 }
 
