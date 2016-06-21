@@ -121,7 +121,7 @@ namespace ModelicaParser.Changes
 
         #endregion
 
-        #region Calculare resutls
+        #region Calculare results
 
         // calculating results for the "entire meta-model"
         private void CalculateResultsModel(MetaModel model1, MetaModel model2, MMResults[][] resultsMatrix, int i, int j)
@@ -134,6 +134,12 @@ namespace ModelicaParser.Changes
             resultsMatrix[i][j].NumOfModifiedElements = model2.NumberOfModifiedElements();
             resultsMatrix[i][j].NumOfAddedElements = model2.NumberOfAddedElements();
             resultsMatrix[i][j].NumOfRemovedElements = model2.NumberOfRemovedElements();
+
+            resultsMatrix[i][j].NumOfChangedConnectors = model2.NumberOfModifiedConnectors() + model2.NumberOfAddedConnectors() + model2.NumberOfRemovedConnectors();
+            resultsMatrix[i][j].NumOfModifiedConnectors = model2.NumberOfModifiedConnectors();
+            resultsMatrix[i][j].NumOfAddedConnectors = model2.NumberOfAddedConnectors();
+            resultsMatrix[i][j].NumOfRemovedConnectors = model2.NumberOfRemovedConnectors();
+
             resultsMatrix[i][j].NumOfChangedAttributes = model2.NumberOfModifiedAttributes() + model2.NumberOfAddedAttributes() + model2.NumberOfRemovedAttributes();
             resultsMatrix[i][j].NumOfModifiedAttributes = model2.NumberOfModifiedAttributes();
             resultsMatrix[i][j].NumOfAddedAttributes = model2.NumberOfAddedAttributes();

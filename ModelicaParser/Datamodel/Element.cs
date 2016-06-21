@@ -91,6 +91,17 @@ namespace ModelicaParser.Datamodel
 
         #region Calculate number of
 
+
+        public int NumberOfElements()
+        {
+            int numberOfElements = 1;
+
+            foreach(Element elem in Children)
+                numberOfElements += elem.NumberOfElements();
+
+            return numberOfElements;
+        }
+
         public int NumberOfAttributes(bool relevantOnly)
         {
             if (relevantOnly && IgnoreElement())
@@ -165,6 +176,65 @@ namespace ModelicaParser.Datamodel
             return modifiableElems;
         }
 
+        public int NumberOfModifiedConnectors()
+        {
+            int numberOfModifiedConnectors = modifiedConnectors.Count;
+
+            foreach (Element elem in modifiedElements)
+                numberOfModifiedConnectors += elem.NumberOfModifiedConnectors();
+
+            return numberOfModifiedConnectors;
+        }
+
+        public int NumberOfAddedConnectors()
+        {
+            int numberOfAddedConnectors = addedConnectors.Count;
+
+            foreach (Element elem in AddedElements)
+                numberOfAddedConnectors += elem.NumberOfAddedConnectors();
+
+            return numberOfAddedConnectors;
+        }
+
+        public int NumberOfRemovedConnectors()
+        {
+            int numberOfRemovedConnectors = removedConnectors.Count;
+
+            foreach (Element elem in RemovedElements)
+                numberOfRemovedConnectors += elem.NumberOfRemovedConnectors();
+
+            return numberOfRemovedConnectors;
+        }
+
+        public int NumberOfModifiedAttributes()
+        {
+            int numberOfModifiedAttributes = modifiedAttributes.Count;
+
+            foreach (Element elem in modifiedElements)
+                numberOfModifiedAttributes += elem.NumberOfModifiedAttributes();
+
+            return numberOfModifiedAttributes;
+        }
+
+        public int NumberOfAddedAttributes()
+        {
+            int numberOfAddedAttributes = addedAttributes.Count;
+
+            foreach (Element elem in AddedElements)
+                numberOfAddedAttributes += elem.NumberOfAddedAttributes();
+
+            return numberOfAddedAttributes;
+        }
+
+        public int NumberOfRemovedAttributes()
+        {
+            int numberOfRemovedAttributes = removedAttributes.Count;
+
+            foreach (Element elem in RemovedElements)
+                numberOfRemovedAttributes += elem.NumberOfRemovedAttributes();
+
+            return numberOfRemovedAttributes;
+        }
 
         #endregion
 
@@ -236,8 +306,8 @@ namespace ModelicaParser.Datamodel
         // adds all added attributes of the element to a list
         public List<Element> GetAllAddedElements(List<Element> list)
         {
-            foreach (Element child in children)
-                list.Add(child);
+            foreach (Element elem in addedElements)
+                list.Add(elem);
 
             return list;
         }
@@ -245,10 +315,55 @@ namespace ModelicaParser.Datamodel
         // adds all removed attributes of the element to a list
         public List<Element> GetAllRemovedElements(List<Element> list)
         {
-            foreach (Element child in children)
-                list.Add(child);
+            foreach (Element elem in removedElements)
+                list.Add(elem);
 
             return list;
+        }
+
+        public void GetAllConnectors(List<Connector> list)
+        {
+            foreach (Connector conn in sourceConnectors)
+                list.Add(conn);
+
+            foreach (Connector conn in targetConnectors)
+                list.Add(conn);
+
+            foreach (Element child in children)
+                child.GetAllConnectors(list);
+        }
+
+        public void GetAllModifiedConnectors(List<Connector> list)
+        {
+            foreach (Connector conn in modifiedConnectors)
+                list.Add(conn);
+
+            foreach (Element elem in modifiedElements)
+                elem.GetAllModifiedConnectors(list);
+        }
+
+        public void GetAllRemovedConnectors(List<Connector> list)
+        {
+            foreach (Connector conn in removedConnectors)
+                list.Add(conn);
+
+            foreach (Element elem in removedElements)
+                elem.GetAllConnectors(list);
+
+            foreach (Element elem in modifiedElements)
+                elem.GetAllRemovedConnectors(list);
+        }
+
+        public void GetAllAddedConnectors(List<Connector> list)
+        {
+            foreach (Connector conn in addedConnectors)
+                list.Add(conn);
+
+            foreach (Element elem in addedElements)
+                elem.GetAllConnectors(list);
+
+            foreach (Element elem in modifiedElements)
+                elem.GetAllAddedConnectors(list);
         }
 
         // adds all attributes of the element to a list
@@ -256,6 +371,9 @@ namespace ModelicaParser.Datamodel
         {
             foreach (Attribute attr in attributes)
                 list.Add(attr);
+
+            foreach (Element elem in Children)
+                elem.GetAllAttributes(list);
 
             return list;
         }
@@ -266,13 +384,8 @@ namespace ModelicaParser.Datamodel
             foreach (Attribute attr in modifiedAttributes)
                 list.Add(attr);
 
-            foreach (Element child in children)
-            {
-                foreach (Attribute attr in child.ModifiedAttributes)
-                {
-                    list.Add(attr);
-                }
-            }
+            foreach (Element elem in modifiedElements)
+                elem.GetAllModifiedAttributes(list);
 
             return list;
         }
@@ -283,13 +396,11 @@ namespace ModelicaParser.Datamodel
             foreach (Attribute attr in addedAttributes)
                 list.Add(attr);
 
-            foreach (Element child in children)
-            {
-                foreach (Attribute attr in child.AddedAttributes)
-                {
-                    list.Add(attr);
-                }
-            }
+            foreach (Element elem in addedElements)
+                elem.GetAllAttributes(list);
+
+            foreach (Element elem in modifiedElements)
+                elem.GetAllAddedAttributes(list);
 
             return list;
         }
@@ -300,13 +411,11 @@ namespace ModelicaParser.Datamodel
             foreach (Attribute attr in removedAttributes)
                 list.Add(attr);
 
-            foreach (Element child in children)
-            {
-                foreach (Attribute attr in child.RemovedAttributes)
-                {
-                    list.Add(attr);
-                }
-            }
+            foreach (Element elem in removedElements)
+                elem.GetAllAttributes(list);
+
+            foreach (Element elem in modifiedElements)
+                elem.GetAllRemovedAttributes(list);
 
             return list;
         }
@@ -324,9 +433,7 @@ namespace ModelicaParser.Datamodel
         {
             foreach(Element child in children){
                 if (child.Name == name)
-                {
                     return child;
-                }
             }
             return null;
         }
@@ -422,6 +529,14 @@ namespace ModelicaParser.Datamodel
             if (RelevantOnly && IgnoreElement())
                 return 0;
 
+            int numOfChanges = 0;
+
+            if (!type.Equals(oldElement.Type))
+            {
+                numOfChanges++;
+                changes.Add(new MMChange("~ Type: " + oldElement.Type + " -> " + type, false).AppendTabs(1));
+            }
+
             if (!name.Equals(oldElement.Name))
             {
                 numOfChanges++;
@@ -436,8 +551,6 @@ namespace ModelicaParser.Datamodel
 
             // checking if the element is changed or added in the new model
             foreach(Element child in children){
-                int num = 0;
-
                 Element oldSubElement = oldElement.GetChild(child.Name);
                 // checking if the element is added to the new model
                 if (oldSubElement == null)
@@ -445,6 +558,11 @@ namespace ModelicaParser.Datamodel
                     numOfChanges += child.NumOfAllModifiableElements(RelevantOnly);
                     addedElements.Add(child);
                     changes.Add(new MMChange("+ Element " + child.GetPath(), false).AppendTabs(1));
+                    foreach(Attribute attr in child.Attributes){
+                        changes.Add(new MMChange("+ Attribute " + attr.GetPath(), false).AppendTabs(2));
+                        child.addedAttributes.Add(attr);
+                    }
+
                 }
 
                 // checking if the element is changed in the new model
@@ -616,6 +734,12 @@ namespace ModelicaParser.Datamodel
             set { parentElement = value; }
         }
 
+        public List<Element> Children
+        {
+            get { return children; }
+            set { children = value; }
+        }
+
         public string Name
         {
             get { return name; }
@@ -708,5 +832,6 @@ namespace ModelicaParser.Datamodel
         }
 
         #endregion
+
     }
 }

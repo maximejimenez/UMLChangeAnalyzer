@@ -28,6 +28,10 @@ namespace ModelicaParser.Changes
         private int numOfAddedElements = 0;
         private int numOfModifiedElements = 0;
         private int numOfRemovedElements = 0;
+        private int numOfChangedConnectors = 0;
+        private int numOfModifiedConnectors = 0;
+        private int numOfAddedConnectors = 0;
+        private int numOfRemovedConnectors = 0;
         private int numOfChangedAttributes = 0;
         private int numOfModifiedAttributes = 0;
         private int numOfAddedAttributes = 0;
@@ -41,6 +45,9 @@ namespace ModelicaParser.Changes
         private List<Element> modifiedElements = new List<Element>();
         private List<Element> removedElements = new List<Element>();
         private List<Element> addedElements = new List<Element>();
+        private List<Connector> modifiedConnectors = new List<Connector>();
+        private List<Connector> removedConnectors = new List<Connector>();
+        private List<Connector> addedConnectors = new List<Connector>(); 
         private List<ModelicaParser.Datamodel.Attribute> modifiedAttributes = new List<ModelicaParser.Datamodel.Attribute>();
         private List<ModelicaParser.Datamodel.Attribute> addedAttributes = new List<ModelicaParser.Datamodel.Attribute>();
         private List<ModelicaParser.Datamodel.Attribute> removedAttributes = new List<ModelicaParser.Datamodel.Attribute>();
@@ -68,6 +75,9 @@ namespace ModelicaParser.Changes
             NumOfModifiedElements = model2.NumberOfModifiedElements();
             NumOfAddedElements = model2.NumberOfAddedElements();
             NumOfRemovedElements = model2.NumberOfRemovedElements();
+            NumOfModifiedConnectors = model2.NumberOfModifiedConnectors();
+            NumOfAddedConnectors = model2.NumberOfAddedConnectors();
+            NumOfRemovedConnectors = model2.NumberOfRemovedConnectors();
             NumOfModifiedAttributes = model2.NumberOfModifiedAttributes();
             NumOfAddedAttributes = model2.NumberOfAddedAttributes();
             NumOfRemovedAttributes = model2.NumberOfRemovedAttributes();
@@ -79,6 +89,9 @@ namespace ModelicaParser.Changes
             ModifiedElements = model2.GetAllModifiedElements();
             AddedElements = model2.GetAllAddedElements();
             RemovedElements = model2.GetAllRemovedElements();
+            ModifiedConnectors = model2.GetAllModifiedConnectors();
+            AddedConnectors = model2.GetAllAddedConnectors();
+            RemovedConnectors = model2.GetAllRemovedConnectors();
             ModifiedAttributes = model2.GetAllModifiedAttributes();
             AddedAttributes = model2.GetAllAddedAttributes();
             RemovedAttributes = model2.GetAllRemovedAttributes();
@@ -229,6 +242,30 @@ namespace ModelicaParser.Changes
             set { numOfRemovedElements = value; }
         }
 
+        public int NumOfChangedConnectors
+        {
+            get { return numOfChangedConnectors; }
+            set { numOfChangedConnectors = value; }
+        }
+
+        public int NumOfModifiedConnectors
+        {
+            get { return numOfModifiedConnectors; }
+            set { numOfModifiedConnectors = value; }
+        }
+
+        public int NumOfAddedConnectors
+        {
+            get { return numOfAddedConnectors; }
+            set { numOfAddedConnectors = value; }
+        }
+
+        public int NumOfRemovedConnectors
+        {
+            get { return numOfRemovedConnectors; }
+            set { numOfRemovedConnectors = value; }
+        }
+
         public int NumOfChangedAttributes
         {
             get { return numOfChangedAttributes; }
@@ -294,6 +331,24 @@ namespace ModelicaParser.Changes
             get { return removedElements; }
             set { removedElements = value; }
         }
+
+        public List<Connector> ModifiedConnectors
+        {
+            get { return modifiedConnectors; }
+            set { modifiedConnectors = value; }
+        }
+
+        public List<Connector> AddedConnectors
+        {
+            get { return addedConnectors; }
+            set { addedConnectors = value; }
+        }
+
+        public List<Connector> RemovedConnectors
+        {
+            get { return removedConnectors; }
+            set { removedConnectors = value; }
+        }             
 
         public List<ModelicaParser.Datamodel.Attribute> ModifiedAttributes
         {

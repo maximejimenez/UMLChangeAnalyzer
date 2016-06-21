@@ -87,22 +87,16 @@ namespace ModelicaParser.Datamodel
             if (RelevantOnly && IgnoreAttribute())
                 return 0;
 
-            if (!Equals(name, oldAttribute.Name))
-            {
-                numOfChanges++;
-                changes.Add(new MMChange("~ Name: " + oldAttribute.Name + " -> " + name, false));
-            }
-
-            if (((RelevantOnly && !ConfigReader.ExcludedAttributeNote) || !RelevantOnly) && !Equals(note, oldAttribute.Note))
-            {
-                numOfChanges++;
-                changes.Add(new MMChange("~ Note", false));
-            }
-
             if (!Equals(type, oldAttribute.Type))
             {
                 numOfChanges++;
                 changes.Add(new MMChange("~ Type: " + oldAttribute.Type + " -> " + type, false));
+            }
+
+            if (!Equals(name, oldAttribute.Name))
+            {
+                numOfChanges++;
+                changes.Add(new MMChange("~ Name: " + oldAttribute.Name + " -> " + name, false));
             }
 
             if (!Equals(lowerBound, oldAttribute.LowerBound))
@@ -115,6 +109,12 @@ namespace ModelicaParser.Datamodel
             {
                 numOfChanges++;
                 changes.Add(new MMChange("~ Upper Bound: " + oldAttribute.UpperBound + " -> " + upperBound, false));
+            }
+
+            if (((RelevantOnly && !ConfigReader.ExcludedAttributeNote) || !RelevantOnly) && !Equals(note, oldAttribute.Note))
+            {
+                numOfChanges++;
+                changes.Add(new MMChange("~ Note", false));
             }
 
             return numOfChanges;
@@ -173,40 +173,6 @@ namespace ModelicaParser.Datamodel
 
 
         #endregion
-
-        /*
-        public bool Equals(Attribute attribute)
-        {
-            if (attribute == null)
-                return false;
-
-            else
-                return Equals(attribute);
-        }
-
-        public override bool Equals(Object obj)
-        {
-            if (obj == null)
-                return false;
-
-            Attribute attribute = obj as Attribute;
-            if (attribute == null)
-                return false;
-            else
-                return Equals(attribute);
-        }
-        
-        public static bool operator ==(Attribute attr1, Attribute attr2)
-        {
-            if (attr1 == null || attr2 == null)
-                return false;
-
-            return attr1.type == attr2.type 
-                && attr1.name == attr2.name 
-                && attr1.upperBound == attr2.upperBound 
-                && attr1.lowerBound == attr2.lowerBound;
-        }
-        */
 
     }
 }

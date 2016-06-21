@@ -51,16 +51,6 @@ namespace ModelicaParser.Datamodel
             return this.MemberwiseClone();
         }
         
-        /*private static string generateUID(int length)
-        {
-            const string alphanumericCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-                                                  "abcdefghijklmnopqrstuvwxyz" +
-                                                  "0123456789";
-            var random = new Random();
-            return new string(Enumerable.Repeat(alphanumericCharacters, length)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
-        }*/
-
         public override string ToString()
         {
             return "Connector " + source.Name + " -> " + target.Name + "\n";
@@ -117,12 +107,6 @@ namespace ModelicaParser.Datamodel
             if (RelevantOnly && IgnoreConector())
                 return 0;
 
-            if (((RelevantOnly && !ConfigReader.ExcludedAttributeNote) || !RelevantOnly) && !Equals(note, oldConnector.Note))
-            {
-                numOfChanges++;
-                changes.Add(new MMChange("~ Note", false).AppendTabs(1));
-            }
-
             if (!Equals(SourceCardinality, oldConnector.SourceCardinality))
             {
                 numOfChanges++;
@@ -134,6 +118,12 @@ namespace ModelicaParser.Datamodel
 
                 numOfChanges++;
                 changes.Add(new MMChange("~ Target Cardinality (" + UID + "): " + oldConnector.TargetCardinality + " -> " + TargetCardinality, false));
+            }
+
+            if (((RelevantOnly && !ConfigReader.ExcludedAttributeNote) || !RelevantOnly) && !Equals(note, oldConnector.Note))
+            {
+                numOfChanges++;
+                changes.Add(new MMChange("~ Note", false).AppendTabs(1));
             }
 
             return numOfChanges;

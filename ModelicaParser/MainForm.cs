@@ -636,10 +636,28 @@ namespace ModelicaParser
                     ListExportAdd("********** CHANGE METRICS **********", sb);
                     ListExportAdd("", sb);
                     ListExportAdd("Number of changes: " + results.NumOfChanges, sb);
+
                     ListExportAdd("Number of changed elements: " + (results.NumOfModifiedElements + results.NumOfAddedElements + results.NumOfRemovedElements), sb);
+
                     ListExportAdd("\tNumber of modified elements: " + results.NumOfModifiedElements, sb);
                     ListExportAdd("\tNumber of added elements: " + results.NumOfAddedElements, sb);
                     ListExportAdd("\tNumber of removed elements: " + results.NumOfRemovedElements, sb);
+
+
+                    ListExportAdd("Number of changed connectors: " + (results.NumOfModifiedConnectors + results.NumOfAddedConnectors + results.NumOfRemovedConnectors), sb);
+                    ListExportAdd("\tNumber of modified connectors: " + results.NumOfModifiedConnectors, sb);
+                    ListExportAdd("\tNumber of added connectors: " + results.NumOfAddedConnectors, sb);
+                    ListExportAdd("\tNumber of removed connectors: " + results.NumOfRemovedConnectors, sb);
+
+                    ListExportAdd("Number of changed attributes: " + (results.NumOfModifiedAttributes + results.NumOfAddedAttributes + results.NumOfRemovedAttributes), sb);
+                    ListExportAdd("\tNumber of modified attributes: " + results.NumOfModifiedAttributes, sb);
+                    ListExportAdd("\tNumber of added attributes: " + results.NumOfAddedAttributes, sb);
+                    ListExportAdd("\tNumber of removed attributes: " + results.NumOfRemovedAttributes, sb);
+                    
+                    ListExportAdd("Number of changed packages: " + (results.NumOfModifiedPackages + results.NumOfAddedPackages + results.NumOfRemovedPackages), sb);
+                    ListExportAdd("\tNumber of modified packages: " + results.NumOfModifiedPackages, sb);
+                    ListExportAdd("\tNumber of added packages: " + results.NumOfAddedPackages, sb);
+                    ListExportAdd("\tNumber of removed packages: " + results.NumOfRemovedPackages, sb);
 
                     ListExportAdd("", sb);
                 }
@@ -648,7 +666,6 @@ namespace ModelicaParser
                 {
                     ListExportAdd("********** CHANGES **********", sb);
                     ListExportAdd("All changes:", sb);
-                    ListExportAdd("", sb);
 
                     int x = 1;
                     foreach (MMChange chg in results.Changes)
@@ -810,7 +827,7 @@ namespace ModelicaParser
         private void reportMetrics_Click_Function()
         {
             EnableButtons(false);
-            //new ReportMetrics(this, checkBoxRelevancePolicy.Checked);
+            new ReportMetrics(this, checkBoxRelevancePolicy.Checked);
             EnableButtons(true);
         }
 
