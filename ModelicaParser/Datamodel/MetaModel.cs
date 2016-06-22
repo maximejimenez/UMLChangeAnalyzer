@@ -249,9 +249,20 @@ namespace ModelicaParser.Datamodel
         {
             List<MMChange> listOfChanges = new List<MMChange>(changes);
 
-            foreach (Package pack in packages)
-                foreach (MMChange chng in pack.GetChanges())
-                    listOfChanges.Add(chng);
+            foreach (Package pack in addedPackages)
+            {
+                pack.printAsAddedPackage(listOfChanges, 0);
+            }
+
+            foreach (Package pack in modifiedPackages)
+            {
+                pack.printAsModifiedPackage(listOfChanges, 0);
+            }
+
+            foreach (Package pack in removedPackages)
+            {
+                pack.printAsAddedPackage(listOfChanges, 0);
+            }
 
             return listOfChanges;
         }
@@ -466,7 +477,6 @@ namespace ModelicaParser.Datamodel
 
             return package.GetElementByName(pathParts[pathParts.Length - 1]);
         }
-        
 
         #endregion
 
@@ -500,10 +510,11 @@ namespace ModelicaParser.Datamodel
                 // checking if the package is added to the new model
                 if (oldPackage == null)
                 {
+                    //changes.Add(new MMChange("+ Package " + package.GetPath() + " " + package.Name, false));
                     numOfChanges += package.NumOfAllModifiableElements(RelevantOnly);
                     addedPackages.Add(package);
+                    
                 }
-
                 // checking if the package is changed in the new model
                 else if ((num = package.ComparePackages(oldPackage, RelevantOnly)) != 0)
                 {

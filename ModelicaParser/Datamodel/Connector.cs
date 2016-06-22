@@ -76,11 +76,9 @@ namespace ModelicaParser.Datamodel
 
         public string GetPath()
         {
-            if (target == null)
-            {
-                Console.WriteLine(parentElement.GetPath() + " : " + source.Name + " -> null" );
-            }
-            return parentElement.GetPath() + "." + source.Name + "->" + target.Name;
+            if(target == null)
+                return parentElement.GetPath() + " -> null";
+            return parentElement.GetPath() + " -> " + target.GetPath();
         }
 
         #endregion
@@ -123,7 +121,7 @@ namespace ModelicaParser.Datamodel
             if (((RelevantOnly && !ConfigReader.ExcludedAttributeNote) || !RelevantOnly) && !Equals(note, oldConnector.Note))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Note", false).AppendTabs(1));
+                changes.Add(new MMChange("~ Note", false));
             }
 
             return numOfChanges;

@@ -240,50 +240,142 @@ namespace ModelicaParser.Datamodel
 
         #region Retrieve object
 
+        public void printAsAddedElement(List<MMChange> listOfChanges, int indent)
+        {
+            listOfChanges.Add(new MMChange("+ Element: " + GetPath(), true).AppendTabs(indent++));
+            foreach (Attribute addedAttribute in Attributes)
+            {
+                listOfChanges.Add(new MMChange("+ Attribute: " + addedAttribute.GetPath(), true).AppendTabs(indent));
+            }
+            foreach (Connector sourceConnector in SourceConnectors)
+            {
+                listOfChanges.Add(new MMChange("+ Connector (source): " + sourceConnector.GetPath(), true).AppendTabs(indent));
+            }
+            foreach (Connector targetConnector in TargetConnectors)
+            {
+                listOfChanges.Add(new MMChange("+ Connector (target):" + targetConnector.GetPath(), true).AppendTabs(indent));
+            }
+            foreach (Element child in Children)
+            {
+                child.printAsAddedElement(listOfChanges, indent);
+            }
+        }
+
+        public void printAsModifiedElement(List<MMChange> listOfChanges, int indent)
+        {
+            listOfChanges.Add(new MMChange("~ Element: " + GetPath(), true).AppendTabs(indent++));
+
+            foreach (Attribute attr in addedAttributes)
+            {
+                listOfChanges.Add(new MMChange("+ Attribute :" + attr.GetPath(), true).AppendTabs(indent));
+            }
+            foreach (Attribute attr in removedAttributes)
+            {
+                listOfChanges.Add(new MMChange("- Attribute :" + attr.GetPath(), true).AppendTabs(indent));
+
+            }
+            foreach (Attribute attr in modifiedAttributes)
+            {
+                listOfChanges.Add(new MMChange("~ Attribute :" + attr.GetPath(), true).AppendTabs(indent));
+                foreach (MMChange chng in attr.GetChanges())
+                    listOfChanges.Add(chng.AppendTabs(indent + 1));
+            }
+
+
+
+            foreach (Connector conn in addedConnectors)
+            {
+                listOfChanges.Add(new MMChange("+ Connector :" + conn.GetPath(), true).AppendTabs(indent));
+            }
+            foreach (Connector conn in removedConnectors)
+            {
+                listOfChanges.Add(new MMChange("- Connector :" + conn.GetPath(), true).AppendTabs(indent));
+            }
+            foreach (Connector conn in modifiedConnectors)
+            {
+                listOfChanges.Add(new MMChange("~ Connector :" + conn.GetPath(), true).AppendTabs(indent));
+                foreach (MMChange chng in conn.GetChanges())
+                    listOfChanges.Add(chng.AppendTabs(indent + 1));
+            }
+
+            foreach (Element child in addedElements)
+            {
+                child.printAsAddedElement(listOfChanges, indent);
+            }
+            foreach (Element child in removedElements)
+            {
+                child.printAsRemovedElement(listOfChanges, indent);
+            }
+            foreach (Element child in modifiedElements)
+            {
+                child.printAsModifiedElement(listOfChanges, indent);
+            }
+        }
+
+        public void printAsRemovedElement(List<MMChange> listOfChanges, int indent)
+        {
+            listOfChanges.Add(new MMChange("- Element: " + GetPath(), true).AppendTabs(indent++));
+            foreach (Attribute addedAttribute in Attributes)
+            {
+                listOfChanges.Add(new MMChange("- Attribute: " + addedAttribute.GetPath(), true).AppendTabs(indent));
+            }
+            foreach (Connector sourceConnector in SourceConnectors)
+            {
+                listOfChanges.Add(new MMChange("- Connector (source): " + sourceConnector.GetPath(), true).AppendTabs(indent));
+            }
+            foreach (Connector targetConnector in TargetConnectors)
+            {
+                listOfChanges.Add(new MMChange("- Connector (target):" + targetConnector.GetPath(), true).AppendTabs(indent));
+            }
+            foreach (Element child in Children)
+            {
+                child.printAsAddedElement(listOfChanges, indent);
+            }
+        }
+
         // retrieves all changes
         public List<MMChange> GetChanges()
         {
             List<MMChange> listOfChanges = new List<MMChange>(changes);
 
-            foreach (Element child in children)
-            {
-                if (child.NumOfChanges != 0)
-                    listOfChanges.Add(new MMChange("~ Element " + child.GetPath(), true).AppendTabs(1));
-
-                foreach (MMChange chng in child.GetChanges())
-                    listOfChanges.Add(chng.AppendTabs(2));
-            }
-
             foreach (Attribute attr in attributes)
             {
-                if (attr.NumOfChanges != 0)
-                    listOfChanges.Add(new MMChange("~ Attribute " + attr.GetPath(), true).AppendTabs(1));
+                //if (attr.NumOfChanges != 0)
+                //    listOfChanges.Add(new MMChange("~ Attribute " + attr.GetPath(), true).AppendTabs(1));
 
                 foreach (MMChange chng in attr.GetChanges())
-                    listOfChanges.Add(chng.AppendTabs(2));
+                    listOfChanges.Add(chng.AppendTabs(1));
             }
 
             foreach (Connector conn in sourceConnectors)
             {
-                if (conn.NumOfChanges != 0)
-                    listOfChanges.Add(new MMChange("~ Connector " + conn.GetPath(), true).AppendTabs(1));
+                //if (conn.NumOfChanges != 0)
+                //    listOfChanges.Add(new MMChange("~ Connector " + conn.GetPath(), true).AppendTabs(1));
 
                 foreach (MMChange chng in conn.GetChanges())
-                    listOfChanges.Add(chng.AppendTabs(2));
+                    listOfChanges.Add(chng.AppendTabs(1));
             }
 
             foreach (Connector conn in targetConnectors)
             {
-                if (conn.NumOfChanges != 0)
-                    listOfChanges.Add(new MMChange("~ Connector " + conn.GetPath(), true).AppendTabs(1));
+                //if (conn.NumOfChanges != 0)
+                //    listOfChanges.Add(new MMChange("~ Connector " + conn.GetPath(), true).AppendTabs(1));
 
                 foreach (MMChange chng in conn.GetChanges())
-                    listOfChanges.Add(chng.AppendTabs(2));
+                    listOfChanges.Add(chng.AppendTabs(1));
+            }
+
+            foreach (Element child in children)
+            {
+                //if (child.NumOfChanges != 0)
+                //    listOfChanges.Add(new MMChange("~ Element " + child.GetPath(), true).AppendTabs(1));
+
+                foreach (MMChange chng in child.GetChanges())
+                    listOfChanges.Add(chng.AppendTabs(1));
             }
 
             return listOfChanges;
         }
-
 
         // adds all elements of the element to a list
         public List<Element> GetAllElements(List<Element> list)
@@ -534,59 +626,19 @@ namespace ModelicaParser.Datamodel
             if (!type.Equals(oldElement.Type))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Type: " + oldElement.Type + " -> " + type, false).AppendTabs(1));
+                changes.Add(new MMChange("~ Type: " + oldElement.Type + " -> " + type, false));
             }
 
             if (!name.Equals(oldElement.Name))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Name: " + oldElement.Name + " -> " + name, false).AppendTabs(1));
+                changes.Add(new MMChange("~ Name: " + oldElement.Name + " -> " + name, false));
             }
 
             if (((RelevantOnly && !ConfigReader.ExcludedAttributeNote) || !RelevantOnly) && !Equals(note, oldElement.Note))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Note", false).AppendTabs(1));
-            }
-
-            // checking if the element is changed or added in the new model
-            foreach(Element child in children){
-                Element oldSubElement = oldElement.GetChild(child.Name);
-                // checking if the element is added to the new model
-                if (oldSubElement == null)
-                {
-                    numOfChanges += child.NumOfAllModifiableElements(RelevantOnly);
-                    addedElements.Add(child);
-                    changes.Add(new MMChange("+ Element " + child.GetPath(), false).AppendTabs(1));
-                    foreach(Attribute attr in child.Attributes){
-                        changes.Add(new MMChange("+ Attribute " + attr.GetPath(), false).AppendTabs(2));
-                        child.addedAttributes.Add(attr);
-                    }
-
-                }
-
-                // checking if the element is changed in the new model
-                else
-                {
-                    int noc = child.CompareElements(oldSubElement, RelevantOnly);
-                    numOfChanges += noc;
-                    if(noc != 0)
-                        modifiedElements.Add(oldSubElement);
-                }
-            }
-
-
-            foreach (Element elem in oldElement.children)
-            {
-
-                Element element = GetChild(elem.Name);
-
-                if (elem == null)
-                {
-                    numOfChanges += oldElement.NumOfAllModifiableElements(RelevantOnly);
-                    removedElements.Add(oldElement);
-                    changes.Add(new MMChange("- Element " + oldElement.GetPath(), false).AppendTabs(1));
-                }
+                changes.Add(new MMChange("~ Note", false));
             }
 
             // checking if the attribute is changed or added in the new model
@@ -604,9 +656,8 @@ namespace ModelicaParser.Datamodel
                 {
                     numOfChanges += attribute.NumOfAllModifiableElements(RelevantOnly);
                     addedAttributes.Add(attribute);
-                    changes.Add(new MMChange("+ Attribute " + attribute.GetPath(), false).AppendTabs(1));
+                    //changes.Add(new MMChange("+ Attribute " + attribute.GetPath(), false));
                 }
-
                 // checking if the attribute is changed in the new model
                 else if ((num = attribute.CompareAttributes(oldAttribute, RelevantOnly)) != 0)
                 {
@@ -627,7 +678,7 @@ namespace ModelicaParser.Datamodel
                 {
                     numOfChanges += oldAttribute.NumOfAllModifiableElements(RelevantOnly);
                     removedAttributes.Add(oldAttribute);
-                    changes.Add(new MMChange("- Attribute " + oldAttribute.GetPath(), false).AppendTabs(1));
+                    //changes.Add(new MMChange("- Attribute " + oldAttribute.GetPath(), false).AppendTabs(1));
                 }
             }
 
@@ -646,8 +697,6 @@ namespace ModelicaParser.Datamodel
                 {
                     numOfChanges += connector.NumOfAllModifiableElements(RelevantOnly);
                     addedConnectors.Add(connector);
-                    Console.WriteLine(type + " " + name);
-                    changes.Add(new MMChange("+ Connector (source) " + connector.GetPath(), false).AppendTabs(1));
                 }
 
                 // checking if the connector is changed in the new model
@@ -655,6 +704,21 @@ namespace ModelicaParser.Datamodel
                 {
                     numOfChanges += num;
                     modifiedConnectors.Add(connector);
+                }
+            }
+
+            // checking if the source connector is removed in the new model
+            foreach (Connector oldConnector in oldElement.SourceConnectors)
+            {
+                if (RelevantOnly && oldConnector.IgnoreConector())
+                    continue;
+
+                Connector connector = GetSourceConnector(oldConnector.UID);
+
+                if (connector == null)
+                {
+                    numOfChanges += oldConnector.NumOfAllModifiableElements(RelevantOnly);
+                    removedConnectors.Add(oldConnector);
                 }
             }
 
@@ -673,7 +737,6 @@ namespace ModelicaParser.Datamodel
                 {
                     numOfChanges += connector.NumOfAllModifiableElements(RelevantOnly);
                     addedConnectors.Add(connector);
-                    changes.Add(new MMChange("+ Connector (target) " + connector.GetPath(), false).AppendTabs(1));
                 }
 
                 // checking if the connector is changed in the new model
@@ -684,22 +747,7 @@ namespace ModelicaParser.Datamodel
                 }
             }
 
-            // checking if the connector is removed in the new model
-            foreach (Connector oldConnector in oldElement.SourceConnectors)
-            {
-                if (RelevantOnly && oldConnector.IgnoreConector())
-                    continue;
-
-                Connector connector = GetSourceConnector(oldConnector.UID);
-
-                if (connector == null)
-                {
-                    numOfChanges += oldConnector.NumOfAllModifiableElements(RelevantOnly);
-                    removedConnectors.Add(oldConnector);
-                    changes.Add(new MMChange("- Connector (source) " + oldConnector.GetPath(), false).AppendTabs(1));
-                }
-            }
-
+            // checking if the target connector is removed in the new model
             foreach (Connector oldConnector in oldElement.TargetConnectors)
             {
                 if (RelevantOnly && oldConnector.IgnoreConector())
@@ -711,7 +759,39 @@ namespace ModelicaParser.Datamodel
                 {
                     numOfChanges += oldConnector.NumOfAllModifiableElements(RelevantOnly);
                     removedConnectors.Add(oldConnector);
-                    changes.Add(new MMChange("- Connector (target) " + oldConnector.GetPath(), false).AppendTabs(1));
+                }
+            }
+
+            // checking if the element is changed or added in the new model
+            foreach (Element child in children)
+            {
+                Element oldSubElement = oldElement.GetChild(child.Name);
+                int num = 0;
+                // checking if the element is added to the new model
+                if (oldSubElement == null)
+                {
+                    numOfChanges += child.NumOfAllModifiableElements(RelevantOnly);
+                    addedElements.Add(child);
+                }
+
+                // checking if the element is changed in the new model
+                else if((num = child.CompareElements(oldSubElement, RelevantOnly)) != 0)
+                {
+                   numOfChanges += num;
+                   modifiedElements.Add(oldSubElement);
+                    
+                }
+            }
+
+            // checking if the element is removed to the new model
+            foreach (Element elem in oldElement.children)
+            {
+                Element element = GetChild(elem.Name);
+
+                if (elem == null)
+                {
+                    numOfChanges += oldElement.NumOfAllModifiableElements(RelevantOnly);
+                    removedElements.Add(oldElement);
                 }
             }
 
@@ -832,6 +912,5 @@ namespace ModelicaParser.Datamodel
         }
 
         #endregion
-
     }
 }

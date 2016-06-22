@@ -621,15 +621,13 @@ namespace ModelicaParser
                 {
                     ListExportAdd("********** SIZE METRICS **********", sb);
                     ListExportAdd("", sb);
-                    ListExportAdd("Number of elements: " + results.NumOfElementsMod1 + " -> " + results.NumOfElementsMod2, sb);
-                    ListExportAdd("Number of attributes: " + results.NumOfAttributesMod1 + " -> " + results.NumOfAttributesMod2, sb);
-                    ListExportAdd("Number of connectors: " + results.NumOfConnectorsMod1 + " -> " + results.NumOfConnectorsMod2, sb);
-                    ListExportAdd("Number of packages: " + results.NumOfPackagesMod1 + " -> " + results.NumOfPackagedMod2, sb);
+                    ListExportAdd("Number of packages: " + results.NumOfPackagesMod1 + " -> " + results.NumOfPackagedMod2 + " (" + (results.NumOfPackagedMod2 - results.NumOfPackagesMod1) + ")", sb);
+                    ListExportAdd("Number of elements: " + results.NumOfElementsMod1 + " -> " + results.NumOfElementsMod2 + " (" + (results.NumOfElementsMod2 - results.NumOfElementsMod1) + ")", sb);
+                    ListExportAdd("Number of connectors: " + results.NumOfConnectorsMod1 + " -> " + results.NumOfConnectorsMod2 + " (" + (results.NumOfConnectorsMod2 - results.NumOfConnectorsMod1) + ")", sb);
+                    ListExportAdd("Number of attributes: " + results.NumOfAttributesMod1 + " -> " + results.NumOfAttributesMod2 + " (" + (results.NumOfAttributesMod2 - results.NumOfAttributesMod1) + ")", sb);
 
                     ListExportAdd("", sb);
                 }
-
-
 
                 if (checkBoxChangeMetrics.Checked)
                 {
@@ -637,8 +635,12 @@ namespace ModelicaParser
                     ListExportAdd("", sb);
                     ListExportAdd("Number of changes: " + results.NumOfChanges, sb);
 
-                    ListExportAdd("Number of changed elements: " + (results.NumOfModifiedElements + results.NumOfAddedElements + results.NumOfRemovedElements), sb);
+                    ListExportAdd("Number of changed packages: " + (results.NumOfModifiedPackages + results.NumOfAddedPackages + results.NumOfRemovedPackages), sb);
+                    ListExportAdd("\tNumber of modified packages: " + results.NumOfModifiedPackages, sb);
+                    ListExportAdd("\tNumber of added packages: " + results.NumOfAddedPackages, sb);
+                    ListExportAdd("\tNumber of removed packages: " + results.NumOfRemovedPackages, sb);
 
+                    ListExportAdd("Number of changed elements: " + (results.NumOfModifiedElements + results.NumOfAddedElements + results.NumOfRemovedElements), sb);
                     ListExportAdd("\tNumber of modified elements: " + results.NumOfModifiedElements, sb);
                     ListExportAdd("\tNumber of added elements: " + results.NumOfAddedElements, sb);
                     ListExportAdd("\tNumber of removed elements: " + results.NumOfRemovedElements, sb);
@@ -654,11 +656,6 @@ namespace ModelicaParser
                     ListExportAdd("\tNumber of added attributes: " + results.NumOfAddedAttributes, sb);
                     ListExportAdd("\tNumber of removed attributes: " + results.NumOfRemovedAttributes, sb);
                     
-                    ListExportAdd("Number of changed packages: " + (results.NumOfModifiedPackages + results.NumOfAddedPackages + results.NumOfRemovedPackages), sb);
-                    ListExportAdd("\tNumber of modified packages: " + results.NumOfModifiedPackages, sb);
-                    ListExportAdd("\tNumber of added packages: " + results.NumOfAddedPackages, sb);
-                    ListExportAdd("\tNumber of removed packages: " + results.NumOfRemovedPackages, sb);
-
                     ListExportAdd("", sb);
                 }
 

@@ -364,6 +364,46 @@ namespace ModelicaParser.Datamodel
 
         #region Retrieve objects
 
+
+        public void printAsAddedPackage(List<MMChange> listOfChanges, int indent)
+        {
+            listOfChanges.Add(new MMChange("+ Package: " + GetPath(), true).AppendTabs(indent++));
+            foreach (Element elem in Elements)
+            {
+                elem.printAsAddedElement(listOfChanges, indent);
+            }
+        }
+
+        public void printAsModifiedPackage(List<MMChange> listOfChanges, int indent)
+        {
+            listOfChanges.Add(new MMChange("~ Package: " + GetPath(), true).AppendTabs(indent++));
+
+            foreach (Element elem in addedElements)
+            {
+                elem.printAsAddedElement(listOfChanges, indent);
+            }
+
+            foreach (Element elem in modifiedElements)
+            {
+                elem.printAsModifiedElement(listOfChanges, indent);
+            }
+
+            foreach (Element elem in removedElements)
+            {
+                elem.printAsRemovedElement(listOfChanges, indent);
+            }
+        }
+
+        public void printAsRemovedPackage(List<MMChange> listOfChanges, int indent)
+        {
+            listOfChanges.Add(new MMChange("- Package: " + GetPath(), true).AppendTabs(indent++));
+            foreach (Element elem in Elements)
+            {
+                elem.printAsRemovedElement(listOfChanges, indent);
+            }
+        }
+
+
         // retrieves all changes in the package and all of its sub-packages
         public List<MMChange> GetChanges()
         {
@@ -371,16 +411,13 @@ namespace ModelicaParser.Datamodel
 
             foreach (Element elem in elements)
             {
-                if (elem.NumOfChanges != 0)
-                    listOfChanges.Add(new MMChange("~ Element " + elem.GetPath(), true));
-
                 foreach (MMChange chng in elem.GetChanges())
-                    listOfChanges.Add(chng);
+                    listOfChanges.Add(chng.AppendTabs(1));
             }
 
             foreach (Package subPack in subPackages)
                 foreach (MMChange chng in subPack.GetChanges())
-                    listOfChanges.Add(chng);
+                    listOfChanges.Add(chng.AppendTabs(1));
 
             return listOfChanges;
         }
@@ -687,98 +724,6 @@ namespace ModelicaParser.Datamodel
             return false;
         }
 
-        // adding changes for the elements and sub-packages of the package (used for new packages)
-        private void AddChangesForAllNewSubPackagesAndElements(int ident, Package package, bool RelevantOnly)
-        {
-            changes.Add(new MMChange("+ Package " + package.GetPath(), true).AppendTabs(ident));
-
-            foreach (Element elem in package.Elements)
-            {
-                if (RelevantOnly && elem.IgnoreElement())
-                    continue;
-
-                changes.Add(new MMChange("+ Element " + elem.GetPath() + " " + elem.Name, false).AppendTabs(ident + 1));
-
-                foreach (Attribute attr in elem.Attributes)
-                {
-                    if (RelevantOnly && attr.IgnoreAttribute())
-                        continue;
-
-                    changes.Add(new MMChange("+ Attribute " + attr.GetPath(), false).AppendTabs(ident + 2));
-                }
-
-                foreach (Connector conn in elem.SourceConnectors)
-                {
-                    if (RelevantOnly && conn.IgnoreConector())
-                        continue;
-
-                    changes.Add(new MMChange("+ Connector (source) " + conn.GetPath(), false).AppendTabs(ident + 2));
-                }
-
-                foreach (Connector conn in elem.TargetConnectors)
-                {
-                    if (RelevantOnly && conn.IgnoreConector())
-                        continue;
-
-                    changes.Add(new MMChange("+ Connector (target) " + conn.GetPath(), false).AppendTabs(ident + 2));
-                }
-            }
-
-            foreach (Package pack in package.SubPackages)
-            {
-                if (RelevantOnly && IgnorePackage())
-                    continue;
-
-                AddChangesForAllNewSubPackagesAndElements(ident + 1, pack, RelevantOnly);
-            }
-        }
-
-        // adding changes for  the elements and sub-packages of the package (used for old packages)
-        private void AddChangesForAllRemovedSubPackagesAndElements(int ident, Package package, bool RelevantOnly)
-        {
-            changes.Add(new MMChange("- Package " + package.GetPath(), true).AppendTabs(ident));
-
-            foreach (Element elem in package.Elements)
-            {
-                if (RelevantOnly && elem.IgnoreElement())
-                    continue;
-
-                changes.Add(new MMChange("- Element " + elem.GetPath() + " " + elem.Name, false).AppendTabs(ident + 1));
-
-                foreach (Attribute attr in elem.Attributes)
-                {
-                    if (RelevantOnly && attr.IgnoreAttribute())
-                        continue;
-
-                    changes.Add(new MMChange("- Attribute " + attr.GetPath(), false).AppendTabs(ident + 2));
-                }
-
-                foreach (Connector conn in elem.SourceConnectors)
-                {
-                    if (RelevantOnly && conn.IgnoreConector())
-                        continue;
-
-                    changes.Add(new MMChange("- Connector (source) " + conn.GetPath(), false).AppendTabs(ident + 2));
-                }
-
-                foreach (Connector conn in elem.TargetConnectors)
-                {
-                    if (RelevantOnly && conn.IgnoreConector())
-                        continue;
-
-                    changes.Add(new MMChange("- Connector (target) " + conn.GetPath(), false).AppendTabs(ident + 2));
-                }
-            }
-
-            foreach (Package pack in package.SubPackages)
-            {
-                if (RelevantOnly && IgnorePackage())
-                    continue;
-
-                AddChangesForAllRemovedSubPackagesAndElements(ident + 1, pack, RelevantOnly);
-            }
-        }
-
         // compares two packages in two releases
         public int ComparePackages(Package oldPackage, bool RelevantOnly)
         {
@@ -792,50 +737,6 @@ namespace ModelicaParser.Datamodel
             {
                 numOfChanges++;
                 changes.Add(new MMChange("~ Note", false).AppendTabs(1));
-            }
-
-            // checking if the sub-package is changed or added in the new model
-            foreach (Package subPackage in subPackages)
-            {
-                if (RelevantOnly && subPackage.IgnorePackage())
-                    continue;
-
-                Package oldSubPackage = oldPackage.GetSubPackageByName(subPackage.Name);
-
-                int num = 0;
-
-                // chacking if the package is added to the new model
-                if (oldSubPackage == null)
-                {
-                    numOfChanges += subPackage.NumOfAllModifiableElements(RelevantOnly); ;
-                    addedSubPackages.Add(subPackage);   // package with its all sub-packages and elements is added to the addedPackages list
-
-                    AddChangesForAllNewSubPackagesAndElements(0, subPackage, RelevantOnly); // add changes for all elements and sub-packages of the old sub-package
-                }
-
-                // chacking if the package is changed in the new model
-                else if ((num = subPackage.ComparePackages(oldSubPackage, RelevantOnly)) != 0)
-                {
-                    numOfChanges += num;
-                    modifiedSubPackages.Add(subPackage);
-                }
-            }
-
-            // checking if the sub-package is removed in the new model
-            foreach (Package oldSubPackage in oldPackage.SubPackages)
-            {
-                if (RelevantOnly && oldSubPackage.IgnorePackage())
-                    continue;
-
-                Package subPackage = GetSubPackageByName(oldSubPackage.Name);
-
-                if (subPackage == null)
-                {
-                    numOfChanges += oldSubPackage.NumOfAllModifiableElements(RelevantOnly);
-                    removedSubPackages.Add(oldSubPackage);  // package with its all sub-packages and elements is added to the removedPackages list
-
-                    AddChangesForAllRemovedSubPackagesAndElements(1, oldSubPackage, RelevantOnly);  // add changes for all elements and sub-packages of the old sub-package
-                }
             }
 
             // checking if the element is changed or added in the new model
@@ -853,31 +754,7 @@ namespace ModelicaParser.Datamodel
                 {
                     numOfChanges += element.NumOfAllModifiableElements(RelevantOnly);
                     addedElements.Add(element);
-                    changes.Add(new MMChange("+ Element " + element.GetPath() + " " + element.Name, false));
-
-                    foreach (Attribute attr in element.Attributes)
-                    {
-                        if (RelevantOnly && attr.IgnoreAttribute())
-                            continue;
-
-                        changes.Add(new MMChange("+ Attribute " + attr.GetPath(), false).AppendTabs(1));
-                    }
-
-                    foreach (Connector conn in element.SourceConnectors)
-                    {
-                        if (RelevantOnly && conn.IgnoreConector())
-                            continue;
-
-                        changes.Add(new MMChange("+ Connector (source) " + conn.GetPath(), false).AppendTabs(1));
-                    }
-
-                    foreach (Connector conn in element.TargetConnectors)
-                    {
-                        if (RelevantOnly && conn.IgnoreConector())
-                            continue;
-
-                        changes.Add(new MMChange("+ Connector (target) " + conn.GetPath(), false).AppendTabs(1));
-                    }
+                    //changes.Add(new MMChange("+ Element " + element.GetPath() + " " + element.Name, false));
                 }
 
                 // chacking if the element is changed in the new model
@@ -900,31 +777,6 @@ namespace ModelicaParser.Datamodel
                 {
                     numOfChanges += oldElement.NumOfAllModifiableElements(RelevantOnly);
                     removedElements.Add(oldElement);
-                    changes.Add(new MMChange("- Element " + oldElement.GetPath() + " " + oldElement.Name, false));
-
-                    foreach (Attribute attr in oldElement.Attributes)
-                    {
-                        if (RelevantOnly && attr.IgnoreAttribute())
-                            continue;
-
-                        changes.Add(new MMChange("- Attribute " + attr.GetPath(), false).AppendTabs(1));
-                    }
-
-                    foreach (Connector conn in oldElement.SourceConnectors)
-                    {
-                        if (RelevantOnly && conn.IgnoreConector())
-                            continue;
-
-                        changes.Add(new MMChange("- Connector (source) " + conn.GetPath(), false).AppendTabs(1));
-                    }
-
-                    foreach (Connector conn in oldElement.TargetConnectors)
-                    {
-                        if (RelevantOnly && conn.IgnoreConector())
-                            continue;
-
-                        changes.Add(new MMChange("- Connector (target) " + conn.GetPath(), false).AppendTabs(1));
-                    }
                 }
             }
 

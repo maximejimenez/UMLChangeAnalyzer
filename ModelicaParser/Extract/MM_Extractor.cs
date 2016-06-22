@@ -53,7 +53,6 @@ namespace ModelicaParser.Extract
             for (int i = 0; i < children.Count; i++)
             {
                 Package package = parsePackage(children[i]);
-                //package.metamodel = metamodel;
                 metamodel.AddPackage(package);
             }
 
@@ -63,20 +62,20 @@ namespace ModelicaParser.Extract
                 Element target = null;
                 if (declaredElements.TryGetValue(targetName, out target))
                 {
+                    Console.WriteLine(target.GetPath() + " = " + targetName);
                     foreach (Connector connector in targetElements[targetName])
                     {
                         connector.Target = target;
                         Connector clone = (Connector)connector.Clone();
                         clone.ParentElement = target;
                         clone.Target = target;
-                        clone.UID = connector.ParentElement.Name + "::" + clone.UID + "R";                         // in order to not get the wrong connector
-                        //Console.WriteLine("Connector (" + connector.ParentElement.Name + "::" + connector.UID + ") " + connector.SourceCardinality + " : " + connector.TargetCardinality + " / " + "Clone (" + clone.UID + ") " + clone.SourceCardinality + " : " + clone.TargetCardinality);
+                        clone.UID = connector.ParentElement.Name + "." + clone.UID + "R";                         // in order to not get the wrong connector
                         target.AddTargetConnector(clone);
                     }
                 }
                 else
                 {
-                    //Console.WriteLine("*** WARNING *** \t Can't find type : " + targetName);
+                    //Console.WriteLine(version + " : *** WARNING *** \t Can't find type : " + targetName);
                 }
             }
             return metamodel;
@@ -99,6 +98,11 @@ namespace ModelicaParser.Extract
                     uniontype.ParentPackage = package;
                     package.AddElement(uniontype);
                     declaredElements.Add(id+"."+uniontype.Name, uniontype);
+                }
+                else if (children[i].Name == "function")
+                { // To handle connectors refering to functions
+                    Element function = new Element("function", children[i].Attributes["id"].Value);
+                    declaredElements.Add(id + "." + children[i].Attributes["id"].Value, function);
                 }
                 else
                 {
