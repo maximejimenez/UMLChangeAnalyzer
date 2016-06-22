@@ -321,14 +321,10 @@ namespace ModelicaParser.Datamodel
             int numberOfAddedAttributes = 0;
 
             foreach (Element elem in modifiedElements)
-            {
                 numberOfAddedAttributes += elem.NumberOfAddedAttributes();
-            }
 
             foreach (Element elem in addedElements)
-            {
                 numberOfAddedAttributes += elem.NumberOfAttributes(false);
-            }
 
             foreach (Package subPackage in modifiedSubPackages)
                 numberOfAddedAttributes += subPackage.NumberOfAddedAttributes();

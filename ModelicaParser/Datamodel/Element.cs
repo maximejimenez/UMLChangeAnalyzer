@@ -125,13 +125,7 @@ namespace ModelicaParser.Datamodel
             if (relevantOnly && IgnoreElement())
                 return 0;
 
-            int numberOfConnectors = 0;
-
-            foreach (Connector conn in sourceConnectors)
-                numberOfConnectors++;
-
-            foreach (Connector conn in targetConnectors)
-                numberOfConnectors++;
+            int numberOfConnectors = sourceConnectors.Count + targetConnectors.Count;
 
             foreach (Element elem in children)
                 if (!(relevantOnly && elem.IgnoreElement()))
@@ -176,7 +170,6 @@ namespace ModelicaParser.Datamodel
             return modifiableElems;
         }
 
-
         public int NumberOfAddedElements()
         {
             int numberOfAddedElements = addedElements.Count;
@@ -185,7 +178,6 @@ namespace ModelicaParser.Datamodel
             return numberOfAddedElements;
         }
 
-
         public int NumberOfModifiedElements()
         {
             int numberOfModifiedElements = modifiedElements.Count;
@@ -193,7 +185,6 @@ namespace ModelicaParser.Datamodel
                 numberOfModifiedElements += child.NumberOfModifiedElements();
             return numberOfModifiedElements;
         }
-
 
         public int NumberOfRemovedElements()
         {
@@ -218,6 +209,9 @@ namespace ModelicaParser.Datamodel
             int numberOfAddedConnectors = addedConnectors.Count;
 
             foreach (Element elem in AddedElements)
+                numberOfAddedConnectors += elem.NumberOfConnectors(false);
+
+            foreach (Element elem in ModifiedElements)
                 numberOfAddedConnectors += elem.NumberOfAddedConnectors();
 
             return numberOfAddedConnectors;
@@ -228,7 +222,10 @@ namespace ModelicaParser.Datamodel
             int numberOfRemovedConnectors = removedConnectors.Count;
 
             foreach (Element elem in RemovedElements)
-                numberOfRemovedConnectors += elem.NumberOfRemovedConnectors();
+                numberOfRemovedConnectors += elem.NumberOfConnectors(false);
+
+            foreach (Element elem in ModifiedElements)
+                numberOfRemovedConnectors += elem.NumberOfAddedConnectors();
 
             return numberOfRemovedConnectors;
         }
@@ -247,7 +244,10 @@ namespace ModelicaParser.Datamodel
         {
             int numberOfAddedAttributes = addedAttributes.Count;
 
-            foreach (Element elem in AddedElements)
+            foreach (Element elem in addedElements)
+                numberOfAddedAttributes += elem.NumberOfAttributes(false);
+
+            foreach (Element elem in modifiedElements)
                 numberOfAddedAttributes += elem.NumberOfAddedAttributes();
 
             return numberOfAddedAttributes;
@@ -257,7 +257,10 @@ namespace ModelicaParser.Datamodel
         {
             int numberOfRemovedAttributes = removedAttributes.Count;
 
-            foreach (Element elem in RemovedElements)
+            foreach (Element elem in removedElements)
+                numberOfRemovedAttributes += elem.NumberOfAttributes(false);
+
+            foreach (Element elem in modifiedElements)
                 numberOfRemovedAttributes += elem.NumberOfRemovedAttributes();
 
             return numberOfRemovedAttributes;
