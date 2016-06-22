@@ -176,6 +176,33 @@ namespace ModelicaParser.Datamodel
             return modifiableElems;
         }
 
+
+        public int NumberOfAddedElements()
+        {
+            int numberOfAddedElements = addedElements.Count;
+            foreach (Element child in children)
+                numberOfAddedElements += child.NumberOfAddedElements();
+            return numberOfAddedElements;
+        }
+
+
+        public int NumberOfModifiedElements()
+        {
+            int numberOfModifiedElements = modifiedElements.Count;
+            foreach (Element child in children)
+                numberOfModifiedElements += child.NumberOfModifiedElements();
+            return numberOfModifiedElements;
+        }
+
+
+        public int NumberOfRemovedElements()
+        {
+            int numberOfRemovedElements = removedElements.Count;
+            foreach (Element child in children)
+                numberOfRemovedElements += child.NumberOfRemovedElements();
+            return numberOfRemovedElements;
+        }
+
         public int NumberOfModifiedConnectors()
         {
             int numberOfModifiedConnectors = modifiedConnectors.Count;
@@ -912,5 +939,6 @@ namespace ModelicaParser.Datamodel
         }
 
         #endregion
+
     }
 }

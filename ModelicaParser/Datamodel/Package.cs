@@ -132,6 +132,11 @@ namespace ModelicaParser.Datamodel
         {
             int numberOfChangedElements = modifiedElements.Count;
 
+            foreach (Element elem in modifiedElements)
+            {
+                numberOfChangedElements += elem.NumberOfModifiedElements();
+            }
+
             foreach (Package subPackage in modifiedSubPackages)
                 numberOfChangedElements += subPackage.NumberOfModifiedElements();
 
@@ -141,7 +146,15 @@ namespace ModelicaParser.Datamodel
         // calculates the number of added elements of this package and all of its sub-packages
         public int NumberOfAddedElements()
         {
-            int numberOfAddedElements = addedElements.Count;
+            int numberOfAddedElements = 0;
+
+            foreach(Element elem in modifiedElements){
+                numberOfAddedElements += elem.NumberOfAddedElements();
+            }
+
+            foreach(Element elem in addedElements){
+                numberOfAddedElements += elem.NumberOfElements();
+            }
 
             foreach (Package subPack in addedSubPackages)
                 numberOfAddedElements += subPack.NumberOfElements(false); // false because we already excluded non relevant packages/elements, etc. during compare
@@ -155,7 +168,17 @@ namespace ModelicaParser.Datamodel
         // calculates the number of removed elements of this package and all of its sub-packages
         public int NumberOfRemovedElements()
         {
-            int numberOfRemovedElements = removedElements.Count;
+            int numberOfRemovedElements = 0;
+
+            foreach (Element elem in modifiedElements)
+            {
+                numberOfRemovedElements += elem.NumberOfRemovedElements();
+            }
+
+            foreach (Element elem in removedElements)
+            {
+                numberOfRemovedElements += elem.NumberOfElements();
+            }
 
             foreach (Package subPack in removedSubPackages)
                 numberOfRemovedElements += subPack.NumberOfElements(false); // false because we already excluded non relevant packages/elements, etc. during compare
@@ -377,6 +400,9 @@ namespace ModelicaParser.Datamodel
         public void printAsModifiedPackage(List<MMChange> listOfChanges, int indent)
         {
             listOfChanges.Add(new MMChange("~ Package: " + GetPath(), true).AppendTabs(indent++));
+
+            foreach (MMChange chng in changes)
+                listOfChanges.Add(chng.AppendTabs(indent));
 
             foreach (Element elem in addedElements)
             {
@@ -731,12 +757,12 @@ namespace ModelicaParser.Datamodel
                 return 0;
 
             if (!name.Equals(oldPackage.Name))  // number of changes not increased as the change in the name of a package is not considered a change
-                changes.Add(new MMChange("~ Name: " + oldPackage.Name + " -> " + name, true).AppendTabs(1));
+                changes.Add(new MMChange("~ Name: " + oldPackage.Name + " -> " + name, true));
 
             if (((RelevantOnly && !ConfigReader.ExcludedAttributeNote) || !RelevantOnly) && !Equals(note, oldPackage.Note))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Note", false).AppendTabs(1));
+                changes.Add(new MMChange("~ Note", false));
             }
 
             // checking if the element is changed or added in the new model

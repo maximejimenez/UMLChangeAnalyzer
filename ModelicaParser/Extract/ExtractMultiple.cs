@@ -64,7 +64,7 @@ namespace ModelicaParser.Extract
                 else
                 {
                     MM_Extractor extractor = new MM_Extractor(form);
-                    form.ListAdd("Dumping " + modelPath);
+                    form.ListAdd("Dumping " + version);
                     extractor.ExtractModel(modelPath, filePath, version);
                 }
             }

@@ -34,6 +34,7 @@ namespace ModelicaParser.Extract
         private const string ID = "Identifier";
         private const string ALIAS = "alias";
         private const string LIST = "list";
+        private const string TUPLE = "tuple";
         private const string OPTION = "Option";
         private const string FUNCTION = "function";
         private const string CONSTANT = "constant";
@@ -168,7 +169,7 @@ namespace ModelicaParser.Extract
             List<string> tokens = new List<string>();
             for (int i = 0; i < tokensArray.Length; i++)
             {
-                if (!tokensArray[i].StartsWith("list") && tokensArray[i].EndsWith(","))
+                if (!tokensArray[i].StartsWith("list") && !tokensArray[i].StartsWith("tuple") && tokensArray[i].EndsWith(","))
                 {
                     tokens.Add(tokensArray[i].Substring(0, tokensArray[i].Length - 1));
                     tokens.Add(";");
@@ -396,6 +397,10 @@ namespace ModelicaParser.Extract
             {
                 field.SetAttribute("note", e.Current.Substring(1, e.Current.Length - 2));
                 e.MoveNext();
+            }else if(e.Current == "="){
+                e.MoveNext();
+                field.SetAttribute("value", e.Current);
+                e.MoveNext();
             }
             parent.AppendChild(field);
             }
@@ -443,6 +448,12 @@ namespace ModelicaParser.Extract
                 field.SetAttribute("maxMultiplicity", "*");
                 contentTypeList(field, e);
             }
+            else if (e.Current.StartsWith(TUPLE))
+            {
+                field.SetAttribute("minMultiplicity", "0");
+                field.SetAttribute("maxMultiplicity", "*");
+                contentTypeTuple(field, e);
+            }
             else
             {
                 field.SetAttribute("type", e.Current);
@@ -465,6 +476,24 @@ namespace ModelicaParser.Extract
                 contentType += e.Current;
                 field.SetAttribute("type", contentType);
             }
+        }
+
+
+        private static void contentTypeTuple(XmlElement field, IEnumerator<string> e)
+        {
+            if (e.Current.EndsWith(">"))
+            {
+                string contentType = e.Current.Substring(6, e.Current.Length - 7);
+                field.SetAttribute("type", contentType);
+            }
+            else
+            {
+                string contentType = e.Current.Substring(6);
+                e.MoveNext();
+                contentType += e.Current;
+                field.SetAttribute("type", contentType);
+            }
+
         }
 
         private static void contentTypeOption(XmlElement field, IEnumerator<string> e)
