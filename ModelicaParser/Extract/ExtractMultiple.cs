@@ -57,7 +57,7 @@ namespace ModelicaParser.Extract
             {
                 string modelPath = releases[i];
                 string version = versions[i];
-                string filePath = Path.Combine("C:\\Users\\maxime\\Desktop\\ModelicaResults\\XML\\", version + ".xml");
+                string filePath = Path.Combine(ConfigReader.ExtractPath, version + ".xml");
 
                 if (File.Exists(filePath))      // the extraction is not done if the file with the same name exists
                     form.ListAdd("File " + filePath + " already exists.");

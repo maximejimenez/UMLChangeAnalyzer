@@ -26,6 +26,7 @@ namespace ModelicaParser.Config
             private static bool excludedConnectorNote = false;
             private static bool excludedCaseSensitivity = false;
             private static bool validates = true;
+            private static string extractPath = "";
 
             #region Read
 
@@ -111,40 +112,14 @@ namespace ModelicaParser.Config
                                 break;
                             case "ROLE":
                                 XmlReader subTree = reader.ReadSubtree();   // reading sub-tags from the tag "ROLE"
-                                /*
-                                ARRole role = new ARRole("NoName", "NoModel");
-
-                                while (subTree.Read())
-                                    if (subTree.NodeType == XmlNodeType.Element)
-                                    {
-                                        if (subTree.Name.Equals("ROLE"))
-                                        {
-                                            if (subTree.GetAttribute("UTMonly") != null && subTree.GetAttribute("UTMonly").Equals("true"))
-                                                role.UtmOnly = true;
-
-                                            if (subTree.GetAttribute("Model") != null)
-                                                role.Model = subTree.GetAttribute("Model");
-                                        }
-                                        else if (subTree.Name.Equals("NAME"))
-                                        {
-                                            subTree.Read();
-                                            role.Name = subTree.Value;
-                                        }
-                                        else if (subTree.Name.Equals("PACKAGE"))
-                                        {
-                                            subTree.Read();
-                                            role.AddPackage(subTree.Value);
-                                        }
-                                    }
-
-                                roles.Add(role);
-                             */
                                 break;
                             case "RESULTS_PATH":    // path used for generating reports from GUI analysis
                                 reader.Read();
                                 resultsPath = reader.Value;
                                 break;
                             case "EXTRACT_MULTIPLE":
+                                if (reader.GetAttribute("EXTRACT_PATH") != null)
+                                    extractPath = reader.GetAttribute("EXTRACT_PATH");   // reading path to generated reports
                                 subTree = reader.ReadSubtree();   // reading sub-tags from the tag "ROLE"
 
                                 while (subTree.Read())
@@ -212,6 +187,11 @@ namespace ModelicaParser.Config
             public static string ResultsPath
             {
                 get { return ConfigReader.resultsPath; }
+            }
+
+            public static string ExtractPath
+            {
+                get { return ConfigReader.extractPath; }
             }
 
             public static List<string> ExcludedPackageNames

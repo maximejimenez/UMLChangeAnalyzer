@@ -510,10 +510,8 @@ namespace ModelicaParser.Datamodel
                 // checking if the package is added to the new model
                 if (oldPackage == null)
                 {
-                    //changes.Add(new MMChange("+ Package " + package.GetPath() + " " + package.Name, false));
                     numOfChanges += package.NumOfAllModifiableElements(RelevantOnly);
                     addedPackages.Add(package);
-                    
                 }
                 // checking if the package is changed in the new model
                 else if ((num = package.ComparePackages(oldPackage, RelevantOnly)) != 0)

@@ -62,7 +62,7 @@ namespace ModelicaParser.Extract
                 Element target = null;
                 if (declaredElements.TryGetValue(targetName, out target))
                 {
-                    Console.WriteLine(target.GetPath() + " = " + targetName);
+                    //Console.WriteLine(target.GetPath() + " = " + targetName);
                     foreach (Connector connector in targetElements[targetName])
                     {
                         connector.Target = target;

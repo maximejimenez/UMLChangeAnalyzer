@@ -91,7 +91,6 @@ namespace ModelicaParser.Datamodel
 
         #region Calculate number of
 
-
         public int NumberOfElements()
         {
             int numberOfElements = 1;
@@ -686,7 +685,6 @@ namespace ModelicaParser.Datamodel
                 {
                     numOfChanges += attribute.NumOfAllModifiableElements(RelevantOnly);
                     addedAttributes.Add(attribute);
-                    //changes.Add(new MMChange("+ Attribute " + attribute.GetPath(), false));
                 }
                 // checking if the attribute is changed in the new model
                 else if ((num = attribute.CompareAttributes(oldAttribute, RelevantOnly)) != 0)
@@ -708,7 +706,6 @@ namespace ModelicaParser.Datamodel
                 {
                     numOfChanges += oldAttribute.NumOfAllModifiableElements(RelevantOnly);
                     removedAttributes.Add(oldAttribute);
-                    //changes.Add(new MMChange("- Attribute " + oldAttribute.GetPath(), false).AppendTabs(1));
                 }
             }
 
@@ -809,7 +806,6 @@ namespace ModelicaParser.Datamodel
                 {
                    numOfChanges += num;
                    modifiedElements.Add(oldSubElement);
-                    
                 }
             }
 

@@ -776,7 +776,6 @@ namespace ModelicaParser.Datamodel
                 {
                     numOfChanges += element.NumOfAllModifiableElements(RelevantOnly);
                     addedElements.Add(element);
-                    //changes.Add(new MMChange("+ Element " + element.GetPath() + " " + element.Name, false));
                 }
 
                 // chacking if the element is changed in the new model

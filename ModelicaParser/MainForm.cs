@@ -670,6 +670,7 @@ namespace ModelicaParser
                             ListExportAddChanges("", chg.ToString(), sb);
                         else
                             ListExportAddChanges("" + x++, chg.ToString(), sb);
+                    ListExportAdd(results.Changes.Count+" changes", sb);
                     ListExportAdd("", sb);
                 }
 
@@ -964,8 +965,8 @@ namespace ModelicaParser
             this.textBoxModelPath.Name = "textBoxModelPath";
             this.textBoxModelPath.Size = new System.Drawing.Size(449, 20);
             this.textBoxModelPath.TabIndex = 0;
-            this.textBoxModelPath.Text = "C:\\Users\\maxime\\Desktop\\Modelica OMCompiler\\OMCompiler-1.9.2\\Compiler\\FrontEnd\\Ab" +
-    "syn.mo";
+            this.textBoxModelPath.Text = "C:\\Users\\maxime\\Desktop\\ModelicaResults\\Metamodels\\OMCompiler-1.9.2\\Compiler\\Fron" +
+    "tEnd";
             // 
             // label1
             // 
@@ -1000,7 +1001,7 @@ namespace ModelicaParser
             this.textBoxFilePath.Name = "textBoxFilePath";
             this.textBoxFilePath.Size = new System.Drawing.Size(449, 20);
             this.textBoxFilePath.TabIndex = 5;
-            this.textBoxFilePath.Text = "C:\\Users\\maxime\\Desktop\\ModelicaResults\\Metamodels\\";
+            this.textBoxFilePath.Text = "C:\\Users\\maxime\\Desktop\\ModelicaResults\\XML\\1.9.2.xml";
             // 
             // compare
             // 
