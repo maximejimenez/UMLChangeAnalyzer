@@ -76,8 +76,6 @@ namespace ModelicaParser.Changes
                 {
                     form.ListAdd("Comparing " + releases[i].Split('\\')[releases[i].Split('\\').Length - 1] + " and " + releases[j].Split('\\')[releases[j].Split('\\').Length - 1]);
 
-                    string[] filePaths;
-
                     model1 = MM_Extractor.XMLtoMetamodel(releases[i]);
                     model2 = MM_Extractor.XMLtoMetamodel(releases[j]);
 

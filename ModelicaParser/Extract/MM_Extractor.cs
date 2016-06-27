@@ -94,7 +94,7 @@ namespace ModelicaParser.Extract
             {
                 if (children[i].Name == "uniontype")
                 {
-                    Element uniontype = parseUniontype(children[i]);
+                    Element uniontype = parseUniontype(children[i], package);
                     uniontype.ParentPackage = package;
                     package.AddElement(uniontype);
                     declaredElements.Add(id+"."+uniontype.Name, uniontype);
@@ -113,7 +113,7 @@ namespace ModelicaParser.Extract
             return package;
         }
 
-        static Element parseUniontype(XmlNode elem)
+        static Element parseUniontype(XmlNode elem, Package package)
         {
             string id = elem.Attributes["id"].Value;
             Element uniontype = new Element("uniontype", id);
@@ -127,7 +127,9 @@ namespace ModelicaParser.Extract
             {
                 Element record = parseRecord(children[i]);
                 record.ParentElement = uniontype;
-                uniontype.AddChild(record);
+                //Fixing elements 
+                //uniontype.AddChild(record);
+                package.AddElement(record);
             }
 
             return uniontype;

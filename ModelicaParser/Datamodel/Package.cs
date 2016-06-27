@@ -132,10 +132,10 @@ namespace ModelicaParser.Datamodel
         {
             int numberOfChangedElements = modifiedElements.Count;
 
-            foreach (Element elem in modifiedElements)
+            /*foreach (Element elem in modifiedElements)
             {
                 numberOfChangedElements += elem.NumberOfModifiedElements();
-            }
+            }*/
 
             foreach (Package subPackage in modifiedSubPackages)
                 numberOfChangedElements += subPackage.NumberOfModifiedElements();
@@ -148,9 +148,9 @@ namespace ModelicaParser.Datamodel
         {
             int numberOfAddedElements = 0;
 
-            foreach(Element elem in modifiedElements){
+            /*foreach(Element elem in modifiedElements){
                 numberOfAddedElements += elem.NumberOfAddedElements();
-            }
+            }*/
 
             foreach(Element elem in addedElements){
                 numberOfAddedElements += elem.NumberOfElements();
@@ -170,10 +170,10 @@ namespace ModelicaParser.Datamodel
         {
             int numberOfRemovedElements = 0;
 
-            foreach (Element elem in modifiedElements)
+            /*foreach (Element elem in modifiedElements)
             {
                 numberOfRemovedElements += elem.NumberOfRemovedElements();
-            }
+            }*/
 
             foreach (Element elem in removedElements)
             {
@@ -450,7 +450,7 @@ namespace ModelicaParser.Datamodel
             foreach (Element elem in Elements)
             {
                 list.Add(elem);
-                elem.GetAllElements(list);
+                //elem.GetAllElements(list);
             }
 
             foreach (Package subPack in subPackages)
@@ -464,7 +464,7 @@ namespace ModelicaParser.Datamodel
         {
             foreach (Element elem in modifiedElements) {
                 list.Add(elem);
-                elem.GetAllModifiedElements(list);
+                //elem.GetAllModifiedElements(list);
             }
 
             foreach (Package subPack in modifiedSubPackages)
@@ -479,11 +479,11 @@ namespace ModelicaParser.Datamodel
             foreach (Element elem in addedElements)
             {
                 list.Add(elem);
-                elem.GetAllElements(list);
+                //elem.GetAllElements(list);
             }
 
-            foreach (Element elem in modifiedElements)
-                elem.GetAllAddedElements(list);
+            /*foreach (Element elem in modifiedElements)
+                elem.GetAllAddedElements(list);*/
 
             foreach (Package subPack in addedSubPackages)
                 subPack.GetAllElements(list);
@@ -500,11 +500,11 @@ namespace ModelicaParser.Datamodel
             foreach (Element elem in removedElements)
             {
                 list.Add(elem);
-                elem.GetAllElements(list);
+                //elem.GetAllElements(list);
             }
 
-            foreach (Element elem in modifiedElements)
-                elem.GetAllRemovedElements(list);
+            /*foreach (Element elem in modifiedElements)
+                elem.GetAllRemovedElements(list);*/
 
             foreach (Package subPack in removedSubPackages)
                 subPack.GetAllElements(list);

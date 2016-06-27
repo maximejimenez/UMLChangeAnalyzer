@@ -670,7 +670,7 @@ namespace ModelicaParser
                             ListExportAddChanges("", chg.ToString(), sb);
                         else
                             ListExportAddChanges("" + x++, chg.ToString(), sb);
-                    ListExportAdd(results.Changes.Count+" changes", sb);
+                    //ListExportAdd(results.Changes.Count+" changes", sb);
                     ListExportAdd("", sb);
                 }
 

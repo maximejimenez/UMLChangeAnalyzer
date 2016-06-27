@@ -34,6 +34,7 @@ namespace ModelicaParser.Extract
         private const string ID = "Identifier";
         private const string ALIAS = "alias";
         private const string LIST = "list";
+        private const string ARRAY = "array";
         private const string TUPLE = "tuple";
         private const string OPTION = "Option";
         private const string FUNCTION = "function";
@@ -442,6 +443,12 @@ namespace ModelicaParser.Extract
                 contentTypeOption(field, e);
 
             }
+            else if (e.Current.StartsWith(ARRAY))
+            {
+                field.SetAttribute("minMultiplicity", "0");
+                field.SetAttribute("maxMultiplicity", "*");
+                contentTypeArray(field, e);
+            }
             else if (e.Current.StartsWith(LIST))
             {
                 field.SetAttribute("minMultiplicity", "0");
@@ -459,6 +466,22 @@ namespace ModelicaParser.Extract
                 field.SetAttribute("type", e.Current);
                 field.SetAttribute("minMultiplicity", "1");
                 field.SetAttribute("maxMultiplicity", "1");
+            }
+        }
+
+        private static void contentTypeArray(XmlElement field, IEnumerator<string> e)
+        {
+            if (e.Current.EndsWith(">"))
+            {
+                string contentType = e.Current.Substring(6, e.Current.Length - 7);
+                field.SetAttribute("type", contentType);
+            }
+            else
+            {
+                string contentType = e.Current.Substring(6);
+                e.MoveNext();
+                contentType += e.Current;
+                field.SetAttribute("type", contentType);
             }
         }
 
