@@ -29,7 +29,6 @@ namespace ModelicaParser.Datamodel
             this.version = version;
         }
 
-
         public void AddPackage(Package package)
         {
             packages.Add(package);

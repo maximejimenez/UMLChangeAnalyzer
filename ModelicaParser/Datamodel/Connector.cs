@@ -50,11 +50,6 @@ namespace ModelicaParser.Datamodel
         {
             return this.MemberwiseClone();
         }
-        
-        public override string ToString()
-        {
-            return "Connector " + source.Name + " -> " + target.Name + "\n";
-        }
 
         #endregion
 
@@ -79,8 +74,6 @@ namespace ModelicaParser.Datamodel
             if(target == null)
                 return parentElement.GetPath() + " -> null";
             return source.GetPath() + " -> " + target.GetPath();
-
-            //return parentElement.GetPath() + " -> " + target.GetPath();
         }
 
         #endregion

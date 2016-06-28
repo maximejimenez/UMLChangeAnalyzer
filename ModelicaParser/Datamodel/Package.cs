@@ -132,11 +132,6 @@ namespace ModelicaParser.Datamodel
         {
             int numberOfChangedElements = modifiedElements.Count;
 
-            /*foreach (Element elem in modifiedElements)
-            {
-                numberOfChangedElements += elem.NumberOfModifiedElements();
-            }*/
-
             foreach (Package subPackage in subPackages)
                 numberOfChangedElements += subPackage.NumberOfModifiedElements();
 
@@ -146,13 +141,7 @@ namespace ModelicaParser.Datamodel
         // calculates the number of added elements of this package and all of its sub-packages
         public int NumberOfAddedElements()
         {
-            int numberOfAddedElements = 0;
-
-            /*foreach(Element elem in modifiedElements){
-                numberOfAddedElements += elem.NumberOfAddedElements();
-            }*/
-
-            numberOfAddedElements += addedElements.Count;
+            int numberOfAddedElements = addedElements.Count;
 
             foreach (Package subPack in addedSubPackages)
                 numberOfAddedElements += subPack.NumberOfElements(false); // false because we already excluded non relevant packages/elements, etc. during compare
@@ -166,14 +155,7 @@ namespace ModelicaParser.Datamodel
         // calculates the number of removed elements of this package and all of its sub-packages
         public int NumberOfRemovedElements()
         {
-            int numberOfRemovedElements = 0;
-
-            /*foreach (Element elem in modifiedElements)
-            {
-                numberOfRemovedElements += elem.NumberOfRemovedElements();
-            }*/
-
-            numberOfRemovedElements += removedElements.Count;
+            int numberOfRemovedElements = removedElements.Count;
 
             foreach (Package subPack in removedSubPackages)
                 numberOfRemovedElements += subPack.NumberOfElements(false); // false because we already excluded non relevant packages/elements, etc. during compare
@@ -374,49 +356,6 @@ namespace ModelicaParser.Datamodel
 
         #region Retrieve objects
 
-
-        /*public void printAsAddedPackage(List<MMChange> listOfChanges, int indent)
-        {
-            listOfChanges.Add(new MMChange("+ Package: " + GetPath(), true).AppendTabs(indent++));
-            foreach (Element elem in Elements)
-            {
-                elem.printAsAddedElement(listOfChanges, indent);
-            }
-        }
-
-        public void printAsModifiedPackage(List<MMChange> listOfChanges, int indent)
-        {
-            listOfChanges.Add(new MMChange("~ Package: " + GetPath(), true).AppendTabs(indent++));
-
-            foreach (MMChange chng in changes)
-                listOfChanges.Add(chng.AppendTabs(indent));
-
-            foreach (Element elem in addedElements)
-            {
-                elem.printAsAddedElement(listOfChanges, indent);
-            }
-
-            foreach (Element elem in modifiedElements)
-            {
-                elem.printAsModifiedElement(listOfChanges, indent);
-            }
-
-            foreach (Element elem in removedElements)
-            {
-                elem.printAsRemovedElement(listOfChanges, indent);
-            }
-        }
-
-        public void printAsRemovedPackage(List<MMChange> listOfChanges, int indent)
-        {
-            listOfChanges.Add(new MMChange("- Package: " + GetPath(), true).AppendTabs(indent++));
-            foreach (Element elem in Elements)
-            {
-                elem.printAsRemovedElement(listOfChanges, indent);
-            }
-        }*/
-
-
         // retrieves all changes in the package and all of its sub-packages
         public List<MMChange> GetChanges()
         {
@@ -468,13 +407,7 @@ namespace ModelicaParser.Datamodel
         public List<Element> GetAllAddedElements(List<Element> list)
         {
             foreach (Element elem in addedElements)
-            {
                 list.Add(elem);
-                //elem.GetAllElements(list);
-            }
-
-            /*foreach (Element elem in modifiedElements)
-                elem.GetAllAddedElements(list);*/
 
             foreach (Package subPack in addedSubPackages)
                 subPack.GetAllElements(list);
@@ -489,13 +422,7 @@ namespace ModelicaParser.Datamodel
         public List<Element> GetAllRemovedElements(List<Element> list)
         {
             foreach (Element elem in removedElements)
-            {
                 list.Add(elem);
-                //elem.GetAllElements(list);
-            }
-
-            /*foreach (Element elem in modifiedElements)
-                elem.GetAllRemovedElements(list);*/
 
             foreach (Package subPack in removedSubPackages)
                 subPack.GetAllElements(list);

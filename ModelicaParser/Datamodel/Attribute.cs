@@ -173,7 +173,6 @@ namespace ModelicaParser.Datamodel
             get { return numOfChanges; }
         }
 
-
         #endregion
 
     }
