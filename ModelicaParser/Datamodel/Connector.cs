@@ -78,7 +78,9 @@ namespace ModelicaParser.Datamodel
         {
             if(target == null)
                 return parentElement.GetPath() + " -> null";
-            return parentElement.GetPath() + " -> " + target.GetPath();
+            return source.GetPath() + " -> " + target.GetPath();
+
+            //return parentElement.GetPath() + " -> " + target.GetPath();
         }
 
         #endregion
@@ -100,29 +102,36 @@ namespace ModelicaParser.Datamodel
             return false;
         }
 
-        public int CompareConnectors(Connector oldConnector, bool RelevantOnly)
+        public int CompareConnectors(Connector oldConnector, bool RelevantOnly, bool target)
         {
             if (RelevantOnly && IgnoreConector())
                 return 0;
 
+            string type = "(source)";
+            if (target)
+                type = "(target)";
+
             if (!Equals(SourceCardinality, oldConnector.SourceCardinality))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Source Cardinality: " + oldConnector.SourceCardinality + " -> " + SourceCardinality, false));
+                changes.Add(new MMChange("~ Source Cardinality: " + oldConnector.SourceCardinality + " -> " + SourceCardinality, false).AppendTabs(1));
             }
 
             if (!Equals(TargetCardinality, oldConnector.TargetCardinality))
             {
 
                 numOfChanges++;
-                changes.Add(new MMChange("~ Target Cardinality (" + UID + "): " + oldConnector.TargetCardinality + " -> " + TargetCardinality, false));
+                changes.Add(new MMChange("~ Target Cardinality (" + UID + "): " + oldConnector.TargetCardinality + " -> " + TargetCardinality, false).AppendTabs(1));
             }
 
             if (((RelevantOnly && !ConfigReader.ExcludedAttributeNote) || !RelevantOnly) && !Equals(note, oldConnector.Note))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Note", false));
+                changes.Add(new MMChange("~ Note", false).AppendTabs(1));
             }
+
+            if (numOfChanges > 0)
+                changes.Insert(0, new MMChange("~ Connector " + type + " " + GetPath(), false));
 
             return numOfChanges;
         }

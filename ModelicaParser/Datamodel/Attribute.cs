@@ -90,32 +90,35 @@ namespace ModelicaParser.Datamodel
             if (!Equals(type, oldAttribute.Type))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Type: " + oldAttribute.Type + " -> " + type, false));
+                changes.Add(new MMChange("~ Type: " + oldAttribute.Type + " -> " + type, false).AppendTabs(1));
             }
 
             if (!Equals(name, oldAttribute.Name))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Name: " + oldAttribute.Name + " -> " + name, false));
+                changes.Add(new MMChange("~ Name: " + oldAttribute.Name + " -> " + name, false).AppendTabs(1));
             }
 
             if (!Equals(lowerBound, oldAttribute.LowerBound))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Lower Bound: " + oldAttribute.LowerBound + " -> " + lowerBound, false));
+                changes.Add(new MMChange("~ Lower Bound: " + oldAttribute.LowerBound + " -> " + lowerBound, false).AppendTabs(1));
             }
 
             if (!Equals(upperBound, oldAttribute.UpperBound))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Upper Bound: " + oldAttribute.UpperBound + " -> " + upperBound, false));
+                changes.Add(new MMChange("~ Upper Bound: " + oldAttribute.UpperBound + " -> " + upperBound, false).AppendTabs(1));
             }
 
             if (((RelevantOnly && !ConfigReader.ExcludedAttributeNote) || !RelevantOnly) && !Equals(note, oldAttribute.Note))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Note", false));
+                changes.Add(new MMChange("~ Note", false).AppendTabs(1));
             }
+
+            if(numOfChanges > 0)
+                changes.Insert(0, new MMChange("~ Attribute " + GetPath(), false));
 
             return numOfChanges;
         }
@@ -129,7 +132,6 @@ namespace ModelicaParser.Datamodel
             get { return parentElement; }
             set { parentElement = value; }
         }
-
 
         public string Name
         {

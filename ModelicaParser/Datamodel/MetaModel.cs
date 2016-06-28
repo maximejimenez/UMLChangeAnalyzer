@@ -249,7 +249,7 @@ namespace ModelicaParser.Datamodel
         {
             List<MMChange> listOfChanges = new List<MMChange>(changes);
 
-            foreach (Package pack in addedPackages)
+            /*foreach (Package pack in addedPackages)
             {
                 pack.printAsAddedPackage(listOfChanges, 0);
             }
@@ -262,7 +262,11 @@ namespace ModelicaParser.Datamodel
             foreach (Package pack in removedPackages)
             {
                 pack.printAsAddedPackage(listOfChanges, 0);
-            }
+            }*/
+
+            foreach (Package pack in packages)
+                foreach (MMChange chng in pack.GetChanges())
+                    listOfChanges.Add(chng);
 
             return listOfChanges;
         }
@@ -286,8 +290,9 @@ namespace ModelicaParser.Datamodel
             foreach (Package pack in addedPackages)
                 pack.GetAllElements(list);
 
-            foreach (Package pack in modifiedPackages)
+            foreach (Package pack in packages)
                 pack.GetAllAddedElements(list);
+
 
             return list;
         }
@@ -512,6 +517,7 @@ namespace ModelicaParser.Datamodel
                 {
                     numOfChanges += package.NumOfAllModifiableElements(RelevantOnly);
                     addedPackages.Add(package);
+                    AddChangesForAllNewSubPackagesAndElements(0, package); 
                 }
                 // checking if the package is changed in the new model
                 else if ((num = package.ComparePackages(oldPackage, RelevantOnly)) != 0)
@@ -533,10 +539,55 @@ namespace ModelicaParser.Datamodel
                 {
                     numOfChanges += oldPackage.NumOfAllModifiableElements(RelevantOnly);
                     removedPackages.Add(oldPackage);
+                    AddChangesForAllRemovedSubPackagesAndElements(0, oldPackage);
                 }
             }
 
             return numOfChanges;
+        }
+
+        private void AddChangesForAllRemovedSubPackagesAndElements(int ident, Package package)
+        {
+            changes.Add(new MMChange("- Package " + package.GetPath(), true).AppendTabs(ident++));  // not counted as a change
+
+            foreach (Element elem in package.Elements)
+            {
+                changes.Add(new MMChange("- Element " + elem.GetPath(), false).AppendTabs(ident));
+
+                foreach (Attribute attr in elem.Attributes)
+                    changes.Add(new MMChange("- Attribute " + attr.GetPath(), false).AppendTabs(ident + 1));
+
+                foreach (Connector conn in elem.SourceConnectors)
+                    changes.Add(new MMChange("- Connector (source) " + conn.GetPath(), false).AppendTabs(ident + 1));
+
+                foreach (Connector conn in elem.TargetConnectors)
+                    changes.Add(new MMChange("- Connector (target) " + conn.GetPath(), false).AppendTabs(ident + 1));
+            }
+
+            foreach (Package pack in package.SubPackages)
+                AddChangesForAllRemovedSubPackagesAndElements(ident, pack);
+        }
+
+        private void AddChangesForAllNewSubPackagesAndElements(int ident, Package package)
+        {
+            changes.Add(new MMChange("+ Package " + package.GetPath(), true).AppendTabs(ident++));  // not counted as a change
+
+            foreach (Element elem in package.Elements)
+            {
+                changes.Add(new MMChange("+ Element " + elem.GetPath(), false).AppendTabs(ident));
+
+                foreach (Attribute attr in elem.Attributes)
+                    changes.Add(new MMChange("+ Attribute " + attr.GetPath(), false).AppendTabs(ident + 1));
+
+                foreach (Connector conn in elem.SourceConnectors)
+                    changes.Add(new MMChange("+ Connector (source) " + conn.GetPath(), false).AppendTabs(ident + 1));
+
+                foreach (Connector conn in elem.TargetConnectors)
+                    changes.Add(new MMChange("+ Connector (target) " + conn.GetPath(), false).AppendTabs(ident + 1));
+            }
+
+            foreach (Package pack in package.SubPackages)
+                AddChangesForAllNewSubPackagesAndElements(ident, pack);
         }
  
         #endregion
