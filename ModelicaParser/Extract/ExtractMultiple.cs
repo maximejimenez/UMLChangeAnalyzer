@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using ModelicaParser;
-using ModelicaParser.Config;
+using ModelicaChangeAnalyzer;
+using ModelicaChangeAnalyzer.Config;
 
-namespace ModelicaParser.Extract
+namespace ModelicaChangeAnalyzer.Extract
 {
     // extracting multiple AUTOSAR meta-model versions
     class ExtractMultiple

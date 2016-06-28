@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
-using ModelicaParser.Config;
-using ModelicaParser.Changes;
+using ModelicaChangeAnalyzer.Config;
+using ModelicaChangeAnalyzer.Changes;
 
-namespace ModelicaParser.Datamodel
+namespace ModelicaChangeAnalyzer.Datamodel
 {
     public class Package
     {

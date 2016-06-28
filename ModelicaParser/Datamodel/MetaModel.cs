@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
-using ModelicaParser.Changes;
+using ModelicaChangeAnalyzer.Changes;
 
-namespace ModelicaParser.Datamodel
+namespace ModelicaChangeAnalyzer.Datamodel
 {
     public class MetaModel
     {

@@ -12,12 +12,12 @@ using System.Collections.ObjectModel;
 //using SharpSvn;
 using System.Threading;
 using System.Text.RegularExpressions;
-using ModelicaParser.Datamodel;
-using ModelicaParser.Config;
-using ModelicaParser.Changes;
-using ModelicaParser.Extract;
+using ModelicaChangeAnalyzer.Datamodel;
+using ModelicaChangeAnalyzer.Config;
+using ModelicaChangeAnalyzer.Changes;
+using ModelicaChangeAnalyzer.Extract;
 
-namespace ModelicaParser
+namespace ModelicaChangeAnalyzer
 {
     public class MainForm : System.Windows.Forms.Form
     {
@@ -753,7 +753,7 @@ namespace ModelicaParser
                     ListExportAdd("", sb);
 
                     int i = 1;
-                    foreach (ModelicaParser.Datamodel.Attribute attr in results.ModifiedAttributes)
+                    foreach (ModelicaChangeAnalyzer.Datamodel.Attribute attr in results.ModifiedAttributes)
                         ListExportAdd(i++ + ": " + attr.GetPath(), sb);
                     ListExportAdd("", sb);
                 }
@@ -765,7 +765,7 @@ namespace ModelicaParser
                     ListExportAdd("", sb);
 
                     int i = 1;
-                    foreach (ModelicaParser.Datamodel.Attribute attr in results.AddedAttributes)
+                    foreach (ModelicaChangeAnalyzer.Datamodel.Attribute attr in results.AddedAttributes)
                         ListExportAdd(i++ + ": " + attr.GetPath(), sb);
                     ListExportAdd("", sb);
                 }
@@ -777,7 +777,7 @@ namespace ModelicaParser
                     ListExportAdd("", sb);
 
                     int i = 1;
-                    foreach (ModelicaParser.Datamodel.Attribute attr in results.RemovedAttributes)
+                    foreach (ModelicaChangeAnalyzer.Datamodel.Attribute attr in results.RemovedAttributes)
                         ListExportAdd(i++ + ": " + attr.GetPath(), sb);
                     ListExportAdd("", sb);
                 }
@@ -1432,9 +1432,10 @@ namespace ModelicaParser
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "AUTOSAR Change Analyzer";
+            this.Text = "Modelica Change Analyzer (forked from ARCA)";
             this.TransparencyKey = System.Drawing.Color.Silver;
             this.Activated += new System.EventHandler(this.EA_Dump_Form_Resize);
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.Resize += new System.EventHandler(this.EA_Dump_Form_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1442,5 +1443,10 @@ namespace ModelicaParser
         }
 
         #endregion
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

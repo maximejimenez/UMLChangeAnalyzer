@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 
-namespace ModelicaParser.Config
+namespace ModelicaChangeAnalyzer.Config
 {
         // parser of the config XML file
         public static class ConfigReader

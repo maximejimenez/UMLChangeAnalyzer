@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 
-namespace ModelicaParser.Changes
+namespace ModelicaChangeAnalyzer.Changes
 {
     public class MMChange : TreeNode
     {

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ModelicaParser.Datamodel;
+using ModelicaChangeAnalyzer.Datamodel;
 using System.Xml;
 
-namespace ModelicaParser.Extract
+namespace ModelicaChangeAnalyzer.Extract
 {
     class MM_Extractor
     {
@@ -155,7 +155,7 @@ namespace ModelicaParser.Extract
 
                 if (Basetypes.Contains<string>(type))
                 {
-                    ModelicaParser.Datamodel.Attribute attribute = new ModelicaParser.Datamodel.Attribute(type, name, maxMultiplicity, minMultiplicity);
+                    ModelicaChangeAnalyzer.Datamodel.Attribute attribute = new ModelicaChangeAnalyzer.Datamodel.Attribute(type, name, maxMultiplicity, minMultiplicity);
                     if (fieldAttributeNote != null)
                         attribute.Note = fieldAttributeNote.Value;
                     attribute.ParentElement = record;

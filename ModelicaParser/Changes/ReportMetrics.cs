@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using ModelicaParser.Datamodel;
-using ModelicaParser.Config;
-using ModelicaParser.Extract;
+using ModelicaChangeAnalyzer.Datamodel;
+using ModelicaChangeAnalyzer.Config;
+using ModelicaChangeAnalyzer.Extract;
 
-namespace ModelicaParser.Changes
+namespace ModelicaChangeAnalyzer.Changes
 {
     // creates a report with metrics results for multiple AUTOSAR meta-model releases
     public class ReportMetrics

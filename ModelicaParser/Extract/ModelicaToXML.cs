@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace ModelicaParser.Extract
+namespace ModelicaChangeAnalyzer.Extract
 {
     class ModelicaToXML
     {
