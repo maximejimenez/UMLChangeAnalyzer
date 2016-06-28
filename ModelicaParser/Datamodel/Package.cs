@@ -12,7 +12,7 @@ namespace ModelicaParser.Datamodel
     public class Package
     {
         // Backtracking
-        //public MetaModel metamodel;
+        private MetaModel metamodel;
         private Package parentPackage = null;
 
         // Attributes
@@ -137,7 +137,7 @@ namespace ModelicaParser.Datamodel
                 numberOfChangedElements += elem.NumberOfModifiedElements();
             }*/
 
-            foreach (Package subPackage in modifiedSubPackages)
+            foreach (Package subPackage in subPackages)
                 numberOfChangedElements += subPackage.NumberOfModifiedElements();
 
             return numberOfChangedElements;
@@ -157,7 +157,7 @@ namespace ModelicaParser.Datamodel
             foreach (Package subPack in addedSubPackages)
                 numberOfAddedElements += subPack.NumberOfElements(false); // false because we already excluded non relevant packages/elements, etc. during compare
 
-            foreach (Package subPackage in modifiedSubPackages)
+            foreach (Package subPackage in subPackages)
                 numberOfAddedElements += subPackage.NumberOfAddedElements();
 
             return numberOfAddedElements;
@@ -178,7 +178,7 @@ namespace ModelicaParser.Datamodel
             foreach (Package subPack in removedSubPackages)
                 numberOfRemovedElements += subPack.NumberOfElements(false); // false because we already excluded non relevant packages/elements, etc. during compare
 
-            foreach (Package subPackage in modifiedSubPackages)
+            foreach (Package subPackage in subPackages)
                 numberOfRemovedElements += subPackage.NumberOfRemovedElements();
 
             return numberOfRemovedElements;
@@ -205,10 +205,10 @@ namespace ModelicaParser.Datamodel
             int numberOfModifiedSubPackages = 0;
 
             foreach (Package subPackage in modifiedSubPackages)
-            {
                 numberOfModifiedSubPackages++;
+
+            foreach (Package subPackage in subPackages)
                 numberOfModifiedSubPackages += subPackage.NumberOfModifiedSubPackages();
-            }
 
             return numberOfModifiedSubPackages;
         }
@@ -219,11 +219,9 @@ namespace ModelicaParser.Datamodel
             int numberOfAddedSubPackages = 0;
 
             foreach (Package subPackage in addedSubPackages)
-            {
                 numberOfAddedSubPackages += subPackage.NumberOfPackages(false); // false because we already excluded non relevant packages/elements, etc. during compare
-            }
 
-            foreach (Package subPackage in modifiedSubPackages)
+            foreach (Package subPackage in subPackages)
                 numberOfAddedSubPackages += subPackage.NumberOfAddedSubPackages();
 
             return numberOfAddedSubPackages;
@@ -235,11 +233,9 @@ namespace ModelicaParser.Datamodel
             int numberOfRemovedSubPackages = 0;
 
             foreach (Package subPackage in removedSubPackages)
-            {
                 numberOfRemovedSubPackages += subPackage.NumberOfPackages(false); // false because we already excluded non relevant packages/elements, etc. during compare
-            }
 
-            foreach (Package subPackage in modifiedSubPackages)
+            foreach (Package subPackage in subPackages)
                 numberOfRemovedSubPackages += subPackage.NumberOfRemovedSubPackages();
 
             return numberOfRemovedSubPackages;
@@ -249,10 +245,10 @@ namespace ModelicaParser.Datamodel
         {
             int numberOfModifiedConnectors = 0;
 
-            foreach (Element elem in modifiedElements)
+            foreach (Element elem in elements)
                 numberOfModifiedConnectors += elem.NumberOfModifiedConnectors();
 
-            foreach (Package subPackage in modifiedSubPackages)
+            foreach (Package subPackage in subPackages)
                 numberOfModifiedConnectors += subPackage.NumberOfModifiedConnectors();
 
             return numberOfModifiedConnectors;
@@ -262,13 +258,13 @@ namespace ModelicaParser.Datamodel
         {
             int numberOfAddedConnectors = 0;
 
-            foreach (Element elem in modifiedElements)
+            foreach (Element elem in elements)
                 numberOfAddedConnectors += elem.NumberOfAddedConnectors();
 
             foreach (Element elem in addedElements)
                 numberOfAddedConnectors += elem.NumberOfConnectors(false);
 
-            foreach (Package subPackage in modifiedSubPackages)
+            foreach (Package subPackage in subPackages)
                 numberOfAddedConnectors += subPackage.NumberOfAddedConnectors();
 
             foreach (Package package in addedSubPackages)
@@ -281,13 +277,13 @@ namespace ModelicaParser.Datamodel
         {
             int numberOfRemovedConnectors = 0;
 
-            foreach (Element elem in modifiedElements)
+            foreach (Element elem in elements)
                 numberOfRemovedConnectors += elem.NumberOfRemovedConnectors();
 
             foreach (Element elem in removedElements)
                 numberOfRemovedConnectors += elem.NumberOfConnectors(false);
 
-            foreach (Package subPackage in modifiedSubPackages)
+            foreach (Package subPackage in subPackages)
                 numberOfRemovedConnectors += subPackage.NumberOfRemovedConnectors();
 
             foreach (Package package in removedSubPackages)
@@ -301,10 +297,10 @@ namespace ModelicaParser.Datamodel
         {
             int numberOfModifiedAttributes = 0;
 
-            foreach (Element elem in modifiedElements)
+            foreach (Element elem in elements)
                 numberOfModifiedAttributes += elem.NumberOfModifiedAttributes();
 
-            foreach (Package subPackage in modifiedSubPackages)
+            foreach (Package subPackage in subPackages)
                 numberOfModifiedAttributes += subPackage.NumberOfModifiedAttributes();
 
             return numberOfModifiedAttributes;
@@ -315,13 +311,13 @@ namespace ModelicaParser.Datamodel
         {
             int numberOfAddedAttributes = 0;
 
-            foreach (Element elem in modifiedElements)
+            foreach (Element elem in elements)
                 numberOfAddedAttributes += elem.NumberOfAddedAttributes();
 
             foreach (Element elem in addedElements)
                 numberOfAddedAttributes += elem.NumberOfAttributes(false);
 
-            foreach (Package subPackage in modifiedSubPackages)
+            foreach (Package subPackage in subPackages)
                 numberOfAddedAttributes += subPackage.NumberOfAddedAttributes();
 
             foreach (Package package in addedSubPackages)
@@ -335,13 +331,13 @@ namespace ModelicaParser.Datamodel
         {
             int numberOfRemovedAttributes = 0;
 
-            foreach (Element elem in modifiedElements)
+            foreach (Element elem in elements)
                 numberOfRemovedAttributes += elem.NumberOfRemovedAttributes();
 
             foreach (Element elem in removedElements)
                 numberOfRemovedAttributes += elem.NumberOfAttributes(false);
 
-            foreach (Package subPackage in modifiedSubPackages)
+            foreach (Package subPackage in subPackages)
                 numberOfRemovedAttributes += subPackage.NumberOfRemovedAttributes();
 
             foreach (Package package in removedSubPackages)
@@ -462,7 +458,7 @@ namespace ModelicaParser.Datamodel
                 //elem.GetAllModifiedElements(list);
             }
 
-            foreach (Package subPack in modifiedSubPackages)
+            foreach (Package subPack in subPackages)
                 subPack.GetAllModifiedElements(list);
 
             return list;
@@ -483,7 +479,7 @@ namespace ModelicaParser.Datamodel
             foreach (Package subPack in addedSubPackages)
                 subPack.GetAllElements(list);
 
-            foreach (Package subPack in modifiedSubPackages)
+            foreach (Package subPack in subPackages)
                 subPack.GetAllAddedElements(list);
 
             return list;
@@ -504,7 +500,7 @@ namespace ModelicaParser.Datamodel
             foreach (Package subPack in removedSubPackages)
                 subPack.GetAllElements(list);
 
-            foreach (Package subPack in modifiedSubPackages)
+            foreach (Package subPack in subPackages)
                 subPack.GetAllRemovedElements(list);
 
             return list;
@@ -521,10 +517,10 @@ namespace ModelicaParser.Datamodel
 
         public void GetAllModifiedConnectors(List<Connector> list)
         {
-            foreach (Element elem in modifiedElements)
+            foreach (Element elem in elements)
                 elem.GetAllModifiedConnectors(list);
 
-            foreach (Package subPack in modifiedSubPackages)
+            foreach (Package subPack in subPackages)
                 subPack.GetAllModifiedConnectors(list);
         }
 
@@ -533,13 +529,13 @@ namespace ModelicaParser.Datamodel
             foreach (Element elem in addedElements)
                 elem.GetAllConnectors(list);
 
-            foreach (Element elem in modifiedElements)
+            foreach (Element elem in elements)
                 elem.GetAllAddedConnectors(list);
 
             foreach (Package subPack in addedSubPackages)
                 subPack.GetAllConnectors(list);
 
-            foreach (Package subPack in modifiedSubPackages)
+            foreach (Package subPack in subPackages)
                 subPack.GetAllAddedConnectors(list);
         }
 
@@ -548,13 +544,13 @@ namespace ModelicaParser.Datamodel
             foreach (Element elem in removedElements)
                 elem.GetAllConnectors(list);
 
-            foreach (Element elem in modifiedElements)
+            foreach (Element elem in elements)
                 elem.GetAllRemovedConnectors(list);
 
             foreach (Package subPack in removedSubPackages)
                 subPack.GetAllConnectors(list);
 
-            foreach (Package subPack in modifiedSubPackages)
+            foreach (Package subPack in subPackages)
                 subPack.GetAllRemovedConnectors(list);
         }
 
@@ -573,10 +569,10 @@ namespace ModelicaParser.Datamodel
         // adds all modified attributes in the package and sub-packages to a list
         public List<Attribute> GetAllModifiedAttributes(List<Attribute> list)
         {
-            foreach (Element elem in modifiedElements)
+            foreach (Element elem in elements)
                 elem.GetAllModifiedAttributes(list);
 
-            foreach (Package subPack in modifiedSubPackages)
+            foreach (Package subPack in subPackages)
                 subPack.GetAllModifiedAttributes(list);
 
             return list;
@@ -588,13 +584,13 @@ namespace ModelicaParser.Datamodel
             foreach (Element elem in addedElements)
                 elem.GetAllAttributes(list);
 
-            foreach (Element elem in modifiedElements)
+            foreach (Element elem in elements)
                 elem.GetAllAddedAttributes(list);
 
             foreach (Package subPack in addedSubPackages)
                 subPack.GetAllAttributes(list);
 
-            foreach (Package subPack in modifiedSubPackages)
+            foreach (Package subPack in subPackages)
                 subPack.GetAllAddedAttributes(list);
 
             return list;
@@ -606,13 +602,13 @@ namespace ModelicaParser.Datamodel
             foreach (Element elem in removedElements)
                 elem.GetAllAttributes(list);
 
-            foreach (Element elem in modifiedElements)
+            foreach (Element elem in elements)
                 elem.GetAllRemovedAttributes(list);
 
             foreach (Package subPack in removedSubPackages)
                 subPack.GetAllAttributes(list);
 
-            foreach (Package subPack in modifiedSubPackages)
+            foreach (Package subPack in subPackages)
                 subPack.GetAllRemovedAttributes(list);
 
             return list;
@@ -634,10 +630,10 @@ namespace ModelicaParser.Datamodel
         public List<Package> GetAllModifiedSubPackages(List<Package> list)
         {
             foreach (Package subPack in modifiedSubPackages)
-            {
                 list.Add(subPack);
+            
+            foreach(Package subPack in subPackages)
                 subPack.GetAllModifiedSubPackages(list);
-            }
 
             return list;
         }
@@ -651,7 +647,7 @@ namespace ModelicaParser.Datamodel
                 subPack.GetAllSubPackages(list);
             }
 
-            foreach (Package subPack in modifiedSubPackages)
+            foreach (Package subPack in subPackages)
                 subPack.GetAllAddedSubPackages(list);
 
             return list;
@@ -666,7 +662,7 @@ namespace ModelicaParser.Datamodel
                 subPack.GetAllSubPackages(list);
             }
 
-            foreach (Package subPack in modifiedSubPackages)
+            foreach (Package subPack in subPackages)
                 subPack.GetAllRemovedSubPackages(list);
 
             return list;
@@ -756,6 +752,9 @@ namespace ModelicaParser.Datamodel
                 changes.Add(new MMChange("~ Note", false).AppendTabs(1));
             }
 
+            if (numOfChanges > 0)
+                metamodel.ModifiedPackages.Add(this);
+
             // checking if the sub-package is changed or added in the new model
             foreach (Package subPackage in subPackages)
             {
@@ -779,7 +778,7 @@ namespace ModelicaParser.Datamodel
                 else if ((num = subPackage.ComparePackages(oldSubPackage, RelevantOnly)) != 0)
                 {
                     numOfChanges += num;
-                    modifiedSubPackages.Add(subPackage);
+                    //modifiedSubPackages.Add(subPackage);
                 }
             }
 
@@ -846,7 +845,7 @@ namespace ModelicaParser.Datamodel
                 else if ((num = element.CompareElements(oldElement, RelevantOnly)) != 0)
                 {
                     numOfChanges += num;
-                    modifiedElements.Add(element); // TODO / VERIFY
+                    //modifiedElements.Add(element); // TODO / VERIFY
                 }
             }
 
@@ -992,6 +991,12 @@ namespace ModelicaParser.Datamodel
         #endregion
 
         #region Getters and setters
+
+        public MetaModel Metamodel
+        {
+            get { return metamodel; }
+            set { metamodel = value; }
+        }
 
         public String Name
         {
