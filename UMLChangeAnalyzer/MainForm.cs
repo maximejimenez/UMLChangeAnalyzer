@@ -961,12 +961,12 @@ namespace ModelicaChangeAnalyzer
             // 
             // textBoxModelPath
             // 
+            this.textBoxModelPath.Enabled = false;
             this.textBoxModelPath.Location = new System.Drawing.Point(84, 20);
             this.textBoxModelPath.Name = "textBoxModelPath";
             this.textBoxModelPath.Size = new System.Drawing.Size(449, 20);
             this.textBoxModelPath.TabIndex = 0;
-            this.textBoxModelPath.Text = "C:\\Users\\maxime\\Desktop\\ModelicaResults\\Metamodels\\OMCompiler-1.9.2\\Compiler\\Fron" +
-    "tEnd";
+            this.textBoxModelPath.Text = "C:\\Users\\maxime\\Desktop\\UMLResults\\Metamodels\\";
             // 
             // label1
             // 
@@ -979,6 +979,7 @@ namespace ModelicaChangeAnalyzer
             // 
             // extract
             // 
+            this.extract.Enabled = false;
             this.extract.Location = new System.Drawing.Point(558, 20);
             this.extract.Name = "extract";
             this.extract.Size = new System.Drawing.Size(70, 46);
@@ -997,11 +998,12 @@ namespace ModelicaChangeAnalyzer
             // 
             // textBoxFilePath
             // 
+            this.textBoxFilePath.Enabled = false;
             this.textBoxFilePath.Location = new System.Drawing.Point(84, 46);
             this.textBoxFilePath.Name = "textBoxFilePath";
             this.textBoxFilePath.Size = new System.Drawing.Size(449, 20);
             this.textBoxFilePath.TabIndex = 5;
-            this.textBoxFilePath.Text = "C:\\Users\\maxime\\Desktop\\ModelicaResults\\XML\\1.9.2.xml";
+            this.textBoxFilePath.Text = "C:\\Users\\maxime\\Desktop\\UMLResults\\UMLX.X.xml";
             // 
             // compare
             // 
@@ -1018,7 +1020,7 @@ namespace ModelicaChangeAnalyzer
             this.textBoxModel2.Name = "textBoxModel2";
             this.textBoxModel2.Size = new System.Drawing.Size(449, 20);
             this.textBoxModel2.TabIndex = 14;
-            this.textBoxModel2.Text = "C:\\Users\\maxime\\Desktop\\ModelicaResults\\XML\\1.9.3.xml";
+            this.textBoxModel2.Text = "C:\\Users\\maxime\\Desktop\\UMLResults\\XML\\";
             // 
             // textBoxModel1
             // 
@@ -1026,7 +1028,7 @@ namespace ModelicaChangeAnalyzer
             this.textBoxModel1.Name = "textBoxModel1";
             this.textBoxModel1.Size = new System.Drawing.Size(449, 20);
             this.textBoxModel1.TabIndex = 15;
-            this.textBoxModel1.Text = "C:\\Users\\maxime\\Desktop\\ModelicaResults\\XML\\1.9.2.xml";
+            this.textBoxModel1.Text = "C:\\Users\\maxime\\Desktop\\UMLResults\\XML\\";
             // 
             // label5
             // 
@@ -1093,7 +1095,7 @@ namespace ModelicaChangeAnalyzer
             this.textBoxNotRelevant.Name = "textBoxNotRelevant";
             this.textBoxNotRelevant.Size = new System.Drawing.Size(449, 20);
             this.textBoxNotRelevant.TabIndex = 24;
-            this.textBoxNotRelevant.Text = "C:\\Users\\maxime\\Desktop\\ModelicaResults\\Config\\MM_Config.xml";
+            this.textBoxNotRelevant.Text = "C:\\Users\\maxime\\Desktop\\UMLResults\\UML_Config.xml";
             // 
             // checkBoxAllChanges
             // 
@@ -1353,6 +1355,7 @@ namespace ModelicaChangeAnalyzer
             // 
             // extractMultiple
             // 
+            this.extractMultiple.Enabled = false;
             this.extractMultiple.Location = new System.Drawing.Point(785, 16);
             this.extractMultiple.Name = "extractMultiple";
             this.extractMultiple.Size = new System.Drawing.Size(92, 23);
@@ -1432,7 +1435,7 @@ namespace ModelicaChangeAnalyzer
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Modelica Change Analyzer (forked from ARCA)";
+            this.Text = "UML Change Analyzer (forked from ARCA)";
             this.TransparencyKey = System.Drawing.Color.Silver;
             this.Activated += new System.EventHandler(this.EA_Dump_Form_Resize);
             this.Load += new System.EventHandler(this.MainForm_Load);
