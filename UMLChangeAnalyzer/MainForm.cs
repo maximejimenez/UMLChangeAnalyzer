@@ -1003,7 +1003,7 @@ namespace ModelicaChangeAnalyzer
             this.textBoxFilePath.Name = "textBoxFilePath";
             this.textBoxFilePath.Size = new System.Drawing.Size(449, 20);
             this.textBoxFilePath.TabIndex = 5;
-            this.textBoxFilePath.Text = "C:\\Users\\maxime\\Desktop\\UMLResults\\UMLX.X.xml";
+            this.textBoxFilePath.Text = "C:\\Users\\maxime\\Desktop\\UMLResults\\UML.xml";
             // 
             // compare
             // 
