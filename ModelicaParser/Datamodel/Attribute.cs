@@ -23,7 +23,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
 
         // Changes
         private int numOfChanges;
-        private List<MMChange> changes = new List<MMChange>();
+        private List<Change> changes = new List<Change>();
 
         #region Loading
 
@@ -57,9 +57,9 @@ namespace ModelicaChangeAnalyzer.Datamodel
 
         #region Retrieve object
 
-        public List<MMChange> GetChanges()
+        public List<Change> GetChanges()
         {
-            return new List<MMChange>(changes);
+            return new List<Change>(changes);
         }
 
         public string GetPath()
@@ -90,35 +90,35 @@ namespace ModelicaChangeAnalyzer.Datamodel
             if (!Equals(type, oldAttribute.Type))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Type: " + oldAttribute.Type + " -> " + type, false).AppendTabs(1));
+                changes.Add(new Change("~ Type: " + oldAttribute.Type + " -> " + type, false).AppendTabs(1));
             }
 
             if (!Equals(name, oldAttribute.Name))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Name: " + oldAttribute.Name + " -> " + name, false).AppendTabs(1));
+                changes.Add(new Change("~ Name: " + oldAttribute.Name + " -> " + name, false).AppendTabs(1));
             }
 
             if (!Equals(lowerBound, oldAttribute.LowerBound))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Lower Bound: " + oldAttribute.LowerBound + " -> " + lowerBound, false).AppendTabs(1));
+                changes.Add(new Change("~ Lower Bound: " + oldAttribute.LowerBound + " -> " + lowerBound, false).AppendTabs(1));
             }
 
             if (!Equals(upperBound, oldAttribute.UpperBound))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Upper Bound: " + oldAttribute.UpperBound + " -> " + upperBound, false).AppendTabs(1));
+                changes.Add(new Change("~ Upper Bound: " + oldAttribute.UpperBound + " -> " + upperBound, false).AppendTabs(1));
             }
 
             if (((RelevantOnly && !ConfigReader.ExcludedAttributeNote) || !RelevantOnly) && !Equals(note, oldAttribute.Note))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Note", false).AppendTabs(1));
+                changes.Add(new Change("~ Note", false).AppendTabs(1));
             }
 
             if(numOfChanges > 0)
-                changes.Insert(0, new MMChange("~ Attribute " + GetPath(), false));
+                changes.Insert(0, new Change("~ Attribute " + GetPath(), false));
 
             return numOfChanges;
         }
@@ -163,7 +163,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
             set { note = value; }
         }
 
-        public List<MMChange> Changes
+        public List<Change> Changes
         {
             get { return changes; }
         }

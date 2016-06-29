@@ -6,7 +6,7 @@ using ModelicaChangeAnalyzer.Datamodel;
 namespace ModelicaChangeAnalyzer.Changes
 {
     // contains the calculation results (changes, metrics and features)
-    public class MMResults
+    public class Results
     {
         /* ***** SIZE METRICS ***** */
         private int numOfElementsMod1 = 0;
@@ -38,7 +38,7 @@ namespace ModelicaChangeAnalyzer.Changes
         private int numOfRemovedAttributes = 0;
 
         /* ***** CHANGES ***** */
-        private List<MMChange> changes = new List<MMChange>();
+        private List<Change> changes = new List<Change>();
         private List<Package> modifiedPackages = new List<Package>();
         private List<Package> addedPackages = new List<Package>();
         private List<Package> removedPackages = new List<Package>();
@@ -122,7 +122,7 @@ namespace ModelicaChangeAnalyzer.Changes
             NumOfAddedAttributes += package2.NumberOfAddedAttributes();
             NumOfRemovedAttributes += package2.NumberOfRemovedAttributes();
 
-            foreach (MMChange chg in package2.GetChanges())
+            foreach (Change chg in package2.GetChanges())
                 Changes.Add(chg);
 
             package2.GetAllModifiedSubPackages(ModifiedPackages);
@@ -290,7 +290,7 @@ namespace ModelicaChangeAnalyzer.Changes
             set { numOfRemovedAttributes = value; }
         }
 
-        public List<MMChange> Changes
+        public List<Change> Changes
         {
             get { return changes; }
             set { changes = value; }

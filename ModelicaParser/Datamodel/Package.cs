@@ -24,7 +24,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
 
         // Changes
         private int numOfChanges;
-        private List<MMChange> changes = new List<MMChange>();
+        private List<Change> changes = new List<Change>();
         private List<Package> modifiedSubPackages = new List<Package>();
         private List<Package> removedSubPackages = new List<Package>();
         private List<Package> addedSubPackages = new List<Package>();
@@ -357,18 +357,18 @@ namespace ModelicaChangeAnalyzer.Datamodel
         #region Retrieve objects
 
         // retrieves all changes in the package and all of its sub-packages
-        public List<MMChange> GetChanges()
+        public List<Change> GetChanges()
         {
-            List<MMChange> listOfChanges = new List<MMChange>(changes);
+            List<Change> listOfChanges = new List<Change>(changes);
 
             foreach (Element elem in elements)
             {
-                foreach (MMChange chng in elem.GetChanges())
+                foreach (Change chng in elem.GetChanges())
                     listOfChanges.Add(chng.AppendTabs(1));
             }
 
             foreach (Package subPack in subPackages)
-                foreach (MMChange chng in subPack.GetChanges())
+                foreach (Change chng in subPack.GetChanges())
                     listOfChanges.Add(chng.AppendTabs(1));
 
             return listOfChanges;
@@ -671,12 +671,12 @@ namespace ModelicaChangeAnalyzer.Datamodel
                 return 0;
 
             if (!name.Equals(oldPackage.Name))  // number of changes not increased as the change in the name of a package is not considered a change
-                changes.Add(new MMChange("~ Name: " + oldPackage.Name + " -> " + name, true).AppendTabs(1));
+                changes.Add(new Change("~ Name: " + oldPackage.Name + " -> " + name, true).AppendTabs(1));
 
             if (!Equals(note, oldPackage.Note))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Note", false).AppendTabs(1));
+                changes.Add(new Change("~ Note", false).AppendTabs(1));
             }
 
             /*if (numOfChanges > 0)
@@ -741,14 +741,14 @@ namespace ModelicaChangeAnalyzer.Datamodel
                 {
                     numOfChanges += element.NumOfAllModifiableElements(RelevantOnly);
                     addedElements.Add(element);
-                    changes.Add(new MMChange("+ Element " + element.GetPath(), false).AppendTabs(1));
+                    changes.Add(new Change("+ Element " + element.GetPath(), false).AppendTabs(1));
                     
                     foreach (Attribute attr in element.Attributes)
                     {
                         if (RelevantOnly && attr.IgnoreAttribute())
                             continue;
 
-                        changes.Add(new MMChange("+ Attribute " + attr.GetPath(), false).AppendTabs(2));
+                        changes.Add(new Change("+ Attribute " + attr.GetPath(), false).AppendTabs(2));
                     }
 
                     foreach (Connector conn in element.SourceConnectors)
@@ -756,7 +756,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
                         if (RelevantOnly && conn.IgnoreConector())
                             continue;
 
-                        changes.Add(new MMChange("+ Connector (source) " + conn.GetPath(), false).AppendTabs(2));
+                        changes.Add(new Change("+ Connector (source) " + conn.GetPath(), false).AppendTabs(2));
                     }
 
                     foreach (Connector conn in element.TargetConnectors)
@@ -764,7 +764,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
                         if (RelevantOnly && conn.IgnoreConector())
                             continue;
 
-                        changes.Add(new MMChange("+ Connector (target) " + conn.GetPath(), false).AppendTabs(2));
+                        changes.Add(new Change("+ Connector (target) " + conn.GetPath(), false).AppendTabs(2));
                     }
                 }
 
@@ -788,14 +788,14 @@ namespace ModelicaChangeAnalyzer.Datamodel
                 {
                     numOfChanges += oldElement.NumOfAllModifiableElements(RelevantOnly);
                     removedElements.Add(oldElement);
-                    changes.Add(new MMChange("- Element " + oldElement.GetPath(), false).AppendTabs(1));
+                    changes.Add(new Change("- Element " + oldElement.GetPath(), false).AppendTabs(1));
 
                     foreach (Attribute attr in oldElement.Attributes)
                     {
                         if (RelevantOnly && attr.IgnoreAttribute())
                             continue;
 
-                        changes.Add(new MMChange("- Attribute " + attr.GetPath(), false).AppendTabs(2));
+                        changes.Add(new Change("- Attribute " + attr.GetPath(), false).AppendTabs(2));
                     }
 
                     foreach (Connector conn in oldElement.SourceConnectors)
@@ -803,7 +803,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
                         if (RelevantOnly && conn.IgnoreConector())
                             continue;
 
-                        changes.Add(new MMChange("- Connector (source) " + conn.GetPath(), false).AppendTabs(2));
+                        changes.Add(new Change("- Connector (source) " + conn.GetPath(), false).AppendTabs(2));
                     }
 
                     foreach (Connector conn in oldElement.TargetConnectors)
@@ -811,35 +811,35 @@ namespace ModelicaChangeAnalyzer.Datamodel
                         if (RelevantOnly && conn.IgnoreConector())
                             continue;
 
-                        changes.Add(new MMChange("- Connector (target) " + conn.GetPath(), false).AppendTabs(2));
+                        changes.Add(new Change("- Connector (target) " + conn.GetPath(), false).AppendTabs(2));
                     }
 
                 }
             }
 
             if (numOfChanges > 0)
-                changes.Insert(0, new MMChange("~ Package " + GetPath(), false));
+                changes.Insert(0, new Change("~ Package " + GetPath(), false));
 
             return numOfChanges;
         }
 
         private void AddChangesForAllNewSubPackagesAndElements(int ident, Package package, bool RelevantOnly)
         {
-            changes.Add(new MMChange("+ Package " + package.GetPath(), true).AppendTabs(ident));
+            changes.Add(new Change("+ Package " + package.GetPath(), true).AppendTabs(ident));
 
             foreach (Element elem in package.Elements)
             {
                 if (RelevantOnly && elem.IgnoreElement())
                     continue;
 
-                changes.Add(new MMChange("+ Element " + elem.GetPath(), false).AppendTabs(ident + 1));
+                changes.Add(new Change("+ Element " + elem.GetPath(), false).AppendTabs(ident + 1));
 
                 foreach (Attribute attr in elem.Attributes)
                 {
                     if (RelevantOnly && attr.IgnoreAttribute())
                         continue;
 
-                    changes.Add(new MMChange("+ Attribute " + attr.GetPath(), false).AppendTabs(ident + 2));
+                    changes.Add(new Change("+ Attribute " + attr.GetPath(), false).AppendTabs(ident + 2));
                 }
 
                 foreach (Connector conn in elem.SourceConnectors)
@@ -847,7 +847,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
                     if (RelevantOnly && conn.IgnoreConector())
                         continue;
 
-                    changes.Add(new MMChange("+ Connector (source) " + conn.GetPath(), false).AppendTabs(ident + 2));
+                    changes.Add(new Change("+ Connector (source) " + conn.GetPath(), false).AppendTabs(ident + 2));
                 }
 
                 foreach (Connector conn in elem.TargetConnectors)
@@ -855,7 +855,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
                     if (RelevantOnly && conn.IgnoreConector())
                         continue;
 
-                    changes.Add(new MMChange("+ Connector (target) " + conn.GetPath(), false).AppendTabs(ident + 2));
+                    changes.Add(new Change("+ Connector (target) " + conn.GetPath(), false).AppendTabs(ident + 2));
                 }
 
             }
@@ -872,21 +872,21 @@ namespace ModelicaChangeAnalyzer.Datamodel
         // adding changes for  the elements and sub-packages of the package (used for old packages)
         private void AddChangesForAllRemovedSubPackagesAndElements(int ident, Package package, bool RelevantOnly)
         {
-            changes.Add(new MMChange("- Package " + package.GetPath(), true).AppendTabs(ident));
+            changes.Add(new Change("- Package " + package.GetPath(), true).AppendTabs(ident));
 
             foreach (Element elem in package.Elements)
             {
                 if (RelevantOnly && elem.IgnoreElement())
                     continue;
 
-                changes.Add(new MMChange("- Element " + elem.GetPath(), false).AppendTabs(ident + 1)); // TODO / Verify
+                changes.Add(new Change("- Element " + elem.GetPath(), false).AppendTabs(ident + 1)); // TODO / Verify
 
                 foreach (Attribute attr in elem.Attributes)
                 {
                     if (RelevantOnly && attr.IgnoreAttribute())
                         continue;
 
-                    changes.Add(new MMChange("- Attribute " + attr.GetPath(), false).AppendTabs(ident + 2));
+                    changes.Add(new Change("- Attribute " + attr.GetPath(), false).AppendTabs(ident + 2));
                 }
 
                 foreach (Connector conn in elem.SourceConnectors )
@@ -894,7 +894,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
                     if (RelevantOnly && conn.IgnoreConector())
                         continue;
 
-                    changes.Add(new MMChange("- Connector (source) " + conn.GetPath(), false).AppendTabs(ident + 2));
+                    changes.Add(new Change("- Connector (source) " + conn.GetPath(), false).AppendTabs(ident + 2));
                 }
 
                 foreach (Connector conn in elem.TargetConnectors)
@@ -902,7 +902,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
                     if (RelevantOnly && conn.IgnoreConector())
                         continue;
 
-                    changes.Add(new MMChange("- Connector (target) " + conn.GetPath(), false).AppendTabs(ident + 2));
+                    changes.Add(new Change("- Connector (target) " + conn.GetPath(), false).AppendTabs(ident + 2));
                 }
             }
 

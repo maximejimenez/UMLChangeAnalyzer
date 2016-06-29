@@ -25,7 +25,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
 
         // Changes
         private int numOfChanges;
-        private List<MMChange> changes = new List<MMChange>();
+        private List<Change> changes = new List<Change>();
         private List<Attribute> modifiedAttributes = new List<Attribute>();
         private List<Attribute> removedAttributes = new List<Attribute>();
         private List<Attribute> addedAttributes = new List<Attribute>();
@@ -175,25 +175,25 @@ namespace ModelicaChangeAnalyzer.Datamodel
         #region Retrieve object
 
         // retrieves all changes
-        public List<MMChange> GetChanges()
+        public List<Change> GetChanges()
         {
-            List<MMChange> listOfChanges = new List<MMChange>(changes);
+            List<Change> listOfChanges = new List<Change>(changes);
 
             foreach (Attribute attr in attributes)
             {
-                foreach (MMChange chng in attr.GetChanges())
+                foreach (Change chng in attr.GetChanges())
                     listOfChanges.Add(chng.AppendTabs(1));
             }
 
             foreach (Connector conn in sourceConnectors)
             {
-                foreach (MMChange chng in conn.GetChanges())
+                foreach (Change chng in conn.GetChanges())
                     listOfChanges.Add(chng.AppendTabs(1));
             }
 
             foreach (Connector conn in targetConnectors)
             {
-                foreach (MMChange chng in conn.GetChanges())
+                foreach (Change chng in conn.GetChanges())
                     listOfChanges.Add(chng.AppendTabs(1));
             }
 
@@ -352,13 +352,13 @@ namespace ModelicaChangeAnalyzer.Datamodel
             if (!name.Equals(oldElement.Name))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Name: " + oldElement.Name + " -> " + name, false).AppendTabs(1));
+                changes.Add(new Change("~ Name: " + oldElement.Name + " -> " + name, false).AppendTabs(1));
             }
 
             if (((RelevantOnly && !ConfigReader.ExcludedElementNote) || !RelevantOnly) && !Equals(note, oldElement.Note))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Note", false).AppendTabs(1));
+                changes.Add(new Change("~ Note", false).AppendTabs(1));
             }
 
             /*if (numOfChanges > 0 && parentPackage != null)
@@ -379,7 +379,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
                 {
                     numOfChanges += attribute.NumOfAllModifiableElements(RelevantOnly);
                     addedAttributes.Add(attribute);
-                    changes.Add(new MMChange("+ Attribute " + attribute.GetPath(), false).AppendTabs(1));
+                    changes.Add(new Change("+ Attribute " + attribute.GetPath(), false).AppendTabs(1));
                 }
 
                 // checking if the attribute is changed in the new model
@@ -402,7 +402,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
                 {
                     numOfChanges += oldAttribute.NumOfAllModifiableElements(RelevantOnly);
                     removedAttributes.Add(oldAttribute);
-                    changes.Add(new MMChange("- Attribute " + oldAttribute.GetPath(), false).AppendTabs(1));
+                    changes.Add(new Change("- Attribute " + oldAttribute.GetPath(), false).AppendTabs(1));
                 }
             }
 
@@ -421,7 +421,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
                 {
                     numOfChanges += connector.NumOfAllModifiableElements(RelevantOnly);
                     addedConnectors.Add(connector);
-                    changes.Add(new MMChange("+ Connector (source) " + connector.GetPath(), false).AppendTabs(1));
+                    changes.Add(new Change("+ Connector (source) " + connector.GetPath(), false).AppendTabs(1));
                 }
 
                 // checking if the connector is changed in the new model
@@ -444,7 +444,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
                 {
                     numOfChanges += oldConnector.NumOfAllModifiableElements(RelevantOnly);
                     removedConnectors.Add(oldConnector);
-                    changes.Add(new MMChange("- Connector (source) " + oldConnector.GetPath(), false).AppendTabs(1));
+                    changes.Add(new Change("- Connector (source) " + oldConnector.GetPath(), false).AppendTabs(1));
                 }
             }
 
@@ -462,7 +462,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
                 {
                     numOfChanges += connector.NumOfAllModifiableElements(RelevantOnly);
                     addedConnectors.Add(connector);
-                    changes.Add(new MMChange("+ Connector (target) " + connector.GetPath(), false).AppendTabs(1));
+                    changes.Add(new Change("+ Connector (target) " + connector.GetPath(), false).AppendTabs(1));
                 }
 
                 // checking if the connector is changed in the new model
@@ -485,12 +485,12 @@ namespace ModelicaChangeAnalyzer.Datamodel
                 {
                     numOfChanges += oldConnector.NumOfAllModifiableElements(RelevantOnly);
                     removedConnectors.Add(oldConnector);
-                    changes.Add(new MMChange("- Connector (target) " + oldConnector.GetPath(), false).AppendTabs(1));
+                    changes.Add(new Change("- Connector (target) " + oldConnector.GetPath(), false).AppendTabs(1));
                 }
             }
 
             if (numOfChanges > 0)
-                changes.Insert(0, new MMChange("~ Element " + GetPath(), false));
+                changes.Insert(0, new Change("~ Element " + GetPath(), false));
 
             return numOfChanges;
         }
@@ -547,7 +547,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
             set { targetConnectors = value; }
         }
 
-        public List<MMChange> Changes
+        public List<Change> Changes
         {
             get { return changes; }
         }

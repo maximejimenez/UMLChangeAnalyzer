@@ -55,21 +55,21 @@ namespace ModelicaChangeAnalyzer.Changes
         {
             StringBuilder sb = new StringBuilder();
 
-            MMResults[][] resultsMatrix = new MMResults[form.RolesList.Items.Count][];     // creation of one calculation results array (for each release) for each role
+            Results[][] resultsMatrix = new Results[form.RolesList.Items.Count][];     // creation of one calculation results array (for each release) for each role
 
             for (int i = 0; i < form.RolesList.Items.Count; i++)
             {
-                resultsMatrix[i] = new MMResults[releases.Length];
+                resultsMatrix[i] = new Results[releases.Length];
 
                 for (int j = 0; j < releases.Length; j++)
-                    resultsMatrix[i][j] = new MMResults();               // creation of one calculation results array for each release for each role
+                    resultsMatrix[i][j] = new Results();               // creation of one calculation results array for each release for each role
             }
 
             for (int i = 0; i < releases.Length; i++)       // for each release
             {
                 form.ListAdd("Calculating " + releases[i].Split('\\')[releases[i].Split('\\').Length - 1]);
 
-                model = MM_Extractor.XMLtoMetamodel(releases[i]);
+                model = Extractor.XMLtoMetamodel(releases[i]);
 
                 for (int ind = 0; ind < resultsMatrix.Length; ind++)     // for each role
                 {
@@ -94,7 +94,7 @@ namespace ModelicaChangeAnalyzer.Changes
         #region Calculate results
 
         // calculating results for the "entire meta-model"
-        private void CalculateResultsModel(MetaModel model, MMResults[] resultsArray, int i)
+        private void CalculateResultsModel(MetaModel model, Results[] resultsArray, int i)
         {
             resultsArray[i].NumOfElementsMod1 = model.NumberOfElements(relevancy);
             resultsArray[i].NumOfAttributesMod1 = model.NumberOfAttributes(relevancy);
@@ -103,7 +103,7 @@ namespace ModelicaChangeAnalyzer.Changes
         }
 
         // calculating results for an array of packages
-        private void CalculateResultsPackage(MetaModel model, string[] packagePaths, MMResults[] resultsArray, int i)
+        private void CalculateResultsPackage(MetaModel model, string[] packagePaths, Results[] resultsArray, int i)
         {
             foreach (string packagePath in packagePaths)
             {
@@ -123,7 +123,7 @@ namespace ModelicaChangeAnalyzer.Changes
         #region Create report
 
         // creating report for the M2 roles including the entire meta-model
-        private void CreateReportM2(MMResults[] resultsArray, string category, int releases, StringBuilder sb)
+        private void CreateReportM2(Results[] resultsArray, string category, int releases, StringBuilder sb)
         {
             string relevantText = "";
 
@@ -191,7 +191,7 @@ namespace ModelicaChangeAnalyzer.Changes
         }
 
         // creating report for the M1 roles
-        private void CreateReportM1(MMResults[] resultsArray, string category, int releases, StringBuilder sb)
+        private void CreateReportM1(Results[] resultsArray, string category, int releases, StringBuilder sb)
         {
             string relevantText = "";
 
@@ -239,7 +239,7 @@ namespace ModelicaChangeAnalyzer.Changes
         }
 
         // creating report for the UTM role
-        private void CreateReportUTM(MMResults[] resultsArray, string category, int releases, StringBuilder sb)
+        private void CreateReportUTM(Results[] resultsArray, string category, int releases, StringBuilder sb)
         {
             string relevantText = "";
 

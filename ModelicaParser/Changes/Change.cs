@@ -5,25 +5,25 @@ using System.Windows.Forms;
 
 namespace ModelicaChangeAnalyzer.Changes
 {
-    public class MMChange : TreeNode
+    public class Change : TreeNode
     {
         private string description;
         private bool printOnly;
 
-        public MMChange(string description, bool printOnly)
+        public Change(string description, bool printOnly)
         {
             this.printOnly = printOnly;
             this.description = description;
         }
 
-        public MMChange AppendTabs(int numOfTabs)
+        public Change AppendTabs(int numOfTabs)
         {
             string tabs = "";
 
             for (int i = 0; i < numOfTabs; i++)
                 tabs += "\t";
 
-            MMChange retChange = new MMChange(tabs + description, printOnly);
+            Change retChange = new Change(tabs + description, printOnly);
 
             return retChange;
         }

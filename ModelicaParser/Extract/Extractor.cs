@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace ModelicaChangeAnalyzer.Extract
 {
-    class MM_Extractor
+    class Extractor
     {
         private MainForm mainForm;
         private static string currentPackage = ""; // Help for backtracking
@@ -15,7 +15,7 @@ namespace ModelicaChangeAnalyzer.Extract
         static Dictionary<string, Element> declaredElements;
         static string[] Basetypes = new string[] { "Boolean", "Integer", "Real", "String" };
 
-        public MM_Extractor(MainForm mainForm)
+        public Extractor(MainForm mainForm)
         {
             this.mainForm = mainForm;
         }

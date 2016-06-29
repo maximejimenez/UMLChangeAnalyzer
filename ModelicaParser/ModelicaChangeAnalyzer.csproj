@@ -59,13 +59,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extract\ExtractMultiple.cs" />
-    <Compile Include="Changes\MMResults.cs" />
+    <Compile Include="Changes\Results.cs" />
     <Compile Include="Changes\Config\ConfigReader.cs" />
     <Compile Include="Datamodel\Connector.cs" />
     <Compile Include="Datamodel\Attribute.cs" />
     <Compile Include="Datamodel\MetaModel.cs" />
-    <Compile Include="Changes\MMChanges.cs" />
-    <Compile Include="Extract\MM_Extractor.cs" />
+    <Compile Include="Changes\Change.cs" />
+    <Compile Include="Extract\Extractor.cs" />
     <Compile Include="Datamodel\Package.cs" />
     <Compile Include="Datamodel\Element.cs" />
     <Compile Include="Changes\ReportChanges.cs" />

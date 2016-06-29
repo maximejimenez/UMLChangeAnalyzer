@@ -63,7 +63,7 @@ namespace ModelicaChangeAnalyzer.Extract
                     form.ListAdd("File " + filePath + " already exists.");
                 else
                 {
-                    MM_Extractor extractor = new MM_Extractor(form);
+                    Extractor extractor = new Extractor(form);
                     form.ListAdd("Dumping " + version);
                     extractor.ExtractModel(modelPath, filePath, version);
                 }

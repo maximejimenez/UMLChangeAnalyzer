@@ -23,7 +23,7 @@ namespace ModelicaChangeAnalyzer
     {
         private MetaModel model1 = null;                 // Model1 loaded and used for comparing
         private MetaModel model2 = null;                 // Model2 loaded and used for comparing
-        private List<MMResults> resultsList;            // list of calculation results for each role
+        private List<Results> resultsList;            // list of calculation results for each role
         private bool featuresLoaded = false;            // indicates whether the features are loaded
         private string selectedRole = "entire model";   // name for the selected role
         private string modelPath1 = "";
@@ -531,7 +531,7 @@ namespace ModelicaChangeAnalyzer
                 EnableButtons(false);   // disabling all buttons
                 EnableCompare(false);
 
-                MM_Extractor extractor = new MM_Extractor(this);
+                Extractor extractor = new Extractor(this);
 
                 ListAdd("Dumping model...");
                 string version = "1.9.X";
@@ -559,17 +559,17 @@ namespace ModelicaChangeAnalyzer
                 featuresLoaded = false;
 
                 ListAdd("Loading model 1...");
-                model1 = MM_Extractor.XMLtoMetamodel(textBoxModel1.Text);
+                model1 = Extractor.XMLtoMetamodel(textBoxModel1.Text);
 
                 ListAdd("Loading model 2...");
-                model2 = MM_Extractor.XMLtoMetamodel(textBoxModel2.Text);
+                model2 = Extractor.XMLtoMetamodel(textBoxModel2.Text);
 
-                resultsList = new List<MMResults>();
+                resultsList = new List<Results>();
 
                 for (int i = 0; i < rolesList.Items.Count; i++)     // calculating results for each role
                 {
                     ListAdd("Calculating role '" + rolesList.Items[i] + "'...");
-                    MMResults results = new MMResults();
+                    Results results = new Results();
 
                     if (i == 0)     // in case of entire meta-model
                     {
@@ -615,7 +615,7 @@ namespace ModelicaChangeAnalyzer
 
                 StringBuilder sb = new StringBuilder();
 
-                MMResults results = resultsList[0];    // getting the results for the selected role
+                Results results = resultsList[0];    // getting the results for the selected role
 
                 if (checkBoxSizeMetrics.Checked)
                 {
@@ -665,7 +665,7 @@ namespace ModelicaChangeAnalyzer
                     ListExportAdd("All changes:", sb);
 
                     int x = 1;
-                    foreach (MMChange chg in results.Changes)
+                    foreach (Change chg in results.Changes)
                         if (chg.PrintOnly)
                             ListExportAddChanges("", chg.ToString(), sb);
                         else

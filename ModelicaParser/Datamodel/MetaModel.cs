@@ -17,7 +17,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
 
         // Changes
         private int numOfChanges;
-        private List<MMChange> changes = new List<MMChange>();
+        private List<Change> changes = new List<Change>();
         private List<Package> modifiedPackages = new List<Package>();
         private List<Package> removedPackages = new List<Package>();
         private List<Package> addedPackages = new List<Package>();  
@@ -241,9 +241,9 @@ namespace ModelicaChangeAnalyzer.Datamodel
         #region Retrieve objects
 
         // retrieves all changes in the model
-        public List<MMChange> GetChanges()
+        public List<Change> GetChanges()
         {
-            List<MMChange> listOfChanges = new List<MMChange>(changes);
+            List<Change> listOfChanges = new List<Change>(changes);
 
             /*foreach (Package pack in addedPackages)
             {
@@ -261,7 +261,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
             }*/
 
             foreach (Package pack in packages)
-                foreach (MMChange chng in pack.GetChanges())
+                foreach (Change chng in pack.GetChanges())
                     listOfChanges.Add(chng);
 
             return listOfChanges;
@@ -544,20 +544,20 @@ namespace ModelicaChangeAnalyzer.Datamodel
 
         private void AddChangesForAllRemovedSubPackagesAndElements(int ident, Package package)
         {
-            changes.Add(new MMChange("- Package " + package.GetPath(), true).AppendTabs(ident++));  // not counted as a change
+            changes.Add(new Change("- Package " + package.GetPath(), true).AppendTabs(ident++));  // not counted as a change
 
             foreach (Element elem in package.Elements)
             {
-                changes.Add(new MMChange("- Element " + elem.GetPath(), false).AppendTabs(ident));
+                changes.Add(new Change("- Element " + elem.GetPath(), false).AppendTabs(ident));
 
                 foreach (Attribute attr in elem.Attributes)
-                    changes.Add(new MMChange("- Attribute " + attr.GetPath(), false).AppendTabs(ident + 1));
+                    changes.Add(new Change("- Attribute " + attr.GetPath(), false).AppendTabs(ident + 1));
 
                 foreach (Connector conn in elem.SourceConnectors)
-                    changes.Add(new MMChange("- Connector (source) " + conn.GetPath(), false).AppendTabs(ident + 1));
+                    changes.Add(new Change("- Connector (source) " + conn.GetPath(), false).AppendTabs(ident + 1));
 
                 foreach (Connector conn in elem.TargetConnectors)
-                    changes.Add(new MMChange("- Connector (target) " + conn.GetPath(), false).AppendTabs(ident + 1));
+                    changes.Add(new Change("- Connector (target) " + conn.GetPath(), false).AppendTabs(ident + 1));
             }
 
             foreach (Package pack in package.SubPackages)
@@ -566,20 +566,20 @@ namespace ModelicaChangeAnalyzer.Datamodel
 
         private void AddChangesForAllNewSubPackagesAndElements(int ident, Package package)
         {
-            changes.Add(new MMChange("+ Package " + package.GetPath(), true).AppendTabs(ident++));  // not counted as a change
+            changes.Add(new Change("+ Package " + package.GetPath(), true).AppendTabs(ident++));  // not counted as a change
 
             foreach (Element elem in package.Elements)
             {
-                changes.Add(new MMChange("+ Element " + elem.GetPath(), false).AppendTabs(ident));
+                changes.Add(new Change("+ Element " + elem.GetPath(), false).AppendTabs(ident));
 
                 foreach (Attribute attr in elem.Attributes)
-                    changes.Add(new MMChange("+ Attribute " + attr.GetPath(), false).AppendTabs(ident + 1));
+                    changes.Add(new Change("+ Attribute " + attr.GetPath(), false).AppendTabs(ident + 1));
 
                 foreach (Connector conn in elem.SourceConnectors)
-                    changes.Add(new MMChange("+ Connector (source) " + conn.GetPath(), false).AppendTabs(ident + 1));
+                    changes.Add(new Change("+ Connector (source) " + conn.GetPath(), false).AppendTabs(ident + 1));
 
                 foreach (Connector conn in elem.TargetConnectors)
-                    changes.Add(new MMChange("+ Connector (target) " + conn.GetPath(), false).AppendTabs(ident + 1));
+                    changes.Add(new Change("+ Connector (target) " + conn.GetPath(), false).AppendTabs(ident + 1));
             }
 
             foreach (Package pack in package.SubPackages)
@@ -601,7 +601,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
             get { return packages; }
         }
 
-        public List<MMChange> Changes
+        public List<Change> Changes
         {
             get { return changes; }
         }

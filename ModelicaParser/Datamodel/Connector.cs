@@ -25,7 +25,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
 
         // Changes
         private int numOfChanges;
-        private List<MMChange> changes = new List<MMChange>();
+        private List<Change> changes = new List<Change>();
 
         #region Loading
 
@@ -64,9 +64,9 @@ namespace ModelicaChangeAnalyzer.Datamodel
 
         #region Retrieve object
 
-        public List<MMChange> GetChanges()
+        public List<Change> GetChanges()
         {
-            return new List<MMChange>(changes);
+            return new List<Change>(changes);
         }
 
         public string GetPath()
@@ -107,24 +107,24 @@ namespace ModelicaChangeAnalyzer.Datamodel
             if (!Equals(SourceCardinality, oldConnector.SourceCardinality))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Source Cardinality: " + oldConnector.SourceCardinality + " -> " + SourceCardinality, false).AppendTabs(1));
+                changes.Add(new Change("~ Source Cardinality: " + oldConnector.SourceCardinality + " -> " + SourceCardinality, false).AppendTabs(1));
             }
 
             if (!Equals(TargetCardinality, oldConnector.TargetCardinality))
             {
 
                 numOfChanges++;
-                changes.Add(new MMChange("~ Target Cardinality (" + UID + "): " + oldConnector.TargetCardinality + " -> " + TargetCardinality, false).AppendTabs(1));
+                changes.Add(new Change("~ Target Cardinality (" + UID + "): " + oldConnector.TargetCardinality + " -> " + TargetCardinality, false).AppendTabs(1));
             }
 
             if (((RelevantOnly && !ConfigReader.ExcludedAttributeNote) || !RelevantOnly) && !Equals(note, oldConnector.Note))
             {
                 numOfChanges++;
-                changes.Add(new MMChange("~ Note", false).AppendTabs(1));
+                changes.Add(new Change("~ Note", false).AppendTabs(1));
             }
 
             if (numOfChanges > 0)
-                changes.Insert(0, new MMChange("~ Connector " + type + " " + GetPath(), false));
+                changes.Insert(0, new Change("~ Connector " + type + " " + GetPath(), false));
 
             return numOfChanges;
         }
