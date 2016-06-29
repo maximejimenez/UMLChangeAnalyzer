@@ -63,14 +63,6 @@ namespace ModelicaChangeAnalyzer
             else
                 config.Enabled = enable;
 
-            if (extract.InvokeRequired)
-            {
-                EnableButtonsCallback d = new EnableButtonsCallback(EnableButtons);
-                this.Invoke(d, new object[] { enable });
-            }
-            else
-                extract.Enabled = enable;
-
             if (load.InvokeRequired)
             {
                 EnableButtonsCallback d = new EnableButtonsCallback(EnableButtons);
@@ -78,23 +70,6 @@ namespace ModelicaChangeAnalyzer
             }
             else
                 load.Enabled = enable;
-
-            /*if (features.InvokeRequired)
-            {
-                EnableButtonsCallback d = new EnableButtonsCallback(EnableButtons);
-                this.Invoke(d, new object[] { enable });
-            }
-            else
-                features.Enabled = enable;
-            */
-
-            if (extractMultiple.InvokeRequired)
-            {
-                EnableButtonsCallback d = new EnableButtonsCallback(EnableButtons);
-                this.Invoke(d, new object[] { enable });
-            }
-            else
-                extractMultiple.Enabled = enable;
 
             if (reportChanges.InvokeRequired)
             {
@@ -124,6 +99,10 @@ namespace ModelicaChangeAnalyzer
             {
                 EnableButtonsCallback d = new EnableButtonsCallback(EnableButtons);
                 this.Invoke(d, new object[] { enable });
+            }
+            else
+            {
+                compare.Enabled = enable;
             }
         }
 
@@ -509,6 +488,7 @@ namespace ModelicaChangeAnalyzer
                     //AddRolesGUI(ConfigReader.Roles);
                     //EnableRelevancy(true);
                     ListAdd("Config file successfully read.");
+                    EnableCompare(true);
                 }
                 else
                     ListAdd("Config file not read.");
@@ -520,6 +500,7 @@ namespace ModelicaChangeAnalyzer
                 ListAdd(exp.ToString());
                 EnableButtons(true);   // enabling all buttons
                 EnableRelevancy(false);
+                EnableCompare(false);
             }
         }
 
