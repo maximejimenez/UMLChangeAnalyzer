@@ -679,8 +679,8 @@ namespace ModelicaChangeAnalyzer.Datamodel
                 changes.Add(new MMChange("~ Note", false).AppendTabs(1));
             }
 
-            if (numOfChanges > 0)
-                metamodel.ModifiedPackages.Add(this);
+            /*if (numOfChanges > 0)
+                metamodel.ModifiedPackages.Add(this);*/
 
             // checking if the sub-package is changed or added in the new model
             foreach (Package subPackage in subPackages)
@@ -772,7 +772,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
                 else if ((num = element.CompareElements(oldElement, RelevantOnly)) != 0)
                 {
                     numOfChanges += num;
-                    //modifiedElements.Add(element); // TODO / VERIFY
+                    modifiedElements.Add(element);
                 }
             }
 

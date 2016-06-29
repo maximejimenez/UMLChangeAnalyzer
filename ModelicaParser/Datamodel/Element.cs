@@ -361,8 +361,8 @@ namespace ModelicaChangeAnalyzer.Datamodel
                 changes.Add(new MMChange("~ Note", false).AppendTabs(1));
             }
 
-            if (numOfChanges > 0)
-                parentPackage.ModifiedElements.Add(this);
+            /*if (numOfChanges > 0 && parentPackage != null)
+                parentPackage.ModifiedElements.Add(this);*/
 
             // checking if the attribute is changed or added in the new model
             foreach (Attribute attribute in attributes)

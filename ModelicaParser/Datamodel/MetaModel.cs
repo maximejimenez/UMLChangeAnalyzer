@@ -519,7 +519,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
                 else if ((num = package.ComparePackages(oldPackage, RelevantOnly)) != 0)
                 {
                     numOfChanges += num;
-                    //modifiedPackages.Add(package);
+                    modifiedPackages.Add(package);
                 }
             }
 

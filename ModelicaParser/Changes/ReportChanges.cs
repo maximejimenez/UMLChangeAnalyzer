@@ -81,8 +81,11 @@ namespace ModelicaChangeAnalyzer.Changes
 
                     for (int ind = 0; ind < resultsArrayMatrix.Length; ind++)     // foreach role
                     {
-                        if (ind == 0)   // entire meta-model
+                        if (ind == 0)
+                        {   // entire meta-model
                             CalculateResultsModel(model1, model2, resultsArrayMatrix[ind], i, j);
+                            CalculateResultsModel(model1, model2, resultsArrayMatrix[ind], j, i);
+                        }
                         /*else if (!ConfigReader.Roles[ind - 1].UtmOnly)      // M2 and M1 roles
                         {
                             filePaths = new string[ConfigReader.Roles[ind - 1].Packages.Count];     // array of packages for the analyzed role
@@ -101,6 +104,8 @@ namespace ModelicaChangeAnalyzer.Changes
                         }*/
                     }
                 }
+
+
 
             form.ListAdd("Printing report...");
 
