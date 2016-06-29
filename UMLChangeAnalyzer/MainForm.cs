@@ -507,26 +507,7 @@ namespace ModelicaChangeAnalyzer
         // extraction of the meta-model
         private void extract_Click_Function()
         {
-            try
-            {
-                EnableButtons(false);   // disabling all buttons
-                EnableCompare(false);
-
-                Extractor extractor = new Extractor(this);
-
-                ListAdd("Dumping model...");
-                string version = "1.9.X";
-                extractor.ExtractModel(textBoxModelPath.Text, textBoxFilePath.Text, version);
-                ListAdd("Model successfully dumped!");
-                extractor.ReleaseModel();
-
-                EnableButtons(true);   // enabling all buttons
-            }
-            catch (Exception exp)
-            {
-                ListAdd(exp.ToString());
-                EnableButtons(true);   // enabling all buttons
-            }
+            throw new NotImplementedException("Non used features for UML");
         }
 
         // loading two models and calculating results for each role
@@ -790,8 +771,7 @@ namespace ModelicaChangeAnalyzer
         private void extractMultiple_Click_Function()
         {
             EnableButtons(false);
-            new ExtractMultiple(this);
-            EnableButtons(true);
+            throw new NotImplementedException("Feature not used for UML");
         }
 
         // reporting changes for multiple meta-model releases
