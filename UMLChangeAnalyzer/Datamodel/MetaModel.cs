@@ -430,10 +430,10 @@ namespace UMLChangeAnalyzer.Datamodel
             return list;
         }
 
-        public Package FindPackageByName(string name)
+        public Package FindPackageById(string uid)
         {
             foreach (Package package in packages)
-                if (package.Name.Equals(name))
+                if (package.UID.Equals(uid))
                     return package;
 
             return null;
@@ -441,9 +441,9 @@ namespace UMLChangeAnalyzer.Datamodel
 
         public Package FindPackageByPath(string packagePath)
         {
-            string[] pathParts = Regex.Split(packagePath, ".");
+            string[] pathParts = Regex.Split(packagePath, "-");
 
-            Package package = this.FindPackageByName(pathParts[0]);
+            Package package = this.FindPackageById(pathParts[0]);
 
             if (package == null)
                 return null;
@@ -461,9 +461,9 @@ namespace UMLChangeAnalyzer.Datamodel
 
         public Element FindElementByPath(string elementPath)
         {
-            string[] pathParts = Regex.Split(elementPath, ".");
+            string[] pathParts = Regex.Split(elementPath, "-");
 
-            Package package = this.FindPackageByName(pathParts[0]);
+            Package package = this.FindPackageById(pathParts[0]);
 
             if (package == null)
                 return null;
@@ -476,7 +476,7 @@ namespace UMLChangeAnalyzer.Datamodel
                     return null;
             }
 
-            return package.GetElementByName(pathParts[pathParts.Length - 1]);
+            return package.GetElementById(pathParts[pathParts.Length - 1]);
         }
 
         #endregion
@@ -504,7 +504,7 @@ namespace UMLChangeAnalyzer.Datamodel
                 if (RelevantOnly && package.IgnorePackage())
                     continue;
 
-                Package oldPackage = oldModel.FindPackageByName(package.Name);
+                Package oldPackage = oldModel.FindPackageByPath(package.UID);
 
                 int num = 0;
 
@@ -529,7 +529,7 @@ namespace UMLChangeAnalyzer.Datamodel
                 if (RelevantOnly && oldPackage.IgnorePackage())
                     continue;
 
-                Package package = FindPackageByName(oldPackage.Name);
+                Package package = FindPackageByPath(oldPackage.UID);
 
                 if (package == null)
                 {

@@ -38,21 +38,18 @@ namespace UMLChangeAnalyzer.Datamodel
 
         public Element(string uid, string type, string name)
         {
+            this.uid = uid;
             this.type = type;
             this.name = name;
         }
 
         public Element(string uid, string type, string name, string note)
         {
+            this.uid = uid;
             this.type = type;
             this.name = name;
             this.note = note;
         }
-
-        /*public void AddChild(Element element)
-        {
-            children.Add(element);
-        }*/
 
         public void AddAttribute(Attribute attribute)
         {
@@ -260,10 +257,10 @@ namespace UMLChangeAnalyzer.Datamodel
             return list;
         }
 
-        public Attribute GetAttribute(string name)
+        public Attribute GetAttribute(string uid)
         {
             foreach (Attribute attribute in attributes)
-                if (attribute.Name.Equals(name))
+                if (attribute.UID.Equals(uid))
                     return attribute;
 
             return null;
@@ -308,7 +305,7 @@ namespace UMLChangeAnalyzer.Datamodel
                 pack = pack.ParentPackage;
             }
 
-            return path;
+            return path + " (" + UID + ")";
         }
 
         #endregion
@@ -355,7 +352,6 @@ namespace UMLChangeAnalyzer.Datamodel
                 numOfChanges++;
                 changes.Add(new Change("~ Name: " + oldElement.Name + " -> " + name, false).AppendTabs(1));
             }
-
             if (((RelevantOnly && !ConfigReader.ExcludedElementNote) || !RelevantOnly) && !Equals(note, oldElement.Note))
             {
                 numOfChanges++;
@@ -371,7 +367,7 @@ namespace UMLChangeAnalyzer.Datamodel
                 if (RelevantOnly && attribute.IgnoreAttribute())
                     continue;
 
-                Attribute oldAttribute = oldElement.GetAttribute(attribute.Name);
+                Attribute oldAttribute = oldElement.GetAttribute(attribute.UID);
 
                 int num = 0;
 
@@ -397,7 +393,7 @@ namespace UMLChangeAnalyzer.Datamodel
                 if (RelevantOnly && oldAttribute.IgnoreAttribute())
                     continue;
 
-                Attribute attribute = GetAttribute(oldAttribute.Name);
+                Attribute attribute = GetAttribute(oldAttribute.UID);
 
                 if (attribute == null)
                 {

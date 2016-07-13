@@ -597,6 +597,16 @@ namespace UMLChangeAnalyzer.Datamodel
             return list;
         }
 
+        // retrieves the sub-package by its uid - used for comparing packages from the main menu
+        public Package GetSubPackageById(string uid)
+        {
+            foreach (Package subPackage in subPackages)
+                if (subPackage.UID.Equals(uid))
+                    return subPackage;
+
+            return null;
+        }
+
         // retrieves the sub-package by its name - used for comparing packages from the main menu
         public Package GetSubPackageByName(string name)
         {
@@ -608,10 +618,10 @@ namespace UMLChangeAnalyzer.Datamodel
         }
 
         // retrieves the element by its name - used for comparing elements from the main menu
-        public Element GetElementByName(string name)
+        public Element GetElementById(string uid)
         {
             foreach (Element element in elements)
-                if (element.Name.Equals(name))
+                if (element.UID.Equals(uid))
                     return element;
 
             return null;
@@ -690,7 +700,7 @@ namespace UMLChangeAnalyzer.Datamodel
                 if (RelevantOnly && subPackage.IgnorePackage())
                     continue;
 
-                Package oldSubPackage = oldPackage.GetSubPackageByName(subPackage.Name);
+                Package oldSubPackage = oldPackage.GetSubPackageById(subPackage.UID);
 
                 int num = 0;
 
@@ -717,7 +727,7 @@ namespace UMLChangeAnalyzer.Datamodel
                 if (RelevantOnly && oldSubPackage.IgnorePackage())
                     continue;
 
-                Package subPackage = GetSubPackageByName(oldSubPackage.Name);
+                Package subPackage = GetSubPackageById(oldSubPackage.UID);
 
                 if (subPackage == null)
                 {
@@ -734,7 +744,7 @@ namespace UMLChangeAnalyzer.Datamodel
                 if (RelevantOnly && element.IgnoreElement())
                     continue;
 
-                Element oldElement = oldPackage.GetElementByName(element.Name);
+                Element oldElement = oldPackage.GetElementById(element.UID);
 
                 int num = 0;
 
@@ -784,7 +794,7 @@ namespace UMLChangeAnalyzer.Datamodel
                 if (RelevantOnly && oldElement.IgnoreElement())
                     continue;
 
-                Element element = GetElementByName(oldElement.Name);
+                Element element = GetElementById(oldElement.UID);
 
                 if (element == null)
                 {
@@ -958,6 +968,7 @@ namespace UMLChangeAnalyzer.Datamodel
         public Package ParentPackage
         {
             get { return parentPackage; }
+            set { parentPackage = value; }
         }
 
         public int NumOfChanges
