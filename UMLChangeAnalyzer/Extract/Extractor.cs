@@ -14,10 +14,7 @@ namespace UMLChangeAnalyzer.Extract
         private static XmlDocument doc;
         private static Dictionary<String, String> primitiveTypes;
         private static Dictionary<String, Connector> declaredConnector;
-
-        private static int numberOfAssociation = 0;
-        private static int numberOfConnector = 0;
-        private static int numberOfAttribute = 0;
+        private static Dictionary<String, XmlNode> associationWithOwnedEnd;
 
         public Extractor(MainForm mainForm)
         {
@@ -26,13 +23,11 @@ namespace UMLChangeAnalyzer.Extract
 
         public static MetaModel XMLtoMetamodel(string p)
         {
-            numberOfAssociation = 0;
-            numberOfAttribute = 0;
-            numberOfConnector = 0;
             MetaModel metamodel = null;
             doc = new XmlDocument();
             primitiveTypes = new Dictionary<String, String>();
             declaredConnector = new Dictionary<String, Connector>();
+            associationWithOwnedEnd = new Dictionary<string, XmlNode>();
 
             if (Directory.Exists(p))
             {
@@ -65,6 +60,37 @@ namespace UMLChangeAnalyzer.Extract
                 XmlNode cmofPackageNode = doc.GetElementsByTagName("cmof:Package").Item(0);
                 Package package = parseCmofPackage(cmofPackageNode);
                 metamodel.AddPackage(package);
+
+                //ownedEnd
+                foreach (string id in associationWithOwnedEnd.Keys.ToList())
+                {
+                    Connector conn;
+                    if (declaredConnector.TryGetValue(id, out conn))
+                    {
+                        //retrieve cardinality
+                        XmlNode node = associationWithOwnedEnd[id];
+                        string lower = "1";
+                        string upper = "1";
+
+                        if (node.Attributes["lower"] != null)
+                            lower = node.Attributes["lower"].Value;
+                        if (node.Attributes["upper"] != null)
+                            upper = node.Attributes["upper"].Value;
+                        string cardinality = lower + ".." + upper;
+                        if (lower == upper)
+                            cardinality = "" + lower;
+
+                        conn.TargetCardinality = cardinality;
+                        declaredConnector.Remove(id);
+                        associationWithOwnedEnd.Remove(id);
+                    }
+                }
+
+                Console.WriteLine("OwnedEnd left : ");
+                foreach (string id in associationWithOwnedEnd.Keys)
+                {
+                    Console.WriteLine("\t" + id);
+                }
                 
                 /*for (int i = 1; i < paths.Length; i++)
                 {
@@ -76,18 +102,11 @@ namespace UMLChangeAnalyzer.Extract
                 }*/
             }
 
-            //TODO OwnedEnd
-
-            Console.WriteLine("numberOfConnector = " + numberOfConnector);
-            Console.WriteLine("numberOfAttribute = " + numberOfAttribute);
-            Console.WriteLine("numberOfAssociation (package) = " + numberOfAssociation);
-
             Console.WriteLine("Declared connectors with a missing end :");
             foreach (string key in declaredConnector.Keys)
             {
                 Console.WriteLine("\t " + key);
             }
-            Console.WriteLine("TOTAL = " + declaredConnector.Count);
 
             return metamodel;
         }
@@ -145,26 +164,24 @@ namespace UMLChangeAnalyzer.Extract
                         Package sub = parsePackage(child);
                         package.AddSubPackage(sub);
                         break;
-                    case "cmof:Enumeration":
-                    case "cmof:PrimitiveType":
-                        /*String primitiveTypeId = child.Attributes["xmi:id"].Value;
-                        String primitiveTypeName = child.Attributes["name"].Value;
-                        primitiveTypes.Add(primitiveTypeId, primitiveTypeName);*/
-                        break;
                     case "cmof:Class":
                         Element element = parseElement(child);
                         package.AddElement(element);
                         break;
                     case "cmof:PackageImport":
+                    case "cmof:Enumeration":
+                    case "cmof:PrimitiveType":
                         break;
-
                     case "cmof:Association":
-                        numberOfAssociation++;
-                        /*String id = child.Attributes["xmi:id"].Value;
-                        associationInPackage.Add(id);*/
-                        /*if(!propertyWithAssociation.Contains(id)){
-                            Console.WriteLine("Association not extract ID" + id);
-                        }*/
+                        if (child.ChildNodes.Count != 0 && child.ChildNodes.Item(0).Name == "ownedEnd")
+                        {
+                            String associationId = child.Attributes["xmi:id"].Value;
+                            associationWithOwnedEnd.Add(associationId, child.ChildNodes.Item(0));
+                        }
+                        else if (child.ChildNodes.Count != 0)
+                        {
+                            Console.WriteLine("unexpected child for Association : " + child.ChildNodes.Item(0).Name);
+                        }
                         break;
                     default:
                         Console.WriteLine("\t Unexpected : " + type + " (" + child.Name + ")");
@@ -258,13 +275,11 @@ namespace UMLChangeAnalyzer.Extract
                     parent.AddSourceConnector(conn);
                     declaredConnector.Add(association.Value, conn);
                 }
-                numberOfConnector++;
             }
             else if(primitiveTypes.ContainsKey(typeIdentifier))
             {
                 UMLChangeAnalyzer.Datamodel.Attribute attr = new UMLChangeAnalyzer.Datamodel.Attribute(uid, type, name, upperBound, lowerBound, note);
                 parent.AddAttribute(attr);
-                numberOfAttribute++;
             }
             else
             {

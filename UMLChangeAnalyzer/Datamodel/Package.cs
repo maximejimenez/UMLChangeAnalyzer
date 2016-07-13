@@ -19,7 +19,7 @@ namespace UMLChangeAnalyzer.Datamodel
         private String uid = "";
         private String name = "";
         //private String note = "";
-        private List<Element> elements =new List<Element>();
+        private List<Element> elements = new List<Element>();
         private List<Package> subPackages = new List<Package>();
 
 
