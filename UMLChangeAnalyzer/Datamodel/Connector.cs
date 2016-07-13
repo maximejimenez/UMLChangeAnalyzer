@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
-using ModelicaChangeAnalyzer.Config;
-using ModelicaChangeAnalyzer.Changes;
+using UMLChangeAnalyzer.Config;
+using UMLChangeAnalyzer.Changes;
 
-namespace ModelicaChangeAnalyzer.Datamodel
+namespace UMLChangeAnalyzer.Datamodel
 {
     public class Connector : ICloneable
     {

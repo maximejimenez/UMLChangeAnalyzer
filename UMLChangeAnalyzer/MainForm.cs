@@ -12,12 +12,12 @@ using System.Collections.ObjectModel;
 //using SharpSvn;
 using System.Threading;
 using System.Text.RegularExpressions;
-using ModelicaChangeAnalyzer.Datamodel;
-using ModelicaChangeAnalyzer.Config;
-using ModelicaChangeAnalyzer.Changes;
-using ModelicaChangeAnalyzer.Extract;
+using UMLChangeAnalyzer.Datamodel;
+using UMLChangeAnalyzer.Config;
+using UMLChangeAnalyzer.Changes;
+using UMLChangeAnalyzer.Extract;
 
-namespace ModelicaChangeAnalyzer
+namespace UMLChangeAnalyzer
 {
     public class MainForm : System.Windows.Forms.Form
     {
@@ -715,7 +715,7 @@ namespace ModelicaChangeAnalyzer
                     ListExportAdd("", sb);
 
                     int i = 1;
-                    foreach (ModelicaChangeAnalyzer.Datamodel.Attribute attr in results.ModifiedAttributes)
+                    foreach (UMLChangeAnalyzer.Datamodel.Attribute attr in results.ModifiedAttributes)
                         ListExportAdd(i++ + ": " + attr.GetPath(), sb);
                     ListExportAdd("", sb);
                 }
@@ -727,7 +727,7 @@ namespace ModelicaChangeAnalyzer
                     ListExportAdd("", sb);
 
                     int i = 1;
-                    foreach (ModelicaChangeAnalyzer.Datamodel.Attribute attr in results.AddedAttributes)
+                    foreach (UMLChangeAnalyzer.Datamodel.Attribute attr in results.AddedAttributes)
                         ListExportAdd(i++ + ": " + attr.GetPath(), sb);
                     ListExportAdd("", sb);
                 }
@@ -739,7 +739,7 @@ namespace ModelicaChangeAnalyzer
                     ListExportAdd("", sb);
 
                     int i = 1;
-                    foreach (ModelicaChangeAnalyzer.Datamodel.Attribute attr in results.RemovedAttributes)
+                    foreach (UMLChangeAnalyzer.Datamodel.Attribute attr in results.RemovedAttributes)
                         ListExportAdd(i++ + ": " + attr.GetPath(), sb);
                     ListExportAdd("", sb);
                 }
@@ -981,7 +981,7 @@ namespace ModelicaChangeAnalyzer
             this.textBoxModel2.Name = "textBoxModel2";
             this.textBoxModel2.Size = new System.Drawing.Size(449, 20);
             this.textBoxModel2.TabIndex = 14;
-            this.textBoxModel2.Text = "C:\\Users\\maxime\\Desktop\\UMLResults\\XML\\";
+            this.textBoxModel2.Text = "C:\\Users\\maxime\\Desktop\\UMLResults\\XML\\2.1.2\\";
             // 
             // textBoxModel1
             // 
@@ -989,7 +989,7 @@ namespace ModelicaChangeAnalyzer
             this.textBoxModel1.Name = "textBoxModel1";
             this.textBoxModel1.Size = new System.Drawing.Size(449, 20);
             this.textBoxModel1.TabIndex = 15;
-            this.textBoxModel1.Text = "C:\\Users\\maxime\\Desktop\\UMLResults\\XML\\";
+            this.textBoxModel1.Text = "C:\\Users\\maxime\\Desktop\\UMLResults\\XML\\2.1.1\\";
             // 
             // label5
             // 
@@ -1056,7 +1056,7 @@ namespace ModelicaChangeAnalyzer
             this.textBoxNotRelevant.Name = "textBoxNotRelevant";
             this.textBoxNotRelevant.Size = new System.Drawing.Size(449, 20);
             this.textBoxNotRelevant.TabIndex = 24;
-            this.textBoxNotRelevant.Text = "C:\\Users\\maxime\\Desktop\\UMLResults\\UML_Config.xml";
+            this.textBoxNotRelevant.Text = "C:\\Users\\maxime\\Desktop\\UMLResults\\Config\\UML_Config.xml";
             // 
             // checkBoxAllChanges
             // 

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ModelicaChangeAnalyzer.Datamodel;
+using UMLChangeAnalyzer.Datamodel;
 
-namespace ModelicaChangeAnalyzer.Changes
+namespace UMLChangeAnalyzer.Changes
 {
     // contains the calculation results (changes, metrics and features)
     public class Results
@@ -48,9 +48,9 @@ namespace ModelicaChangeAnalyzer.Changes
         private List<Connector> modifiedConnectors = new List<Connector>();
         private List<Connector> removedConnectors = new List<Connector>();
         private List<Connector> addedConnectors = new List<Connector>(); 
-        private List<ModelicaChangeAnalyzer.Datamodel.Attribute> modifiedAttributes = new List<ModelicaChangeAnalyzer.Datamodel.Attribute>();
-        private List<ModelicaChangeAnalyzer.Datamodel.Attribute> addedAttributes = new List<ModelicaChangeAnalyzer.Datamodel.Attribute>();
-        private List<ModelicaChangeAnalyzer.Datamodel.Attribute> removedAttributes = new List<ModelicaChangeAnalyzer.Datamodel.Attribute>();
+        private List<UMLChangeAnalyzer.Datamodel.Attribute> modifiedAttributes = new List<UMLChangeAnalyzer.Datamodel.Attribute>();
+        private List<UMLChangeAnalyzer.Datamodel.Attribute> addedAttributes = new List<UMLChangeAnalyzer.Datamodel.Attribute>();
+        private List<UMLChangeAnalyzer.Datamodel.Attribute> removedAttributes = new List<UMLChangeAnalyzer.Datamodel.Attribute>();
 
         #region Compare
 
@@ -350,19 +350,19 @@ namespace ModelicaChangeAnalyzer.Changes
             set { removedConnectors = value; }
         }             
 
-        public List<ModelicaChangeAnalyzer.Datamodel.Attribute> ModifiedAttributes
+        public List<UMLChangeAnalyzer.Datamodel.Attribute> ModifiedAttributes
         {
             get { return modifiedAttributes; }
             set { modifiedAttributes = value; }
         }
 
-        public List<ModelicaChangeAnalyzer.Datamodel.Attribute> AddedAttributes
+        public List<UMLChangeAnalyzer.Datamodel.Attribute> AddedAttributes
         {
             get { return addedAttributes; }
             set { addedAttributes = value; }
         }
 
-        public List<ModelicaChangeAnalyzer.Datamodel.Attribute> RemovedAttributes
+        public List<UMLChangeAnalyzer.Datamodel.Attribute> RemovedAttributes
         {
             get { return removedAttributes; }
             set { removedAttributes = value; }

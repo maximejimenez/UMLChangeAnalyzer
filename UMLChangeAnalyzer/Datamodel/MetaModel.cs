@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
-using ModelicaChangeAnalyzer.Changes;
+using UMLChangeAnalyzer.Changes;
 
-namespace ModelicaChangeAnalyzer.Datamodel
+namespace UMLChangeAnalyzer.Datamodel
 {
     public class MetaModel
     {
@@ -537,6 +537,11 @@ namespace ModelicaChangeAnalyzer.Datamodel
                     removedPackages.Add(oldPackage);
                     AddChangesForAllRemovedSubPackagesAndElements(0, oldPackage);
                 }
+            }
+
+            foreach (Package package in packages)
+            {
+                Console.WriteLine("Package " + package.Name + " - NoC = " + package.NumOfChanges);
             }
 
             return numOfChanges;

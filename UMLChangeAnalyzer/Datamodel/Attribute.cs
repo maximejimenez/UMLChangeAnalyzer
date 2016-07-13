@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
-using ModelicaChangeAnalyzer.Changes;
-using ModelicaChangeAnalyzer.Config;
+using UMLChangeAnalyzer.Changes;
+using UMLChangeAnalyzer.Config;
 
-namespace ModelicaChangeAnalyzer.Datamodel
+namespace UMLChangeAnalyzer.Datamodel
 {
     public class Attribute //: IEquatable<Attribute>
     {
@@ -15,6 +15,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
         private Element parentElement;
 
         // Attributes
+        private String uid = "";
         private String type = "";
         private String name = "";
         private String upperBound = "";
@@ -27,16 +28,18 @@ namespace ModelicaChangeAnalyzer.Datamodel
 
         #region Loading
 
-        public Attribute(string type, string name, string upperBound, string lowerBound)
+        public Attribute(string uid, string type, string name, string upperBound, string lowerBound)
         {
+            this.uid = uid;
             this.type = type;
             this.name = name;
             this.upperBound = upperBound;
             this.lowerBound = lowerBound;
         }
 
-        public Attribute(string type, string name, string upperBound, string lowerBound, string note)
+        public Attribute(string uid, string type, string name, string upperBound, string lowerBound, string note)
         {
+            this.uid = uid;
             this.type = type;
             this.name = name;
             this.upperBound = upperBound;
@@ -131,6 +134,12 @@ namespace ModelicaChangeAnalyzer.Datamodel
         {
             get { return parentElement; }
             set { parentElement = value; }
+        }
+
+        public string UID
+        {
+            get { return uid; }
+            set { uid = value; }
         }
 
         public string Name

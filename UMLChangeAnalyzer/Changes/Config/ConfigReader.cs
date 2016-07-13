@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 
-namespace ModelicaChangeAnalyzer.Config
+namespace UMLChangeAnalyzer.Config
 {
         // parser of the config XML file
         public static class ConfigReader
@@ -53,10 +53,10 @@ namespace ModelicaChangeAnalyzer.Config
 
                 // setting the schema validation settings
                 XmlReaderSettings settings = new XmlReaderSettings();
-                /*settings.ValidationType = ValidationType.Schema;
+                settings.ValidationType = ValidationType.Schema;
                 settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessInlineSchema;
                 settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessSchemaLocation;     // schema defined in the "schemaLocation" attribute
-                settings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;*/
+                settings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;
 
                 // registering the validation error/warning event handler
                 settings.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);

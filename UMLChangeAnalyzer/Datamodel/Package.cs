@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
-using ModelicaChangeAnalyzer.Config;
-using ModelicaChangeAnalyzer.Changes;
+using UMLChangeAnalyzer.Config;
+using UMLChangeAnalyzer.Changes;
 
-namespace ModelicaChangeAnalyzer.Datamodel
+namespace UMLChangeAnalyzer.Datamodel
 {
     public class Package
     {
@@ -16,8 +16,9 @@ namespace ModelicaChangeAnalyzer.Datamodel
         private Package parentPackage = null;
 
         // Attributes
+        private String uid = "";
         private String name = "";
-        private String note = "";
+        //private String note = "";
         private List<Element> elements =new List<Element>();
         private List<Package> subPackages = new List<Package>();
 
@@ -39,16 +40,17 @@ namespace ModelicaChangeAnalyzer.Datamodel
 
         }
 
-        public Package(string name)
+        public Package(string uid, string name)
         {
+            this.uid = uid;
             this.name = name;
         }
 
-        public Package(string name, string note)
+        /*public Package(string name, string note)
         {
             this.name = name;
             this.note = note;
-        }
+        }*/
 
         public void AddSubPackage(Package package)
         {
@@ -673,11 +675,11 @@ namespace ModelicaChangeAnalyzer.Datamodel
             if (!name.Equals(oldPackage.Name))  // number of changes not increased as the change in the name of a package is not considered a change
                 changes.Add(new Change("~ Name: " + oldPackage.Name + " -> " + name, true).AppendTabs(1));
 
-            if (!Equals(note, oldPackage.Note))
+            /*if (!Equals(note, oldPackage.Note))
             {
                 numOfChanges++;
                 changes.Add(new Change("~ Note", false).AppendTabs(1));
-            }
+            }*/
 
             /*if (numOfChanges > 0)
                 metamodel.ModifiedPackages.Add(this);*/
@@ -925,17 +927,23 @@ namespace ModelicaChangeAnalyzer.Datamodel
             set { metamodel = value; }
         }
 
+        public String UID
+        {
+            get { return uid; }
+            set { uid = value; }
+        }
+
         public String Name
         {
             get { return name; }
             set { name = value; }
         }
 
-        public String Note
+        /*public String Note
         {
             get { return note; }
             set { note = value; }
-        }
+        }*/
 
         public List<Element> Elements
         {

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
-using ModelicaChangeAnalyzer.Config;
-using ModelicaChangeAnalyzer.Changes;
+using UMLChangeAnalyzer.Config;
+using UMLChangeAnalyzer.Changes;
 
-namespace ModelicaChangeAnalyzer.Datamodel
+namespace UMLChangeAnalyzer.Datamodel
 {
     public class Element
     {
@@ -16,6 +16,7 @@ namespace ModelicaChangeAnalyzer.Datamodel
         private Element parentElement = null;
 
         // Attributes
+        private String uid = "";
         private String type = "";
         private String name = "";
         private String note = "";
@@ -35,13 +36,13 @@ namespace ModelicaChangeAnalyzer.Datamodel
 
         #region Loading
 
-        public Element(string type, string name)
+        public Element(string uid, string type, string name)
         {
             this.type = type;
             this.name = name;
         }
 
-        public Element(string type, string name, string note)
+        public Element(string uid, string type, string name, string note)
         {
             this.type = type;
             this.name = name;
@@ -521,6 +522,12 @@ namespace ModelicaChangeAnalyzer.Datamodel
         {
             get { return type; }
             set { type = value; }
+        }
+
+        public string UID
+        {
+            get { return uid; }
+            set { uid = value; }
         }
 
         public String Note
