@@ -627,6 +627,21 @@ namespace UMLChangeAnalyzer.Datamodel
             return null;
         }
 
+        public Element ResearchElementById(string uid)
+        {
+            foreach (Element element in elements)
+                if (element.UID.Equals(uid))
+                    return element;
+
+            foreach (Package subPack in subPackages){
+                Element res = subPack.ResearchElementById(uid);
+                if(res != null)
+                    return res;
+            }
+
+            return null;
+        }
+
         // retrieves the path to the package
         public string GetPath()
         {

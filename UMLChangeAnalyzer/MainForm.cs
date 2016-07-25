@@ -521,10 +521,25 @@ namespace UMLChangeAnalyzer
                 featuresLoaded = false;
 
                 ListAdd("Loading model 1...");
-                model1 = Extractor.XMLtoMetamodel(textBoxModel1.Text);
+                string name1 = textBoxModel1.Text.Split(new char[] { '\\' })[textBoxModel1.Text.Split(new char[] { '\\' }).Length - 2];
+                if (name1.StartsWith("2.4"))
+                {
+                    model1 = Extractor24.XMLtoMetamodel(textBoxModel1.Text);
+                }
+                else
+                {
+                    model1 = Extractor.XMLtoMetamodel(textBoxModel1.Text);
+                }
 
                 ListAdd("Loading model 2...");
-                model2 = Extractor.XMLtoMetamodel(textBoxModel2.Text);
+                string name2 = textBoxModel2.Text.Split(new char[] { '\\' })[textBoxModel2.Text.Split(new char[] { '\\' }).Length - 2];
+                if (name2.StartsWith("2.4")){
+                    model2 = Extractor24.XMLtoMetamodel(textBoxModel2.Text);
+                }
+                else
+                {
+                    model2 = Extractor.XMLtoMetamodel(textBoxModel2.Text);
+                }
 
                 resultsList = new List<Results>();
 
@@ -981,7 +996,7 @@ namespace UMLChangeAnalyzer
             this.textBoxModel2.Name = "textBoxModel2";
             this.textBoxModel2.Size = new System.Drawing.Size(449, 20);
             this.textBoxModel2.TabIndex = 14;
-            this.textBoxModel2.Text = "C:\\Users\\maxime\\Desktop\\UMLResults\\XML\\2.1.2\\";
+            this.textBoxModel2.Text = "C:\\Users\\maxime\\Desktop\\UMLResults\\XML\\2.4.1\\";
             // 
             // textBoxModel1
             // 
@@ -1399,7 +1414,6 @@ namespace UMLChangeAnalyzer
             this.Text = "UML Change Analyzer (forked from ARCA)";
             this.TransparencyKey = System.Drawing.Color.Silver;
             this.Activated += new System.EventHandler(this.EA_Dump_Form_Resize);
-            this.Load += new System.EventHandler(this.MainForm_Load);
             this.Resize += new System.EventHandler(this.EA_Dump_Form_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1407,10 +1421,5 @@ namespace UMLChangeAnalyzer
         }
 
         #endregion
-
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }

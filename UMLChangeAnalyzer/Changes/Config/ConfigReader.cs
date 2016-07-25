@@ -53,10 +53,10 @@ namespace UMLChangeAnalyzer.Config
 
                 // setting the schema validation settings
                 XmlReaderSettings settings = new XmlReaderSettings();
-                settings.ValidationType = ValidationType.Schema;
+                /*settings.ValidationType = ValidationType.Schema;
                 settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessInlineSchema;
                 settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessSchemaLocation;     // schema defined in the "schemaLocation" attribute
-                settings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;
+                settings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;*/
 
                 // registering the validation error/warning event handler
                 settings.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);

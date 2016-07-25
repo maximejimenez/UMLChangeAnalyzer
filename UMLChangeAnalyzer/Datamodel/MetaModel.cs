@@ -439,6 +439,15 @@ namespace UMLChangeAnalyzer.Datamodel
             return null;
         }
 
+        public Package FindPackageByName(string name)
+        {
+            foreach (Package package in packages)
+                if (package.Name.Equals(name))
+                    return package;
+
+            return null;
+        }
+
         public Package FindPackageByPath(string packagePath)
         {
             string[] pathParts = Regex.Split(packagePath, "-");
@@ -504,7 +513,7 @@ namespace UMLChangeAnalyzer.Datamodel
                 if (RelevantOnly && package.IgnorePackage())
                     continue;
 
-                Package oldPackage = oldModel.FindPackageByPath(package.UID);
+                Package oldPackage = oldModel.FindPackageByName(package.Name);
 
                 int num = 0;
 
@@ -529,7 +538,7 @@ namespace UMLChangeAnalyzer.Datamodel
                 if (RelevantOnly && oldPackage.IgnorePackage())
                     continue;
 
-                Package package = FindPackageByPath(oldPackage.UID);
+                Package package = FindPackageByName(oldPackage.Name);
 
                 if (package == null)
                 {
@@ -539,10 +548,10 @@ namespace UMLChangeAnalyzer.Datamodel
                 }
             }
 
-            foreach (Package package in packages)
+            /*foreach (Package package in packages)
             {
                 Console.WriteLine("Package " + package.Name + " - NoC = " + package.NumOfChanges);
-            }
+            }*/
 
             return numOfChanges;
         }

@@ -116,8 +116,11 @@ namespace UMLChangeAnalyzer.Datamodel
 
             if (((RelevantOnly && !ConfigReader.ExcludedAttributeNote) || !RelevantOnly) && !Equals(note, oldAttribute.Note))
             {
-                numOfChanges++;
-                changes.Add(new Change("~ Note", false).AppendTabs(1));
+                if (!note.StartsWith(oldAttribute.Note) && !oldAttribute.Note.StartsWith(note))
+                {
+                    numOfChanges++;
+                    changes.Add(new Change("~ Note", false).AppendTabs(1));
+                }
             }
 
             if(numOfChanges > 0)

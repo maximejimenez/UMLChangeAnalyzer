@@ -266,6 +266,19 @@ namespace UMLChangeAnalyzer.Datamodel
             return null;
         }
 
+        public Connector GetConnector(string uid)
+        {
+            foreach (Connector connector in sourceConnectors)
+                if (connector.UID.Equals(uid))
+                    return connector;
+
+            foreach (Connector connector in targetConnectors)
+                if (connector.UID.Equals(uid))
+                    return connector;
+
+            return null;
+        }
+
         public Connector GetSourceConnector(string uid)
         {
             foreach (Connector connector in sourceConnectors)
@@ -354,8 +367,11 @@ namespace UMLChangeAnalyzer.Datamodel
             }
             if (((RelevantOnly && !ConfigReader.ExcludedElementNote) || !RelevantOnly) && !Equals(note, oldElement.Note))
             {
-                numOfChanges++;
-                changes.Add(new Change("~ Note", false).AppendTabs(1));
+                if (!note.StartsWith(oldElement.Note) && !oldElement.Note.StartsWith(note))
+                {
+                    numOfChanges++;
+                    changes.Add(new Change("~ Note", false).AppendTabs(1));
+                }
             }
 
             /*if (numOfChanges > 0 && parentPackage != null)
@@ -418,7 +434,7 @@ namespace UMLChangeAnalyzer.Datamodel
                 {
                     numOfChanges += connector.NumOfAllModifiableElements(RelevantOnly);
                     addedConnectors.Add(connector);
-                    changes.Add(new Change("+ Connector (source) " + connector.GetPath(), false).AppendTabs(1));
+                    changes.Add(new Change("+ Connector (source) - UID = " + connector.UID + ") " + connector.GetPath(), false).AppendTabs(1));
                 }
 
                 // checking if the connector is changed in the new model
@@ -441,7 +457,7 @@ namespace UMLChangeAnalyzer.Datamodel
                 {
                     numOfChanges += oldConnector.NumOfAllModifiableElements(RelevantOnly);
                     removedConnectors.Add(oldConnector);
-                    changes.Add(new Change("- Connector (source) " + oldConnector.GetPath(), false).AppendTabs(1));
+                    changes.Add(new Change("- Connector (source) - UID = " + oldConnector.UID + ") " + oldConnector.GetPath(), false).AppendTabs(1));
                 }
             }
 
@@ -459,7 +475,7 @@ namespace UMLChangeAnalyzer.Datamodel
                 {
                     numOfChanges += connector.NumOfAllModifiableElements(RelevantOnly);
                     addedConnectors.Add(connector);
-                    changes.Add(new Change("+ Connector (target) " + connector.GetPath(), false).AppendTabs(1));
+                    changes.Add(new Change("+ Connector (target) - UID = " + connector.UID + ") " + connector.GetPath(), false).AppendTabs(1));
                 }
 
                 // checking if the connector is changed in the new model
@@ -482,7 +498,7 @@ namespace UMLChangeAnalyzer.Datamodel
                 {
                     numOfChanges += oldConnector.NumOfAllModifiableElements(RelevantOnly);
                     removedConnectors.Add(oldConnector);
-                    changes.Add(new Change("- Connector (target) " + oldConnector.GetPath(), false).AppendTabs(1));
+                    changes.Add(new Change("- Connector (target) - UID = " + oldConnector.UID + ") " + oldConnector.GetPath(), false).AppendTabs(1));
                 }
             }
 

@@ -76,8 +76,20 @@ namespace UMLChangeAnalyzer.Changes
                 {
                     form.ListAdd("Comparing " + releases[i].Split('\\')[releases[i].Split('\\').Length - 1] + " and " + releases[j].Split('\\')[releases[j].Split('\\').Length - 1]);
 
-                    model1 = Extractor.XMLtoMetamodel(releases[i]);
-                    model2 = Extractor.XMLtoMetamodel(releases[j]);
+                    string name1 = releases[i].Split('\\')[releases[i].Split('\\').Length - 1];
+
+                    if (name1.StartsWith("2.4"))
+                        model1 = Extractor24.XMLtoMetamodel(releases[i]);
+                    else
+                        model1 = Extractor.XMLtoMetamodel(releases[i]);
+
+                    string name2 = releases[j].Split('\\')[releases[j].Split('\\').Length - 1];
+
+                    if (name2.StartsWith("2.4"))
+                        model2 = Extractor24.XMLtoMetamodel(releases[j]);
+                    else
+                        model2 = Extractor.XMLtoMetamodel(releases[j]);
+
 
                     for (int ind = 0; ind < resultsArrayMatrix.Length; ind++)     // foreach role
                     {

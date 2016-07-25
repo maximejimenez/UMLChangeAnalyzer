@@ -69,7 +69,12 @@ namespace UMLChangeAnalyzer.Changes
             {
                 form.ListAdd("Calculating " + releases[i].Split('\\')[releases[i].Split('\\').Length - 1]);
 
-                model = Extractor.XMLtoMetamodel(releases[i]);
+                string name = releases[i].Split('\\')[releases[i].Split('\\').Length - 1];
+
+                if(name.StartsWith("2.4"))
+                    model = Extractor24.XMLtoMetamodel(releases[i]);
+                else
+                    model = Extractor.XMLtoMetamodel(releases[i]);
 
                 for (int ind = 0; ind < resultsMatrix.Length; ind++)     // for each role
                 {

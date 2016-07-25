@@ -114,17 +114,19 @@ namespace UMLChangeAnalyzer.Datamodel
             {
 
                 numOfChanges++;
-                changes.Add(new Change("~ Target Cardinality (" + UID + "): " + oldConnector.TargetCardinality + " -> " + TargetCardinality, false).AppendTabs(1));
+                changes.Add(new Change("~ Target Cardinality: " + oldConnector.TargetCardinality + " -> " + TargetCardinality, false).AppendTabs(1));
             }
 
             if (((RelevantOnly && !ConfigReader.ExcludedAttributeNote) || !RelevantOnly) && !Equals(note, oldConnector.Note))
             {
-                numOfChanges++;
-                changes.Add(new Change("~ Note", false).AppendTabs(1));
+                if(!note.StartsWith(oldConnector.Note) && !oldConnector.Note.StartsWith(note)){
+                    numOfChanges++;
+                    changes.Add(new Change("~ Note", false).AppendTabs(1));
+                }
             }
 
             if (numOfChanges > 0)
-                changes.Insert(0, new Change("~ Connector " + type + " " + GetPath(), false));
+                changes.Insert(0, new Change("~ Connector (" + UID + ") " + type + " " + GetPath(), false));
 
             return numOfChanges;
         }

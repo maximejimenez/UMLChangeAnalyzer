@@ -64,6 +64,7 @@
     <Compile Include="Datamodel\Attribute.cs" />
     <Compile Include="Datamodel\MetaModel.cs" />
     <Compile Include="Changes\Change.cs" />
+    <Compile Include="Extract\Extractor24.cs" />
     <Compile Include="Extract\Extractor.cs" />
     <Compile Include="Datamodel\Package.cs" />
     <Compile Include="Datamodel\Element.cs" />

@@ -8,7 +8,7 @@ using System.IO;
 
 namespace UMLChangeAnalyzer.Extract
 {
-    class Extractor
+    class Extractor24
     {
         private MainForm mainForm;
         private static XmlDocument doc;
@@ -16,7 +16,7 @@ namespace UMLChangeAnalyzer.Extract
         private static Dictionary<String, Connector> declaredConnector;
         private static Dictionary<String, XmlNode> associationWithOwnedEnd;
 
-        public Extractor(MainForm mainForm)
+        public Extractor24(MainForm mainForm)
         {
             this.mainForm = mainForm;
         }
@@ -37,8 +37,9 @@ namespace UMLChangeAnalyzer.Extract
                 {
                     string path = paths[i];
                     doc.Load(path);
-                    XmlNode cmofPackageNode = doc.GetElementsByTagName("cmof:Package").Item(0);
-                    extractPrimitiveTypes(cmofPackageNode);
+                    XmlNode cmofPackageNode = doc.GetElementsByTagName("uml:Package").Item(0);
+                    if(cmofPackageNode != null)
+                        extractPrimitiveTypes(cmofPackageNode);
                 }
             }
 
@@ -49,11 +50,11 @@ namespace UMLChangeAnalyzer.Extract
                 doc.Load(path);
 
                 XmlNode metamodelNode = doc.GetElementsByTagName("xmi:XMI").Item(0);
-                string version = metamodelNode.Attributes["xmi:version"].Value;
+                string version = p.Split(new char[] { '\\' })[p.Split(new char[] { '\\' }).Count<string>() - 2];
                 metamodel = new MetaModel(version);
 
-
-                XmlNode cmofPackageNode = doc.GetElementsByTagName("cmof:Package").Item(0);
+                Console.WriteLine(path);
+                XmlNode cmofPackageNode = doc.GetElementsByTagName("uml:Package").Item(0);
                 Package package = parseCmofPackage(cmofPackageNode);
                 metamodel.AddPackage(package);
                 
@@ -62,10 +63,25 @@ namespace UMLChangeAnalyzer.Extract
                     path = paths[i];
                     
                     doc.Load(path);
-                    //Console.WriteLine(path);
-                    cmofPackageNode = doc.GetElementsByTagName("cmof:Package").Item(0);
-                    package = parseCmofPackage(cmofPackageNode);
-                    metamodel.AddPackage(package);
+                    Console.WriteLine(path);
+
+                    cmofPackageNode = doc.GetElementsByTagName("uml:Package").Item(0);
+                    if (cmofPackageNode != null)
+                    {
+                        package = parseCmofPackage(cmofPackageNode);
+                        Package existingPackage = metamodel.FindPackageByName(package.Name);
+                        if (existingPackage != null)
+                        {
+                            foreach (Package sub in package.SubPackages)
+                                existingPackage.AddSubPackage(sub);
+                            foreach (Element elem in package.Elements)
+                                existingPackage.AddElement(elem);
+                        }
+                        else
+                        {
+                            metamodel.AddPackage(package);
+                        }
+                    }
                 }
             }
 
@@ -94,12 +110,12 @@ namespace UMLChangeAnalyzer.Extract
                 XmlNode child = subNodes.Item(i);
                 String type = child.Attributes["xmi:type"].Value;
 
-                if (type == "cmof:PrimitiveType" || type == "cmof:Enumeration")
+                if (type == "uml:PrimitiveType" || type == "uml:Enumeration")
                 {
                     String primitiveTypeId = child.Attributes["xmi:id"].Value;
                     String primitiveTypeName = child.Attributes["name"].Value;
                     primitiveTypes.Add(primitiveTypeId, primitiveTypeName);
-                }else if(type == "cmof:Package"){
+                }else if(type == "uml:Package"){
                     extractPrimitiveTypes(child);
                 }
             }
@@ -115,9 +131,12 @@ namespace UMLChangeAnalyzer.Extract
             for (int i = 0; i < cmofSubPackages.Count; i++)
             {
                 XmlNode cmofSubPackage = cmofSubPackages.Item(i);
-                Package subPack = parsePackage(cmofSubPackage);
-                if (subPack != null)
-                    cmofPackage.AddSubPackage(subPack);
+                if (cmofSubPackage.Name == "packagedElement" && cmofSubPackage.Attributes["xmi:type"].Value == "uml:Package")
+                {
+                    Package subPack = parsePackage(cmofSubPackage);
+                    if (subPack != null)
+                        cmofPackage.AddSubPackage(subPack);
+                }
             }
 
             //test
@@ -131,10 +150,24 @@ namespace UMLChangeAnalyzer.Extract
                     string lower = "1";
                     string upper = "1";
 
-                    if (node.Attributes["lower"] != null)
-                        lower = node.Attributes["lower"].Value;
-                    if (node.Attributes["upper"] != null)
-                        upper = node.Attributes["upper"].Value;
+                    foreach (XmlNode child in node.ChildNodes)
+                    {
+                        if (child.Name == "lowerValue")
+                        {
+                            if (child.Attributes["xmi:type"].Value == "uml:LiteralInteger")
+                                lower = "0";
+
+                            if (child.Attributes["value"] != null)
+                            {
+                                lower = child.Attributes["value"].Value;
+                            }
+                        }
+                        else if (child.Name == "upperValue")
+                        {
+                            upper = child.Attributes["value"].Value;
+                        }
+                    }
+
                     string cardinality = lower + ".." + upper;
                     if (lower == upper)
                         cardinality = "" + lower;
@@ -179,22 +212,24 @@ namespace UMLChangeAnalyzer.Extract
                 String type = child.Attributes["xmi:type"].Value;
                 switch (type)
                 {
-                    case "cmof:Package":
+                    case "uml:Package":
                         Package sub = parsePackage(child);
                         sub.ParentPackage = package;
                         package.AddSubPackage(sub);
                         break;
-                    case "cmof:Class":
+                    case "uml:Class":
                         Element element = parseElement(child);
                         element.ParentPackage = package;
                         package.AddElement(element);
                         break;
-                    case "cmof:PackageImport":
-                    case "cmof:Enumeration":
-                    case "cmof:PrimitiveType":
-                    case "cmof:PackageMerge":
+                    case "uml:PackageImport":
+                    case "uml:Enumeration":
+                    case "uml:PrimitiveType":
+                    case "uml:PackageMerge":
+                    case "uml:Generalization":
+                        //maybe todo for the generalization
                         break;
-                    case "cmof:Association":
+                    case "uml:Association":
                         if (child.ChildNodes.Count != 0 && child.ChildNodes.Item(0).Name == "ownedEnd")
                         {
                             String associationId = child.Attributes["xmi:id"].Value;
@@ -207,7 +242,7 @@ namespace UMLChangeAnalyzer.Extract
                         }
                         break;
                     default:
-                        Console.WriteLine("\t Unexpected : " + type + " (" + child.Name + ")");
+                        Console.WriteLine("\t 1 - Unexpected : " + type + " (" + child.Name + ")");
                         break;
                 }
             }
@@ -229,19 +264,20 @@ namespace UMLChangeAnalyzer.Extract
                 type = child.Attributes["xmi:type"].Value;
                 switch (type)
                 {
-                    case "cmof:Comment":
+                    case "uml:Comment":
                         string note = parseComment(child);
                         element.Note = note;
                         break;
-                    case "cmof:Property":
+                    case "uml:Property":
                         parseProperty(element, child);
                         break;
-                    case "cmof:Operation":
-                    case "cmof:Constraint":
-
+                    case "uml:Operation":
+                    case "uml:Constraint":
+                    case "uml:Generalization":
+                        // maybe todo for generalization
                         break;
                     default:
-                        Console.WriteLine("\t \t Unexpected : " + type + " (" + child.Name + ")");
+                        Console.WriteLine("\t 2 - Unexpected : " + type + " (" + child.Name + ")");
                         break;
                 }
             }
@@ -261,26 +297,44 @@ namespace UMLChangeAnalyzer.Extract
                 typeIdentifier = attrNode.Attributes["type"].Value;
             }
 
-            if (attrNode.Attributes["lower"] != null)
+            foreach (XmlNode node in attrNode.ChildNodes)
+            {
+                if (node.Name == "lowerValue")
+                {
+                    if (node.Attributes["xmi:type"].Value == "uml:LiteralInteger")
+                        lowerBound = "0";
+
+                    if (node.Attributes["value"] != null)
+                    {
+                        lowerBound = node.Attributes["value"].Value;
+                    }
+                }
+                else if (node.Name == "upperValue")
+                {
+                    upperBound = node.Attributes["value"].Value;
+                }
+            }
+
+            /*if (attrNode.Attributes["lower"] != null)
                 lowerBound = attrNode.Attributes["lower"].Value;
             if (attrNode.Attributes["upper"] != null)
-                upperBound = attrNode.Attributes["upper"].Value;
+                upperBound = attrNode.Attributes["upper"].Value;*/
+            //Console.WriteLine("Attribute of " + uid + "(parent = " + parent.UID + ")");
 
             XmlNodeList children = attrNode.ChildNodes;
             for (int i = 0; i < children.Count; i++)
             {
                 XmlNode child = children.Item(i);
-                if (child.Attributes["xmi:type"].Value == "cmof:Comment")
+                if (child.Attributes["xmi:type"] != null && child.Attributes["xmi:type"].Value == "uml:Comment")
                 {
                     note = parseComment(child);
                 }
-                else if (child.Attributes["xmi:type"].Value == "cmof:PrimitiveType")
+                else if ((child.Attributes["xmi:type"] != null && child.Attributes["xmi:type"].Value == "uml:PrimitiveType") || child.Name == "type")
                 {
                     string href = child.Attributes["href"].Value;
                     string [] hrefParts = href.Split(new Char[]{'#'});
                     typeIdentifier = hrefParts[hrefParts.Length - 1];
                 }
-
             }
 
 
@@ -295,7 +349,6 @@ namespace UMLChangeAnalyzer.Extract
 
                 if (declaredConnector.TryGetValue(association.Value, out conn))
                 {
-                    //Second end of association
                     if (conn.Source != null)
                     {
                         conn.TargetCardinality = cardinality;
@@ -324,19 +377,16 @@ namespace UMLChangeAnalyzer.Extract
                     }
                     declaredConnector.Remove(association.Value);
                 }
-                else
-                {
+                else{
                     //First end of association
                     //string test = name[0].ToString().ToUpper() + name.Substring(1);
-                    /*if (parent.UID.Equals(typeIdentifier))
-                    {
+                    //Console.WriteLine(parent.UID + " - " + test);
+                    /*if(parent.UID.Equals(typeIdentifier)){
                         conn = new Connector(type, "1", cardinality, uid, note);
                         conn.ParentElement = parent;
                         conn.Target = parent;
                         parent.AddTargetConnector(conn);
-                    }
-                    else
-                    {*/
+                    }else{*/
                         conn = new Connector(type, cardinality, "1", uid, note);
                         conn.ParentElement = parent;
                         conn.Source = parent;
