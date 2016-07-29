@@ -1,0 +1,128 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified">
+	<xs:element name="ARCA_CONFIG">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="EA-EXPORT" maxOccurs="unbounded" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element type="xs:string" name="EXCLUDE-CASE-SENSITIVITY" maxOccurs="unbounded" minOccurs="0"/>
+							<xs:element name="EXCLUDE-PACKAGES" maxOccurs="unbounded" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element type="xs:string" name="PACKAGE-NAME" maxOccurs="unbounded" minOccurs="1"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="EXCLUDED-ELEMENTS" maxOccurs="unbounded" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element type="xs:string" name="ELEMENT-NOTE"/>
+										<xs:element type="xs:string" name="ELEMENT-TYPE"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="EXCLUDED-ATTRIBUTES" maxOccurs="unbounded" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element type="xs:string" name="ATTRIBUTE-NOTE"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="EXCLUDED-CONNECTORS" maxOccurs="unbounded" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element type="xs:string" name="CONNECTOR-TYPE"/>
+										<xs:element type="xs:string" name="CONNECTOR-NOTE"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="EXCLUDE-TAGGED-VALUES" maxOccurs="unbounded" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element type="xs:string" name="TAGGED-VALUE-NAME" maxOccurs="unbounded" minOccurs="0"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ROLES" maxOccurs="1" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ROLE" maxOccurs="unbounded" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element type="xs:string" name="NAME"/>
+										<xs:element type="xs:string" name="PACKAGE" maxOccurs="unbounded" minOccurs="1"/>
+									</xs:sequence>
+									<xs:attribute type="xs:string" name="Model" use="optional"/>
+									<xs:attribute type="xs:string" name="UTMonly" use="optional"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element type="xs:string" name="RESULTS_PATH"/>
+				<xs:element name="FEATURES" maxOccurs="1" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element type="xs:date" name="START_DATE"/>
+							<xs:element type="xs:date" name="END_DATE"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+		        <xs:element name="EXTRACT_MULTIPLE">
+		          <xs:complexType>
+		            <xs:sequence>
+		              <xs:element maxOccurs="unbounded" name="RELEASE">
+		                <xs:complexType>
+		                  <xs:simpleContent>
+		                    <xs:extension base="xs:string">
+		                      <xs:attribute name="VERSION" type="xs:string" use="required" />
+		                    </xs:extension>
+		                  </xs:simpleContent>
+		                </xs:complexType>
+		              </xs:element>
+		            </xs:sequence>
+		            <xs:attribute name="EXTRACT_PATH" type="xs:string" use="required" />
+		          </xs:complexType>
+		        </xs:element>
+				<xs:element name="REPORT_CHANGES" maxOccurs="1" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element type="xs:string" name="RELEASE" maxOccurs="unbounded" minOccurs="1"/>
+						</xs:sequence>
+						<xs:attribute type="xs:string" name="REPORT_PATH" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="REPORT_METRICS" maxOccurs="1" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element type="xs:string" name="RELEASE" maxOccurs="unbounded" minOccurs="1"/>
+						</xs:sequence>
+						<xs:attribute type="xs:string" name="REPORT_PATH" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="REPORT_FEATURES" maxOccurs="1" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element type="xs:string" name="SVN"/>
+							<xs:element name="FEATURE" maxOccurs="unbounded" minOccurs="1">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute type="xs:string" name="Name" use="required"/>
+											<xs:attribute type="xs:byte" name="Priority" use="required"/>
+											<xs:attribute type="xs:byte" name="Policy" use="required"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute type="xs:string" name="REPORT_PATH" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
