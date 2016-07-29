@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ARCA_CONFIG xmlns="C:\Users\USERNAME\Desktop\UMLResults\Config\" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="C:\Users\USERNAME\Desktop\UMLResults\Config\ ARCA_Schema.xsd">
+	<EA-EXPORT>
+		<EXCLUDE-CASE-SENSITIVITY>true</EXCLUDE-CASE-SENSITIVITY>
+		<EXCLUDE-PACKAGES>
+			<PACKAGE-NAME>NonRelevantPackage.mo</PACKAGE-NAME>
+		</EXCLUDE-PACKAGES>
+		<EXCLUDED-ELEMENTS>
+			<ELEMENT-NOTE>true</ELEMENT-NOTE>
+			<ELEMENT-TYPE>Note</ELEMENT-TYPE>
+		</EXCLUDED-ELEMENTS>
+		<EXCLUDED-ATTRIBUTES>
+			<ATTRIBUTE-NOTE>true</ATTRIBUTE-NOTE>
+		</EXCLUDED-ATTRIBUTES>
+		<EXCLUDED-CONNECTORS>
+			<CONNECTOR-TYPE>NoteLink</CONNECTOR-TYPE>
+			<CONNECTOR-NOTE>true</CONNECTOR-NOTE>
+		</EXCLUDED-CONNECTORS>
+	</EA-EXPORT>
+	<ROLES>
+		<ROLE Model="M1">
+			<NAME>Metamodel</NAME>
+			<PACKAGE>Absyn.mo</PACKAGE>
+		</ROLE>
+	</ROLES>
+	<RESULTS_PATH>C:\Users\USERNAME\Desktop\UMLResults\Results</RESULTS_PATH>
+	<REPORT_CHANGES REPORT_PATH="C:\Users\USERNAME\Desktop\UMLResults\Results">
+		<RELEASE>C:\Users\USERNAME\Desktop\UMLResults\XML\2.1.1</RELEASE>
+		<RELEASE>C:\Users\USERNAME\Desktop\UMLResults\XML\2.1.2</RELEASE>
+		<RELEASE>C:\Users\USERNAME\Desktop\UMLResults\XML\2.2</RELEASE>
+		<RELEASE>C:\Users\USERNAME\Desktop\UMLResults\XML\2.3</RELEASE>
+		<RELEASE>C:\Users\USERNAME\Desktop\UMLResults\XML\2.4</RELEASE>
+		<RELEASE>C:\Users\USERNAME\Desktop\UMLResults\XML\2.4.1</RELEASE>
+	</REPORT_CHANGES>
+	<REPORT_METRICS REPORT_PATH="C:\Users\USERNAME\Desktop\UMLResults\Results">
+		<RELEASE>C:\Users\USERNAME\Desktop\UMLResults\XML\2.1.1</RELEASE>
+		<RELEASE>C:\Users\USERNAME\Desktop\UMLResults\XML\2.1.2</RELEASE>
+		<RELEASE>C:\Users\USERNAME\Desktop\UMLResults\XML\2.2</RELEASE>
+		<RELEASE>C:\Users\USERNAME\Desktop\UMLResults\XML\2.3</RELEASE>
+		<RELEASE>C:\Users\USERNAME\Desktop\UMLResults\XML\2.4</RELEASE>
+		<RELEASE>C:\Users\USERNAME\Desktop\UMLResults\XML\2.4.1</RELEASE>		
+	</REPORT_METRICS>
+</ARCA_CONFIG>
